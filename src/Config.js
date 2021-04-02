@@ -1,7 +1,7 @@
 export default {
   apollo: {
-    http: process.env.REACT_APP_APOLLO_HTTP_SERVER,
-    ws: process.env.REACT_APP_APOLLO_WS_SERVER
+    http: 'https://dev-core.emp-sig.com:4001/',
+    ws: 'wss://dev-core.emp-sig.com:4001/'
   },
   aws: {
     aws_project_region: 'us-east-2',
