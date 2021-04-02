@@ -1,0 +1,13 @@
+image: node:10.15.0
+    
+pipelines:
+  custom: # Pipelines that are triggered manually
+    S3Push: # The name that is displayed in the list in the Bitbucket Cloud GUI
+      - step:
+          script:
+            - echo "Installing AWS cli package"
+            - apt-get update && apt-get install -y awscli
+            - echo "Runnning AWS CLI Commands to push into s3"
+            - aws s3 --region "us-east-2" sync ./ s3://new.emp-sig.com
+
+    

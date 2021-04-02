@@ -1,0 +1,244 @@
+fragment Desc_desc on Desc {
+  title
+  short
+  long
+}
+
+fragment Asset_asset on Asset {
+  type
+  url
+  name
+  iconUrl
+  mimeType
+  altText
+}
+
+fragment DocState_docState on DocState {
+  locked
+  authorId
+}
+
+fragment Topology_topology on Topology {
+  station
+  district
+  school
+  class
+}
+
+fragment Grouping_grouping on Grouping {
+  schemaVer
+  schemaType
+  _id
+  _extId
+  name
+  status
+  version
+  docState {
+    ...DocState_docState
+  }
+  parentId
+  parentIdList
+  childrenIdList
+  desc {
+    ...Desc_desc
+  }
+  body
+  tagList
+  categories
+  rank
+  source
+  authorIdList
+  assigneeIdList
+  avatar {
+    ...Asset_asset
+  }
+  docAssets {
+    ...Asset_asset
+  }
+  extAssets {
+    ...Asset_asset
+  }
+  topology {
+    ...Topology_topology
+  }
+  baseUrl
+  data
+  contact
+  createdAt
+  updatedAt
+}
+
+query Grouping(
+  $id: ID
+  $schemaType: String!
+  $nameRegExp: String
+  $name: String
+  $offset: Int
+  $limit: Int
+  $parentId: ID
+) {
+  grouping(
+    _id: $id
+    schemaType: $schemaType
+    name: $name
+    nameRegExp: $nameRegExp
+    offset: $offset
+    limit: $limit
+    parentId: $parentId
+  ) {
+    ...Grouping_grouping
+  }
+}
+
+mutation CreateGrouping(
+  $schemaVer: Int!
+  $schemaType: String!
+  $extId: ID
+  $name: String!
+  $status: String
+  $version: Int
+  $docState: DocStateInput
+  $parentId: ID
+  $parentIdList: [ID]
+  $childrenIdList: [ID]
+  $desc: DescInput
+  $body: String
+  $tagList: [String]
+  $categories: JSONObject
+  $rank: Int
+  $source: JSONObject
+  $authorIdList: [String]
+  $assigneeIdList: [String]
+  $avatar: AssetInput
+  $docAssets: [AssetInput]
+  $extAssets: [AssetInput]
+  $topology: TopologyInput
+  $schedule: JSONObject
+  $baseUrl: JSONObject
+  $data: JSONObject
+  $contact: JSONObject
+  $createdAt: String
+  $updatedAt: String
+) {
+  createGrouping(
+    schemaVer: $schemaVer
+    schemaType: $schemaType
+    _extId: $extId
+    name: $name
+    status: $status
+    version: $version
+    docState: $docState
+    parentId: $parentId
+    parentIdList: $parentIdList
+    childrenIdList: $childrenIdList
+    desc: $desc
+    body: $body
+    tagList: $tagList
+    categories: $categories
+    rank: $rank
+    source: $source
+    authorIdList: $authorIdList
+    assigneeIdList: $assigneeIdList
+    avatar: $avatar
+    docAssets: $docAssets
+    extAssets: $extAssets
+    topology: $topology
+    schedule: $schedule
+    baseUrl: $baseUrl
+    data: $data
+    contact: $contact
+    createdAt: $createdAt
+    updatedAt: $updatedAt
+  ) {
+    ...Grouping_grouping
+  }
+}
+
+mutation DeleteDocument($id: ID!, $schemaType: String!) {
+  deleteDocument(_id: $id, schemaType: $schemaType)
+}
+
+mutation UpdateGrouping(
+  $schemaVer: Int!
+  $schemaType: String!
+  $id: ID!
+  $extId: ID
+  $name: String
+  $status: String
+  $version: Int
+  $docState: DocStateInput
+  $parentId: ID
+  $parentIdList: [ID]
+  $childrenIdList: [ID]
+  $desc: DescInput
+  $body: String
+  $tagList: [String]
+  $categories: JSONObject
+  $rank: Int
+  $source: JSONObject
+  $authorIdList: [String]
+  $assigneeIdList: [String]
+  $avatar: AssetInput
+  $docAssets: [AssetInput]
+  $extAssets: [AssetInput]
+  $topology: TopologyInput
+  $schedule: JSONObject
+  $baseUrl: JSONObject
+  $data: JSONObject
+  $contact: JSONObject
+  $createdAt: String
+  $updatedAt: String
+) {
+  updateGrouping(
+    schemaVer: $schemaVer
+    schemaType: $schemaType
+    _id: $id
+    _extId: $extId
+    name: $name
+    status: $status
+    version: $version
+    docState: $docState
+    parentId: $parentId
+    parentIdList: $parentIdList
+    childrenIdList: $childrenIdList
+    desc: $desc
+    body: $body
+    tagList: $tagList
+    categories: $categories
+    rank: $rank
+    source: $source
+    authorIdList: $authorIdList
+    assigneeIdList: $assigneeIdList
+    avatar: $avatar
+    docAssets: $docAssets
+    extAssets: $extAssets
+    topology: $topology
+    schedule: $schedule
+    baseUrl: $baseUrl
+    data: $data
+    contact: $contact
+    createdAt: $createdAt
+    updatedAt: $updatedAt
+  ) {
+    ...Grouping_grouping
+  }
+}
+
+subscription GroupingAdd {
+  groupingAdd {
+    ...Grouping_grouping
+  }
+}
+
+subscription DocumentDelete {
+  documentDelete {
+    _id
+    collectionName
+  }
+}
+
+subscription GroupingUpdate {
+  groupingUpdate {
+    ...Grouping_grouping
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-empdashboard-dev-170822-authRole",
+      "UnauthRoleArn": "arn:aws:iam::302307366702:role/amplify-empdashboard-dev-170822-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::302307366702:role/amplify-empdashboard-dev-170822-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-empdashboard-dev-170822-deployment",
+      "UnauthRoleName": "amplify-empdashboard-dev-170822-unauthRole",
+      "StackName": "amplify-empdashboard-dev-170822",
+      "StackId": "arn:aws:cloudformation:us-east-2:302307366702:stack/amplify-empdashboard-dev-170822/50214bb0-6ae0-11eb-991e-0abaa1928d2c",
+      "AmplifyAppId": "d3b2ujw0ee1uu2"
+    },
+    "categories": {
+      "auth": {
+        "empdashboard541abc60": {}
+      }
+    }
+  }
+}

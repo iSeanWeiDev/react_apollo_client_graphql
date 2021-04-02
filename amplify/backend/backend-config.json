@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "empdashboard541abc60": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}
