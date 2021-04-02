@@ -14,6 +14,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
+        env:
+          CI: false
+          REACT_APP_APOLLO_HTTP_SERVER: https://dev-core.emp-sig.com:4001/
+          REACT_APP_APOLLO_WS_SERVER: wss://dev-core.emp-sig.com:4001/
       - run: yarn install
       - run: CI=false && yarn run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
@@ -24,5 +28,4 @@ jobs:
           projectId: emp-sig
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
-          REACT_APP_APOLLO_HTTP_SERVER: https://dev-core.emp-sig.com:4001/
-          REACT_APP_APOLLO_WS_SERVER: wss://dev-core.emp-sig.com:4001/
+
