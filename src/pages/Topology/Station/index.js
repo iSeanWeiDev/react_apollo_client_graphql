@@ -18,7 +18,7 @@ import { Add as AddIcon } from '@material-ui/icons';
 import graphql from '@app/graphql';
 import useStyles from './style';
 
-const TStation = () => {
+const TStation = ({ isOpenSide }) => {
   const classes = useStyles();
   const [loadedData, setLoadedData] = useState([]);
   const [openCreate, setOpenCreate] = useState(false);
@@ -31,7 +31,7 @@ const TStation = () => {
       setLoadedData(data.grouping);
     }
   }, [loading, data, error]);
-
+  console.log('ddd');
   return (
     <Box className={classes.root}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -61,8 +61,15 @@ const TStation = () => {
           alignItems="flex-start"
         >
           {loadedData.map((el) => (
-            <Grid item key={el['_id']} xs={12} sm={12} md={6} lg={4}>
-              <Card>
+            <Grid
+              item
+              key={el['_id']}
+              xs={12}
+              sm={isOpenSide ? 12 : 6}
+              md={isOpenSide ? 6 : 4}
+              lg={isOpenSide ? 4 : 3}
+            >
+              <Card className={classes.card}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
