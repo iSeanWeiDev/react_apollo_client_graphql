@@ -9,7 +9,8 @@ import {
   CardMedia,
   Typography,
   CardActions,
-  Button
+  Button,
+  Divider
 } from '@material-ui/core';
 import { faBroadcastTower } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -47,10 +48,10 @@ const TStation = () => {
           onClick={() => setOpenCreate(true)}
         >
           <AddIcon />
-          Add New User
+          New Station
         </Button>
       </Box>
-
+      <Divider className={classes.separator} />
       <main className={classes.main}>
         <Grid
           container
