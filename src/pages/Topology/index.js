@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
+import { withRouter } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { AppTreeView } from '@app/components/App';
 import graphql from '@app/graphql';
+import TStation from './Station';
+import TDistrict from './District';
+import TSchool from './School';
+import TClass from './Class';
 import useStyles from './style';
 
-const TopologyContainer = () => {
+const TopologyContainer = ({ match, history }) => {
   const classes = useStyles();
   const [openTreeView, setOpenTreeView] = useState(true);
   const [loadedStationData, setLoadedStationData] = useState([]);
@@ -13,6 +18,7 @@ const TopologyContainer = () => {
   const [loadedSchoolData, setLoadedSchoolData] = useState([]);
   const [loadedClassData, setLoadedClassData] = useState([]);
   const [treeData, setTreeData] = useState([]);
+  const [selectedTopology, setSelectedTopology] = useState();
 
   const {
     loading: stationLoading,
@@ -124,6 +130,27 @@ const TopologyContainer = () => {
     loadedClassData
   ]);
 
+  useEffect(() => {
+    const { params } = match;
+    switch (params.type) {
+      case 'stations':
+        setSelectedTopology(<TStation />);
+        break;
+      case 'districts':
+        setSelectedTopology(<TDistrict />);
+        break;
+      case 'schools':
+        setSelectedTopology(<TSchool />);
+        break;
+      case 'classes':
+        setSelectedTopology(<TClass />);
+        break;
+      default:
+        history.push({ pathname: '/topologies/stations' });
+        break;
+    }
+  }, [match]);
+
   return (
     <div className={classes.root}>
       <AppTreeView
@@ -136,9 +163,11 @@ const TopologyContainer = () => {
           [classes.mainOpen]: openTreeView,
           [classes.mainClose]: !openTreeView
         })}
-      ></main>
+      >
+        {selectedTopology}
+      </main>
     </div>
   );
 };
 
-export default TopologyContainer;
+export default withRouter(TopologyContainer);

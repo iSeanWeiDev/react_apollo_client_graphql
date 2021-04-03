@@ -34,7 +34,7 @@ const AppRoutes = () => (
       layout={DashboardLayout}
     />
     <PrivateRoute
-      path="/topologies"
+      path="/topologies/:type?"
       component={TopologyContainer}
       layout={DashboardLayout}
     />

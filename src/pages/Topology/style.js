@@ -6,13 +6,11 @@ const useStyles = makeStyles((theme) => ({
   },
   mainOpen: {
     marginLeft: 270,
-    width: 'calc(100vw - 510px)',
-    padding: theme.spacing(2)
+    width: 'calc(100vw - 510px)'
   },
   mainClose: {
     marginLeft: 30,
-    width: 'calc(100vw - 270px)',
-    padding: theme.spacing(2)
+    width: 'calc(100vw - 270px)'
   }
 }));
 
