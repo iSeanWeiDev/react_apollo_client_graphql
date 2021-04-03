@@ -15,7 +15,7 @@ LinearProgressWithLabel.propTypes = {
 
 const LoadingCard = ({
   loading,
-  style,
+  height,
   children,
   percentage,
   isShadow,
@@ -26,23 +26,15 @@ const LoadingCard = ({
 
   return (
     <Box component={isShadow ? Card : 'div'} className={classes.root} {...rest}>
-      {loading &&
-        (isProgress ? (
-          <LinearProgressWithLabel
-            value={percentage}
-            className={classes.loading}
-          />
-        ) : (
-          <LinearProgress className={classes.loading} />
-        ))}
-      <main
-        className={clsx({
-          [classes.content]: !style,
-          [style]: style
-        })}
-      >
+      {loading && isProgress && (
+        <LinearProgressWithLabel
+          value={percentage}
+          className={classes.loading}
+        />
+      )}
+      <main>
         {loading ? (
-          <Skeleton variant="rect" width={'100%'} height={130} />
+          <Skeleton variant="rect" width={'100%'} height={height} />
         ) : (
           children
         )}

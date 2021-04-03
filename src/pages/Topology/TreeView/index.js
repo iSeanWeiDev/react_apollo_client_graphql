@@ -17,6 +17,7 @@ import {
   Search as SearchIcon,
   KeyboardReturn as KeyboardReturnIcon
 } from '@material-ui/icons';
+import { LoadingCard } from '@app/components/Cards';
 import { fade, withStyles } from '@material-ui/core/styles';
 import { TreeView, TreeItem } from '@material-ui/lab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -66,7 +67,7 @@ const StyledTreeItem = withStyles((theme) => ({
   />
 ));
 
-const AppTreeView = ({ open, resources, onChange }) => {
+const AppTreeView = ({ loading, open, resources, onChange }) => {
   const classes = useStyles();
   const [openSearch, setOpenSearch] = useState(false);
   const [searchKey, setSearchKey] = useState('');
@@ -120,7 +121,7 @@ const AppTreeView = ({ open, resources, onChange }) => {
               <SearchIcon />
             </IconButton>
           </Box>
-          <Divider className={classes.separator} />
+          {/* <Divider className={classes.separator} /> */}
           {openSearch && (
             <FormControl fullWidth className={classes.searchBar}>
               <Input
@@ -141,51 +142,52 @@ const AppTreeView = ({ open, resources, onChange }) => {
               />
             </FormControl>
           )}
-
-          <TreeView
-            className={classes.treeView}
-            defaultExpanded={['1']}
-            defaultCollapseIcon={<MinusSquare />}
-            defaultExpandIcon={<PlusSquare />}
-            defaultEndIcon={<CloseSquare />}
-          >
-            {loadedData.length > 0 &&
-              loadedData.map((sd) => (
-                <StyledTreeItem
-                  key={sd.parent['_id']}
-                  nodeId={sd.parent['_id']}
-                  label={sd.parent.name}
-                  labelIcon={faBroadcastTower}
-                >
-                  {sd.children.map((sdc) => (
-                    <StyledTreeItem
-                      key={sdc.parent['_id']}
-                      nodeId={sdc.parent['_id']}
-                      label={sdc.parent.name}
-                      labelIcon={faSchool}
-                    >
-                      {sdc.children.map((sdcc) => (
-                        <StyledTreeItem
-                          key={sdcc.parent['_id']}
-                          nodeId={sdcc.parent['_id']}
-                          label={sdcc.parent?.name}
-                          labelIcon={faStoreAlt}
-                        >
-                          {sdcc.children.map((sdccc) => (
-                            <StyledTreeItem
-                              key={sdccc['_id']}
-                              nodeId={sdccc['_id']}
-                              label={sdccc.name}
-                              labelIcon={faChalkboardTeacher}
-                            />
-                          ))}
-                        </StyledTreeItem>
-                      ))}
-                    </StyledTreeItem>
-                  ))}
-                </StyledTreeItem>
-              ))}
-          </TreeView>
+          <LoadingCard loading={loading} height={`calc(100vh - 200px)`}>
+            <TreeView
+              className={classes.treeView}
+              defaultExpanded={['1']}
+              defaultCollapseIcon={<MinusSquare />}
+              defaultExpandIcon={<PlusSquare />}
+              defaultEndIcon={<CloseSquare />}
+            >
+              {loadedData.length > 0 &&
+                loadedData.map((sd) => (
+                  <StyledTreeItem
+                    key={sd.parent['_id']}
+                    nodeId={sd.parent['_id']}
+                    label={sd.parent.name}
+                    labelIcon={faBroadcastTower}
+                  >
+                    {sd.children.map((sdc) => (
+                      <StyledTreeItem
+                        key={sdc.parent['_id']}
+                        nodeId={sdc.parent['_id']}
+                        label={sdc.parent.name}
+                        labelIcon={faSchool}
+                      >
+                        {sdc.children.map((sdcc) => (
+                          <StyledTreeItem
+                            key={sdcc.parent['_id']}
+                            nodeId={sdcc.parent['_id']}
+                            label={sdcc.parent?.name}
+                            labelIcon={faStoreAlt}
+                          >
+                            {sdcc.children.map((sdccc) => (
+                              <StyledTreeItem
+                                key={sdccc['_id']}
+                                nodeId={sdccc['_id']}
+                                label={sdccc.name}
+                                labelIcon={faChalkboardTeacher}
+                              />
+                            ))}
+                          </StyledTreeItem>
+                        ))}
+                      </StyledTreeItem>
+                    ))}
+                  </StyledTreeItem>
+                ))}
+            </TreeView>
+          </LoadingCard>
         </main>
       )}
     </Box>

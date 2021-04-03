@@ -31,7 +31,15 @@ const useStyles = makeStyles((theme) => ({
     height: 2
   },
   main: {
-    padding: theme.spacing(1)
+    padding: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap'
+  },
+  card: {
+    minWidth: 300,
+    maxWidth: 350,
+    margin: theme.spacing(1)
   }
 }));
 
