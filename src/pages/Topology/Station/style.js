@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.blueGrey['500'],
     marginRight: theme.spacing(1)
   },
+  searchBar: {
+    marginRight: theme.spacing(2)
+  },
   panelTitle: {
     color: theme.palette.blueGrey['500']
   },
@@ -31,15 +34,35 @@ const useStyles = makeStyles((theme) => ({
     height: 2
   },
   main: {
-    padding: theme.spacing(1),
     display: 'flex',
     justifyContent: 'center',
     flexWrap: 'wrap'
   },
   card: {
-    minWidth: 300,
-    maxWidth: 350,
+    width: 300,
     margin: theme.spacing(1)
+  },
+  cardContent: {
+    minHeight: 150
+  },
+  inputArea: {
+    width: '100%',
+    marginBottom: theme.spacing(1)
+  },
+  textArea: {
+    minWidth: '100%',
+    maxWidth: '100%',
+    fontFamily: 'Roboto',
+    fontSize: 16,
+    paddingTop: 9,
+    paddingLeft: 12,
+    outlineColor: theme.palette.primary.main,
+    borderRadius: 5,
+    borderColor: '#c1bdbd'
+  },
+  dialogTitle: {
+    color: theme.palette.blueGrey['700'],
+    paddingBottom: theme.spacing(0)
   }
 }));
 

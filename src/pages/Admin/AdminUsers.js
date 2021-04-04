@@ -16,7 +16,6 @@ const AdminUsers = ({ type }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [loadedData, setLoadedData] = useState([]);
   const [title, setTitle] = useState('');
-  const [nameRegExp, setNameRegExp] = useState(null);
   const [totalRow, setTotalRow] = useState();
   const [hideAlert, setHideAlert] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
@@ -241,7 +240,7 @@ const AdminUsers = ({ type }) => {
 
       setOpenEdit(false);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       enqueueSnackbar(error.message, { variant: 'error' });
     }
   };

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { withRouter } from 'react-router-dom';
 import { useGroupingQuery } from '@app/utils/hooks/apollo';
 import TreeView from './TreeView';
-// import TStation from './Station';
+import TStation from './Station';
 // import TDistrict from './District';
 // import TSchool from './School';
 // import TClass from './Class';
@@ -77,7 +77,9 @@ const TopologyContainer = ({ match, history }) => {
           [classes.mainOpen]: openTreeView,
           [classes.mainClose]: !openTreeView
         })}
-      ></main>
+      >
+        <TStation resources={stationData} isOpenSide={openTreeView} />
+      </main>
     </div>
   );
 };
