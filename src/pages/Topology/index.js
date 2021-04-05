@@ -51,18 +51,13 @@ const TopologyContainer = ({ match, history }) => {
       const tmp2 = [];
       dis.forEach((district) => {
         const sch = arr3.filter(
-          (el) =>
-            el.topology?.district === district['_id'] ||
-            el.topology?.station === station['_id']
+          (el) => el.topology?.district === district['_id']
         );
 
         const tmp3 = [];
         sch.forEach((school) => {
           const cls = arr4.filter(
-            (el) =>
-              el.topology?.school === school['_id'] ||
-              el.topology?.district === district['_id'] ||
-              el.topology?.station === station['_id']
+            (el) => el.topology?.school === school['_id']
           );
           tmp3.push({ parent: school, children: cls });
         });
