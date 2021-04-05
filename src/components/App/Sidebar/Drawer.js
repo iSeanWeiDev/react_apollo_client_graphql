@@ -21,6 +21,7 @@ import {
   faCog,
   faInfoCircle
 } from '@fortawesome/free-solid-svg-icons';
+import noUserFemale from '@app/assets/imgs/no-user-female.jpeg';
 import StyledBadge from './StyledBadge';
 import useStyles from './style';
 
@@ -125,7 +126,7 @@ const AppDrawer = ({ location }) => {
           <Avatar
             alt="Remy Sharp"
             className={classes.avatar}
-            src="./assets/imgs/no-user-female.jpeg"
+            src={noUserFemale}
           />
         </StyledBadge>
         <Typography variant="subtitle1" className={classes.userName}>

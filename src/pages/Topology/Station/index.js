@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -23,10 +24,12 @@ import { LoadingCard } from '@app/components/Cards';
 import CreateStation from './Create';
 import PreviewStation from './Preview';
 import graphql from '@app/graphql';
+import noLogo from '@app/assets/imgs/no-logo.jpg';
 import useStyles from './style';
 
-const TStation = ({ resources, isOpenSide }) => {
+const TStation = ({ resources }) => {
   const classes = useStyles();
+  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const [loadingPage, setLoadingPage] = useState(false);
   const [loadedData, setLoadedData] = useState([]);
@@ -149,6 +152,12 @@ const TStation = ({ resources, isOpenSide }) => {
       if (method === 'view') {
         setOpenPreview(true);
       }
+
+      if (method === 'body') {
+        const id = value['_id'];
+
+        history.push({ pathname: `/topologies/districts/null/${id}` });
+      }
     } catch (error) {
       console.log(error.message);
       enqueueSnackbar(error.message, { variant: 'error' });
@@ -229,16 +238,12 @@ const TStation = ({ resources, isOpenSide }) => {
               <div key={el['_id']} style={{ width: 300, margin: 8 }}></div>
             ) : (
               <Card className={classes.card} key={el['_id']}>
-                <CardActionArea>
+                <CardActionArea onClick={() => handleCardAction('body', el)}>
                   <CardMedia
                     component="img"
                     alt="Contemplative Reptile"
                     height="140"
-                    image={
-                      el.avatar?.url
-                        ? el.avatar?.url
-                        : './assets/imgs/no-logo.jpg'
-                    }
+                    image={el.avatar?.url ? el.avatar?.url : noLogo}
                     title="Contemplative Reptile"
                   />
                   <CardContent className={classes.cardContent}>
