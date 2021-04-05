@@ -41,7 +41,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2)
   },
   menus: {
-    width: '100%'
+    width: '100%',
+    marginTop: 3
   },
   actionList: {
     width: '100%',
@@ -49,22 +50,23 @@ const useStyles = makeStyles((theme) => ({
     bottom: theme.spacing(2)
   },
   listItemIcons: {
-    fontSize: '0.9rem',
     display: 'flex',
     justifyContent: 'center'
   },
   listItems: {
     color: theme.palette.common.white,
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(0)
+    paddingTop: 1,
+    paddingBottom: 1
   },
   listItemIcon: {
+    fontSize: '0.9rem',
     color: theme.palette.blueGrey['100']
   },
   listItemIconSelcted: {
     color: theme.palette.common.white
   },
   listItemText: {
+    fontSize: '0.9rem',
     color: theme.palette.blueGrey['100']
   },
   listItemTextSelcted: {
