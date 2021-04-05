@@ -45,13 +45,33 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   main: {
-    height: 'calc(100vh - 225px)',
+    height: 'calc(100vh - 215px)',
     position: 'relative',
     top: 120,
-    padding: theme.spacing(3),
     marginLeft: theme.spacing(5),
     marginRight: theme.spacing(5),
     borderRadius: 20
+  },
+  table: {
+    minWidth: 750,
+    padding: theme.spacing(1)
+  },
+  pagination: {
+    display: 'flex',
+    position: 'absolute',
+    bottom: 0,
+    right: 10
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute',
+    top: 20,
+    width: 1
   }
 }));
 

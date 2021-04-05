@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Paper,
@@ -10,10 +10,19 @@ import {
 import { faSwatchbook } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SearchIcon from '@material-ui/icons/Search';
+import { useGroupingQuery } from '@app/utils/hooks/apollo';
+import ResourceTable from './Table';
 import useStyles from './style';
 
 const ResourceContainer = () => {
   const classes = useStyles();
+  const [loadedData, setLoadedData] = useState();
+  const resourceData = useGroupingQuery({ schemaType: 'resource' });
+
+  useEffect(() => {
+    setLoadedData(resourceData);
+  }, [resourceData]);
+
   return (
     <Box className={classes.classes}>
       <Box className={classes.header}>
@@ -39,7 +48,9 @@ const ResourceContainer = () => {
           Add New Resource
         </Button>
       </Box>
-      <Box component={Paper} className={classes.main}></Box>
+      <Box component={Paper} className={classes.main}>
+        <ResourceTable resources={loadedData} />
+      </Box>
     </Box>
   );
 };

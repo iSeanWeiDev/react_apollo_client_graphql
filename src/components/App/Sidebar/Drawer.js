@@ -183,7 +183,6 @@ const AppDrawer = ({ location }) => {
             <ListItemIcon className={classes.listItemIcons}>
               <FontAwesomeIcon
                 icon={el.icon}
-                size="md"
                 className={clsx(classes.listItemIcon, {
                   [classes.listItemIconSelcted]: el.url === selected,
                   [classes.listItemIcon]: el.url !== selected
