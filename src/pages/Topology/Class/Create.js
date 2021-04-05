@@ -11,7 +11,7 @@ import {
 import { useInput } from '@app/utils/hooks/form';
 import useStyles from './style';
 
-const CreateDistrict = ({ open, onChange }) => {
+const CreateClass = ({ open, onChange }) => {
   const classes = useStyles();
   const {
     value: name,
@@ -113,4 +113,4 @@ const CreateDistrict = ({ open, onChange }) => {
   );
 };
 
-export default CreateDistrict;
+export default CreateClass;

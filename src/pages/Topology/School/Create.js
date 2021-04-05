@@ -11,7 +11,7 @@ import {
 import { useInput } from '@app/utils/hooks/form';
 import useStyles from './style';
 
-const CreateStation = ({ open, onChange }) => {
+const CreateSchool = ({ open, onChange }) => {
   const classes = useStyles();
   const {
     value: name,
@@ -113,4 +113,4 @@ const CreateStation = ({ open, onChange }) => {
   );
 };
 
-export default CreateStation;
+export default CreateSchool;
