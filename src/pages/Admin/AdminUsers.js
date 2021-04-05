@@ -6,9 +6,10 @@ import { useSnackbar } from 'notistack';
 import { Alert } from '@material-ui/lab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
-import { CreateUserDialog, EditUserDialog } from '@app/components/Dialogs';
 import { DataGrid } from '@material-ui/data-grid';
 import graphql from '@app/graphql';
+import CreateUserDialog from './CreateUser';
+import EditUserDialog from './EditUser';
 import useStyles from './style';
 
 const AdminUsers = ({ type }) => {

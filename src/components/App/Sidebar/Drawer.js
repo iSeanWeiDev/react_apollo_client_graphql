@@ -28,8 +28,6 @@ const AppDrawer = ({ location }) => {
   const classes = useStyles();
   const theme = useTheme();
   const history = useHistory();
-  const avatarUrl =
-    'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200';
   const menuElements = [
     {
       icon: faSitemap,
@@ -124,7 +122,11 @@ const AppDrawer = ({ location }) => {
           }}
           variant="dot"
         >
-          <Avatar alt="Remy Sharp" className={classes.avatar} src={avatarUrl} />
+          <Avatar
+            alt="Remy Sharp"
+            className={classes.avatar}
+            src="./assets/imgs/no-user-female.jpeg"
+          />
         </StyledBadge>
         <Typography variant="subtitle1" className={classes.userName}>
           {userName}

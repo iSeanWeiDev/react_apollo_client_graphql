@@ -20,7 +20,8 @@ import { useMutation } from '@apollo/client';
 import { faBroadcastTower } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LoadingCard } from '@app/components/Cards';
-import CreateDialog from './Create';
+import CreateStation from './Create';
+import PreviewStation from './Preview';
 import graphql from '@app/graphql';
 import useStyles from './style';
 
@@ -30,6 +31,7 @@ const TStation = ({ resources, isOpenSide }) => {
   const [loadingPage, setLoadingPage] = useState(false);
   const [loadedData, setLoadedData] = useState([]);
   const [openCreate, setOpenCreate] = useState(false);
+  const [openPreview, setOpenPreview] = useState(false);
   const [selectedData, setSelectedData] = useState();
   const [currMainWidth, setCurrMainWidth] = useState(null);
   const [searchKey, setSearchKey] = useState('');
@@ -42,30 +44,37 @@ const TStation = ({ resources, isOpenSide }) => {
           schemaType: 'station'
         }
       });
-      const tmp = [...existData.grouping, createGrouping];
+      let data = existData ? existData.grouping.slice() : [];
+      const idx = data.findIndex((el) => el['_id'] === createGrouping['_id']);
+      if (idx > -1) {
+        data[idx] = createGrouping;
+      } else {
+        data = [...data, createGrouping];
+      }
+
       cache.writeQuery({
         query: graphql.queries.grouping,
         variables: {
           schemaType: 'station'
         },
         data: {
-          grouping: tmp
+          grouping: data
         }
       });
     }
   });
 
   const [deleteDocument] = useMutation(graphql.mutations.deleteDocument, {
-    update(cache) {
+    update(cache, { data: { deleteDocument } }) {
+      const idx = deleteDocument.split(' ')[1];
       const existData = cache.readQuery({
         query: graphql.queries.grouping,
         variables: {
           schemaType: 'station'
         }
       });
-      const tmp = existData.grouping.filter(
-        (el) => el['_id'] !== selectedData['_id']
-      );
+
+      const tmp = existData.grouping.filter((el) => el['_id'] !== idx);
       cache.writeQuery({
         query: graphql.queries.grouping,
         variables: {
@@ -107,7 +116,7 @@ const TStation = ({ resources, isOpenSide }) => {
 
     if (e.target.value.length >= 3) {
       const filteredData = loadedData.filter((el) =>
-        el.name.toLowerCase().includes(e.target.value)
+        el.name.toLowerCase().includes(e.target.value.toLowerCase())
       );
       countElLastRow = filteredData.length % elPerRow;
       tmp = filteredData.slice();
@@ -135,6 +144,10 @@ const TStation = ({ resources, isOpenSide }) => {
         });
         const { data } = response;
         enqueueSnackbar(data.deleteDocument, { variant: 'success' });
+      }
+
+      if (method === 'view') {
+        setOpenPreview(true);
       }
     } catch (error) {
       console.log(error.message);
@@ -221,7 +234,11 @@ const TStation = ({ resources, isOpenSide }) => {
                     component="img"
                     alt="Contemplative Reptile"
                     height="140"
-                    image="https://picsum.photos/200/300"
+                    image={
+                      el.avatar?.url
+                        ? el.avatar?.url
+                        : './assets/imgs/no-logo.jpg'
+                    }
                     title="Contemplative Reptile"
                   />
                   <CardContent className={classes.cardContent}>
@@ -253,14 +270,26 @@ const TStation = ({ resources, isOpenSide }) => {
                   >
                     delete
                   </Button>
-                  <Button size="small" color="primary">
-                    Load more
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => handleCardAction('view', el)}
+                  >
+                    view
                   </Button>
                 </CardActions>
               </Card>
             )
           )}
-          <CreateDialog open={openCreate} onChange={handleCreateDialogChange} />
+          <CreateStation
+            open={openCreate}
+            onChange={handleCreateDialogChange}
+          />
+          <PreviewStation
+            open={openPreview}
+            resources={selectedData}
+            onChange={() => setOpenPreview(!openPreview)}
+          />
         </main>
       </LoadingCard>
     </Box>

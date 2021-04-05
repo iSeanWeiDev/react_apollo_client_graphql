@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { green } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,6 +64,30 @@ const useStyles = makeStyles((theme) => ({
   dialogTitle: {
     color: theme.palette.blueGrey['700'],
     paddingBottom: theme.spacing(0)
+  },
+  dialogPaper: {
+    minHeight: '100vh',
+    maxHeight: '100vh',
+    position: 'absolute',
+    right: 0,
+    margin: 0,
+    borderRadius: 0
+  },
+  buttonSuccess: {
+    color: theme.palette.common.white,
+    backgroundColor: theme.palette.blueGrey['500'],
+    '&:hover': {
+      background: theme.palette.blueGrey['500'],
+      color: theme.palette.blueGrey['50']
+    }
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
   }
 }));
 

@@ -26,14 +26,21 @@ const AppStateProvider = ({ ...props }) => {
         }
       });
 
-      const tmp = existData ? existData.grouping.slice() : [];
+      let data = existData ? existData.grouping.slice() : [];
+      const idx = data.findIndex((el) => el['_id'] === groupingAdd['_id']);
+      if (idx > -1) {
+        data[idx] = groupingAdd;
+      } else {
+        data = [...data, groupingAdd];
+      }
+
       client.writeQuery({
         query: graphql.queries.grouping,
         variables: {
           schemaType: groupingAdd.schemaType
         },
         data: {
-          grouping: [...tmp, groupingAdd]
+          grouping: data
         }
       });
     }
@@ -71,36 +78,38 @@ const AppStateProvider = ({ ...props }) => {
     }
   });
 
-  // useSubscription(
-  //   graphql.subscriptions.documentDelete, {
-  //   onSubscriptionData: ({
-  //     client,
-  //     subscriptionData: { data: { documentDelete } }
-  //   }) => {
-  //     const existData = client.readQuery({
-  //       query: graphql.queries.grouping,
-  //       variables: {
-  //         schemaType: groupingUpdate.schemaType
-  //       }
-  //     });
+  useSubscription(graphql.subscriptions.documentDelete, {
+    onSubscriptionData: ({
+      client,
+      subscriptionData: {
+        data: { documentDelete }
+      }
+    }) => {
+      const len = documentDelete.split(' ').length;
+      const schemaType = documentDelete.split(' ')[len - 1].split('.')[0];
+      const idx = documentDelete.split(' ')[1];
 
-  //     let tmp = existData ? existData.grouping.slice() : [];
-  //     const idx = tmp.findIndex(el => el['_id'] === groupingUpdate['_id']);
-  //     if (idx > -1) {
-  //       tmp[idx] = groupingUpdate;
-  //     }
+      const existData = client.readQuery({
+        query: graphql.queries.grouping,
+        variables: {
+          schemaType: schemaType
+        }
+      });
 
-  //     client.writeQuery({
-  //       query: graphql.queries.grouping,
-  //       variables: {
-  //         schemaType: groupingUpdate.schemaType
-  //       },
-  //       data: {
-  //         grouping: tmp
-  //       }
-  //     });
-  //   }
-  // });
+      let tmp = existData ? existData.grouping.slice() : [];
+      const data = tmp.findIndex((el) => el['_id'] !== idx);
+
+      client.writeQuery({
+        query: graphql.queries.grouping,
+        variables: {
+          schemaType: schemaType
+        },
+        data: {
+          grouping: data
+        }
+      });
+    }
+  });
 
   return <AppStateContext.Provider value={value} {...props} />;
 };

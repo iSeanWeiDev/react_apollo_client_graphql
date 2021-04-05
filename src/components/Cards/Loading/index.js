@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import clsx from 'clsx';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Card, LinearProgress } from '@material-ui/core';
+import { Box, Card } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import LinearProgressWithLabel from './Progress';
 import useStyles from './style';
+
 LinearProgressWithLabel.propTypes = {
   /**
    * The value of the progress indicator for the determinate and buffer variants.
