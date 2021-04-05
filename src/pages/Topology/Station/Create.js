@@ -11,7 +11,7 @@ import {
 import { useInput } from '@app/utils/hooks/form';
 import useStyles from './style';
 
-const CreateStationDialog = ({ open, onChange }) => {
+const CreateStation = ({ open, onChange }) => {
   const classes = useStyles();
   const {
     value: name,
@@ -113,4 +113,4 @@ const CreateStationDialog = ({ open, onChange }) => {
   );
 };
 
-export default CreateStationDialog;
+export default CreateStation;
