@@ -233,7 +233,7 @@ subscription GroupingAdd {
 subscription DocumentDelete {
   documentDelete {
     _id
-    collectionName
+    schemaType
   }
 }
 

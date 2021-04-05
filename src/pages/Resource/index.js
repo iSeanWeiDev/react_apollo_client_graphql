@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Paper,
@@ -10,10 +10,17 @@ import {
 import { faSwatchbook } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SearchIcon from '@material-ui/icons/Search';
+import { useGroupingQuery } from '@app/utils/hooks/apollo';
 import useStyles from './style';
 
 const ResourceContainer = () => {
   const classes = useStyles();
+  const resourceData = useGroupingQuery({ schemaType: 'resource' });
+
+  useEffect(() => {
+    console.log(resourceData);
+  }, [resourceData]);
+
   return (
     <Box className={classes.classes}>
       <Box className={classes.header}>

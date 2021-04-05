@@ -85,10 +85,7 @@ const AppStateProvider = ({ ...props }) => {
         data: { documentDelete }
       }
     }) => {
-      const len = documentDelete.split(' ').length;
-      const schemaType = documentDelete.split(' ')[len - 1].split('.')[0];
-      const idx = documentDelete.split(' ')[1];
-
+      const { schemaType, _id } = documentDelete;
       const existData = client.readQuery({
         query: graphql.queries.grouping,
         variables: {
@@ -97,7 +94,7 @@ const AppStateProvider = ({ ...props }) => {
       });
 
       let tmp = existData ? existData.grouping.slice() : [];
-      const data = tmp.findIndex((el) => el['_id'] !== idx);
+      const data = tmp.findIndex((el) => el['_id'] !== _id);
 
       client.writeQuery({
         query: graphql.queries.grouping,
