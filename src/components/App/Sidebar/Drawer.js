@@ -14,13 +14,21 @@ import {
   ListItemText,
   Avatar
 } from '@material-ui/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faUsersCog,
-  faSitemap,
   faCog,
+  faBox,
+  faSwatchbook,
+  faSitemap,
+  faChartBar,
+  faFileArchive,
+  faPhotoVideo,
+  faTools,
+  faChalkboardTeacher,
+  faBookOpen,
+  faUsersCog,
   faInfoCircle
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import noUserFemale from '@app/assets/imgs/no-user-female.jpeg';
 import StyledBadge from './StyledBadge';
 import useStyles from './style';
@@ -35,6 +43,32 @@ const AppDrawer = ({ location }) => {
       text: 'Topology',
       url: '/topologies',
       disabled: false
+    },
+    {
+      icon: faBookOpen,
+      text: 'Lessons',
+      url: '/lessons'
+    },
+    {
+      icon: faBox,
+      text: 'Packages',
+      url: '/packages'
+    },
+    {
+      icon: faPhotoVideo,
+      text: 'Galleries',
+      url: '/galleries'
+    },
+    {
+      icon: faSwatchbook,
+      text: 'Resources',
+      url: '/resources'
+    },
+    {
+      icon: faFileArchive,
+      text: 'Archives',
+      url: '/archives',
+      disabled: true
     },
     {
       icon: faUsersCog,
@@ -137,8 +171,8 @@ const AppDrawer = ({ location }) => {
         </Typography>
       </Box>
 
+      <Divider className={classes.separator} />
       <List className={classes.menus}>
-        <Divider className={classes.separator} />
         {menuElements.map((el, index) => (
           <ListItem
             button
@@ -149,7 +183,7 @@ const AppDrawer = ({ location }) => {
             <ListItemIcon className={classes.listItemIcons}>
               <FontAwesomeIcon
                 icon={el.icon}
-                size="lg"
+                size="md"
                 className={clsx(classes.listItemIcon, {
                   [classes.listItemIconSelcted]: el.url === selected,
                   [classes.listItemIcon]: el.url !== selected

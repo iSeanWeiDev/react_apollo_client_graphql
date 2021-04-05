@@ -12,6 +12,7 @@ import { LoginContainer, ForgotPasswordContainer } from '@app/pages/Auth';
 import AdminContainer from '@app/pages/Admin';
 import DashboardContainer from '@app/pages/Dashboard';
 import TopologyContainer from '@app/pages/Topology';
+import ResourceContainer from '@app/pages/Resource';
 import NotFound from '@app/pages/NotFound';
 
 const AppRoutes = () => (
@@ -36,6 +37,11 @@ const AppRoutes = () => (
     <PrivateRoute
       path="/topologies/:type?/:typeId?/:parentID?"
       component={TopologyContainer}
+      layout={DashboardLayout}
+    />
+    <PrivateRoute
+      path="/resources"
+      component={ResourceContainer}
       layout={DashboardLayout}
     />
     <PrivateRoute
