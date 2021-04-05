@@ -18,7 +18,7 @@ import {
 import { Add as AddIcon, Search as SearchIcon } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
 import { useMutation } from '@apollo/client';
-import { faBroadcastTower } from '@fortawesome/free-solid-svg-icons';
+import { faSchool } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LoadingCard } from '@app/components/Cards';
 import CreateDistrict from './Create';
@@ -202,10 +202,7 @@ const TDistrict = ({ resources, stations }) => {
     <Box className={classes.root}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="h6" className={classes.panelTitle}>
-          <FontAwesomeIcon
-            icon={faBroadcastTower}
-            className={classes.panelIcon}
-          />
+          <FontAwesomeIcon icon={faSchool} className={classes.panelIcon} />
           Districts ({stationName})
         </Typography>
         <Box display="flex" alignItems="center">

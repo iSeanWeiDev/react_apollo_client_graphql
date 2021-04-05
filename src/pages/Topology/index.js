@@ -107,7 +107,9 @@ const TopologyContainer = ({ match, history }) => {
         {currPage === 'district' && (
           <TDistrict resources={districtData} stations={stationData} />
         )}
-        {currPage === 'school' && <TSchool resources={schoolData} />}
+        {currPage === 'school' && (
+          <TSchool resources={schoolData} districts={districtData} />
+        )}
         {currPage === 'class' && <TClass resources={classData} />}
       </main>
     </div>
