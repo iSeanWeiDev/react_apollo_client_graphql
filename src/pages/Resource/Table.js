@@ -55,8 +55,8 @@ const ResourceTable = ({ resources, onChange }) => {
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell align="right">Title</TableCell>
-            <TableCell align="right">Description</TableCell>
+            <TableCell align="left">Title</TableCell>
+            <TableCell align="left">Description</TableCell>
             <TableCell align="right">Version</TableCell>
             <TableCell align="right">Status</TableCell>
           </TableRow>
