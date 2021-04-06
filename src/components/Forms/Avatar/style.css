@@ -1,0 +1,16 @@
+/* .MuiDropzoneArea-textContainer {
+  width: 100% !important;
+  min-height: 90px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+.MuiDropzoneArea-textContainer > p {
+  margin: 0;
+}
+
+.MuiDropzoneArea-icon {
+  /* display: none !important; */
+  color: #455a64 !important;
+}
