@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import clsx from 'clsx';
 import { DropzoneArea } from 'material-ui-dropzone';
-import { Box, IconButton, LinearProgress, Grid } from '@material-ui/core';
+import { Box, LinearProgress, Button } from '@material-ui/core';
 import { Img } from 'react-image';
 import { useSnackbar } from 'notistack';
 import { getBase64 } from '@app/utils/file';
-import { Close } from '@material-ui/icons';
+import { genSignedUrl, avatarUpload } from '@app/api';
 import useStyles from './style';
 import './style.css';
 
-const AvatarForm = ({ acceptedFiles }) => {
+const AvatarForm = ({ docId, resources, acceptedFiles, onChange }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [loadedData, setLoadedData] = useState('');
   const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    if (resources) {
+      setLoadedData(resources);
+    }
+  }, [resources]);
 
   const handleChange = async (files) => {
     try {
@@ -21,7 +26,11 @@ const AvatarForm = ({ acceptedFiles }) => {
         setLoading(true);
         const base64string = await getBase64(files[0]);
         setLoadedData(base64string);
-
+        const { signedUrl, fileUrl } = await genSignedUrl(files[0], docId);
+        const { status } = await avatarUpload(signedUrl, files[0]);
+        if (status === 200) {
+          onChange(fileUrl);
+        }
         setLoading(false);
       }
     } catch (error) {
@@ -31,6 +40,7 @@ const AvatarForm = ({ acceptedFiles }) => {
 
   const handleClose = () => {
     setLoadedData('');
+    onChange('');
   };
 
   return (
@@ -42,9 +52,11 @@ const AvatarForm = ({ acceptedFiles }) => {
             className={classes.media}
             loader={<LinearProgress />}
           />
-          <IconButton className={classes.closeButton} onClick={handleClose}>
-            <Close />
-          </IconButton>
+          <Box display="flex" justifyContent="center">
+            <Button className={classes.changeLogo} onClick={handleClose}>
+              Change Logo
+            </Button>
+          </Box>
         </Box>
       ) : (
         <DropzoneArea

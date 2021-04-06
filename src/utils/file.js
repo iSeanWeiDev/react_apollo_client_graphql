@@ -9,3 +9,5 @@ export const getBase64 = (file) =>
       reject(error);
     };
   });
+
+export const getFileExtension = (fileName) => fileName.split('.').pop();

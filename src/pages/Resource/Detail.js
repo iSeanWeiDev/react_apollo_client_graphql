@@ -10,7 +10,7 @@ import {
 } from '@app/components/Forms';
 import useStyles from './style';
 
-const ResourceDetail = () => {
+const ResourceDetail = ({ resources, onChange }) => {
   const classes = useStyles();
   const [value, setValue] = React.useState('1');
 
@@ -41,20 +41,22 @@ const ResourceDetail = () => {
             alignItems="flex-start"
           >
             <Grid item xs={12} sm={12} md={10} lg={9}>
-              <Grid
-                container
-                direction="row"
-                justify="flex-start"
-                alignItems="flex-start"
-                spacing={2}
-              >
-                <Grid item xs={12} sm={5} md={4} lg={3}>
-                  <AvatarForm />
-                </Grid>
-                <Grid item xs={12} sm={7} md={8} lg={9}>
-                  <DescriptionForm />
-                </Grid>
-              </Grid>
+              <Box display="flex">
+                <AvatarForm
+                  docId={resources.id}
+                  resources={resources.avatar}
+                  acceptedFiles={['image/png']}
+                  onChange={(value) => onChange('avatar', value)}
+                />
+                <DescriptionForm
+                  resources={{
+                    title: resources.title,
+                    short: resources.short,
+                    long: resources.long
+                  }}
+                  onChange={(value) => onChange('desc', value)}
+                />
+              </Box>
               <TagForm />
             </Grid>
           </Grid>

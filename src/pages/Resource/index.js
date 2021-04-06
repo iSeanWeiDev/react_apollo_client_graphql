@@ -22,6 +22,7 @@ import ResourceDetail from './Detail';
 import useStyles from './style';
 
 const ResourceContainer = ({ history, match }) => {
+  const [canUpdate, setCanUpdate] = useState(false);
   const { params } = match;
   const classes = useStyles();
   const [loadedData, setLoadedData] = useState();
@@ -29,6 +30,7 @@ const ResourceContainer = ({ history, match }) => {
   const resourceData = useGroupingQuery({ schemaType: 'resource' });
 
   useEffect(() => {
+    setCanUpdate(false);
     setLoadedData(resourceData);
   }, [resourceData]);
 
@@ -40,12 +42,15 @@ const ResourceContainer = ({ history, match }) => {
         name: tmp.name,
         avatar: tmp.avatar?.url || '',
         title: tmp.desc?.title || '',
+        short: tmp.desc?.short || '',
         long: tmp.desc?.long || '',
         version: tmp.version,
         status: tmp.status,
         schemaVer: tmp.schemaVer,
         schemaType: tmp.schemaType
       });
+    } else {
+      setSelectedData();
     }
   }, [params, resourceData]);
 
@@ -57,6 +62,11 @@ const ResourceContainer = ({ history, match }) => {
   const handleBack = () => {
     setSelectedData();
     history.goBack();
+  };
+
+  const handleDetailChange = (type, value) => {
+    console.log(type, value);
+    setCanUpdate(true);
   };
 
   return (
@@ -113,7 +123,11 @@ const ResourceContainer = ({ history, match }) => {
                 <DeleteIcon /> &nbsp; Remove
               </IconButton>
               &nbsp; &nbsp;
-              <Button variant="contained" className={classes.addButton}>
+              <Button
+                variant="contained"
+                className={classes.saveButton}
+                disabled={!canUpdate}
+              >
                 Save
               </Button>
             </Box>
@@ -124,7 +138,12 @@ const ResourceContainer = ({ history, match }) => {
         {!selectedData && (
           <ResourceTable resources={loadedData} onChange={handleTableChange} />
         )}
-        {selectedData && <ResourceDetail resources={selectedData} />}
+        {selectedData && (
+          <ResourceDetail
+            resources={selectedData}
+            onChange={handleDetailChange}
+          />
+        )}
       </Box>
     </Box>
   );

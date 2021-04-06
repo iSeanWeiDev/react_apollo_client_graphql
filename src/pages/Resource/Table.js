@@ -12,11 +12,10 @@ import { Img } from 'react-image';
 import useStyles from './style';
 
 const ResourceTable = ({ resources, onChange }) => {
-  console.log(resources);
   const classes = useStyles();
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     if (resources) {
@@ -25,6 +24,7 @@ const ResourceTable = ({ resources, onChange }) => {
         name: el.name,
         avatar: el.avatar?.url || '',
         title: el.desc?.title || '',
+        short: el.desc?.short || '',
         long: el.desc?.long || '',
         version: el.version,
         status: el.status,

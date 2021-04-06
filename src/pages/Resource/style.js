@@ -44,6 +44,21 @@ const useStyles = makeStyles((theme) => ({
       background: lightBlue['400']
     }
   },
+  saveButton: {
+    height: 40,
+    borderRadius: 40,
+    background: lightBlue['300'],
+    color: theme.palette.blueGrey['900'],
+    fontWeight: 500,
+    fontSize: '.75rem',
+    '&:hover': {
+      background: lightBlue['400']
+    },
+    '&:disabled': {
+      background: theme.palette.blueGrey['300'],
+      color: theme.palette.common.light
+    }
+  },
   main: {
     height: 'calc(100vh - 215px)',
     position: 'relative',
