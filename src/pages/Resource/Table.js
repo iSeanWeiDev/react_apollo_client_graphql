@@ -1,5 +1,4 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -9,44 +8,32 @@ import {
   TableRow,
   TablePagination
 } from '@material-ui/core';
+import { Img } from 'react-image';
+import useStyles from './style';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(1)
-  },
-  table: {
-    minWidth: 650
-  },
-  tableBody: {
-    height: `calc(100vh - 240px)`
-  },
-  tableRow: {
-    height: 53
-  },
-  pagination: {
-    display: 'flex',
-    position: 'absolute',
-    bottom: 0,
-    right: 10
-  }
-}));
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9)
-];
-
-const ResourceTable = ({ resources }) => {
+const ResourceTable = ({ resources, onChange }) => {
+  console.log(resources);
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rows, setRows] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  useEffect(() => {
+    if (resources) {
+      const tmp = resources.map((el) => ({
+        id: el['_id'],
+        name: el.name,
+        avatar: el.avatar?.url || '',
+        title: el.desc?.title || '',
+        long: el.desc?.long || '',
+        version: el.version,
+        status: el.status,
+        schemaVer: el.schemaVer,
+        schemaType: el.schemaType
+      }));
+      setRows(tmp);
+    }
+  }, [resources]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -56,6 +43,10 @@ const ResourceTable = ({ resources }) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const handleRowClick = (value) => {
+    onChange(value);
+  };
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   return (
@@ -63,23 +54,46 @@ const ResourceTable = ({ resources }) => {
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell align="right">Title</TableCell>
+            <TableCell align="right">Description</TableCell>
+            <TableCell align="right">Version</TableCell>
+            <TableCell align="right">Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody className={classes.tableBody}>
           {rows.map((row) => (
-            <TableRow key={row.name} className={classes.tableRow}>
-              <TableCell component="th" scope="row">
+            <TableRow
+              key={row.id}
+              className={classes.tableRow}
+              onClick={() => handleRowClick(row)}
+            >
+              <TableCell
+                component="th"
+                scope="row"
+                width="200"
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center'
+                }}
+              >
+                <Img src={row.avatar} width="40" />
+                &nbsp; &nbsp;
                 {row.name}
               </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
+              <TableCell align="left">
+                {row.title && row.title.length > 50
+                  ? `${row.title.substring(0, 50)}... ...`
+                  : row.title}
+              </TableCell>
+              <TableCell align="left">
+                {row.long && row.long.length > 120
+                  ? `${row.long.substring(0, 120)}... ...`
+                  : row.long}
+              </TableCell>
+              <TableCell align="right">{row.version}</TableCell>
+              <TableCell align="right">{row.status}</TableCell>
             </TableRow>
           ))}
           {emptyRows > 0 && (

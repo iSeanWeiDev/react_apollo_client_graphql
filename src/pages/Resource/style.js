@@ -72,6 +72,25 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: 20,
     width: 1
+  },
+  tableBody: {
+    height: `calc(100vh - 240px)`
+  },
+  tableRow: {
+    height: 53,
+    cursor: 'pointer'
+  },
+  indicator: {
+    backgroundColor: theme.palette.blueGrey['700']
+  },
+  detailRoot: {
+    flexGrow: 1
+  },
+  detailAppbar: {
+    padding: '8px 8px 0 8px',
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.blueGrey['800'],
+    borderRadius: '20px 20px 0 0'
   }
 }));
 

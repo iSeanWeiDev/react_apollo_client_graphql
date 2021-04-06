@@ -40,7 +40,7 @@ const AppRoutes = () => (
       layout={DashboardLayout}
     />
     <PrivateRoute
-      path="/resources"
+      path="/resources/:id?"
       component={ResourceContainer}
       layout={DashboardLayout}
     />
