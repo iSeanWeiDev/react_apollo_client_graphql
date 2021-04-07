@@ -44,7 +44,9 @@ const ResourceTable = ({ resources, onChange }) => {
         <TableHead>
           <TableRow>
             <TableCell width="200">Name</TableCell>
-            <TableCell align="left">Title</TableCell>
+            <TableCell align="left" width="200">
+              Title
+            </TableCell>
             <TableCell align="left">Description</TableCell>
             <TableCell align="center">Version</TableCell>
             <TableCell align="center">Status</TableCell>
@@ -74,7 +76,7 @@ const ResourceTable = ({ resources, onChange }) => {
                 &nbsp; &nbsp;
                 {row.name}
               </TableCell>
-              <TableCell align="left">
+              <TableCell align="left" width="200">
                 {row.desc?.title && row.desc?.title.length > 50
                   ? `${row.desc.title.substring(0, 50)}... ...`
                   : row.desc?.title}

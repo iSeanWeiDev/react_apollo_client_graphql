@@ -3,7 +3,8 @@ import { lightBlue } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex'
+    display: 'flex',
+    width: '100%'
   },
   header: {
     position: 'absolute',
@@ -60,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   main: {
+    width: '100%',
     height: 'calc(100vh - 215px)',
     position: 'relative',
     top: 120,
@@ -67,60 +69,14 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(5),
     borderRadius: 20
   },
-  table: {
-    minWidth: 750,
-    padding: theme.spacing(1)
-  },
-  pagination: {
-    display: 'flex',
-    position: 'absolute',
-    bottom: 0,
-    right: 10
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: 'rect(0 0 0 0)',
-    height: 1,
-    margin: -1,
-    overflow: 'hidden',
-    padding: 0,
-    position: 'absolute',
-    top: 20,
-    width: 1
-  },
-  tableBody: {
-    height: `calc(100vh - 240px)`
-  },
-  tableRow: {
-    height: 53,
-    cursor: 'pointer'
-  },
-  indicator: {
-    backgroundColor: theme.palette.blueGrey['700']
-  },
-  detailRoot: {
-    flexGrow: 1
-  },
-  detailAppbar: {
+  appbar: {
     padding: '8px 8px 0 8px',
     backgroundColor: theme.palette.background.paper,
     color: theme.palette.blueGrey['800'],
     borderRadius: '20px 20px 0 0'
   },
-  inputArea: {
-    width: '100%',
-    marginBottom: theme.spacing(1)
-  },
-  textArea: {
-    minWidth: '100%',
-    maxWidth: '100%',
-    fontFamily: 'Roboto',
-    fontSize: 16,
-    paddingTop: 9,
-    paddingLeft: 12,
-    outlineColor: theme.palette.primary.main,
-    borderRadius: 5,
-    borderColor: '#c1bdbd'
+  indicator: {
+    backgroundColor: theme.palette.blueGrey['700']
   }
 }));
 
