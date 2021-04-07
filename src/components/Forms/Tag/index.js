@@ -1,22 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import testData from './data';
 import useStyles from './style';
 
-const TagForm = () => {
+const TagForm = ({ resources, onChange }) => {
   const classes = useStyles();
-  const [loadedData, setLoadedData] = useState(testData.data);
+  const [value, setValue] = useState([]);
+  const [loadedData, setLoadedData] = useState([]);
+  useEffect(() => {
+    if (resources) {
+      setLoadedData(resources);
+      setValue(resources);
+    }
+  }, [resources]);
 
   const handleInputChange = (e) => {
-    setLoadedData([
-      ...loadedData,
-      { label: e.target.value, value: e.target.value }
-    ]);
-  };
-
-  const handleTagChange = (e, value) => {
-    console.log(value);
+    setLoadedData([...loadedData, e.target.value]);
   };
 
   return (
@@ -26,9 +25,9 @@ const TagForm = () => {
         id="size-small-outlined-multi"
         size="small"
         options={loadedData}
-        getOptionLabel={(option) => option.label}
-        onChange={handleTagChange}
-        defaultValue={[loadedData[13]]}
+        value={value}
+        getOptionLabel={(option) => option}
+        onChange={(e, value) => onChange(value)}
         renderInput={(params) => (
           <TextField
             {...params}

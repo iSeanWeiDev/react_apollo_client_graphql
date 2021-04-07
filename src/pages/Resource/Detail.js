@@ -57,7 +57,10 @@ const ResourceDetail = ({ resources, onChange }) => {
                   onChange={(value) => onChange('desc', value)}
                 />
               </Box>
-              <TagForm />
+              <TagForm
+                resources={resources.tagList}
+                onChange={(value) => onChange('tagList', value)}
+              />
             </Grid>
           </Grid>
         </TabPanel>
