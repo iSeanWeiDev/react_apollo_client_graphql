@@ -20,19 +20,7 @@ const ResourceTable = ({ resources, onChange }) => {
 
   useEffect(() => {
     if (resources) {
-      const tmp = resources.map((el) => ({
-        id: el['_id'],
-        name: el.name,
-        avatar: el.avatar?.url || '',
-        title: el.desc?.title || '',
-        short: el.desc?.short || '',
-        long: el.desc?.long || '',
-        version: el.version,
-        status: el.status,
-        schemaVer: el.schemaVer,
-        schemaType: el.schemaType
-      }));
-      setRows(tmp);
+      setRows(resources);
     }
   }, [resources]);
 
@@ -58,8 +46,8 @@ const ResourceTable = ({ resources, onChange }) => {
             <TableCell width="200">Name</TableCell>
             <TableCell align="left">Title</TableCell>
             <TableCell align="left">Description</TableCell>
-            <TableCell align="right">Version</TableCell>
-            <TableCell align="right">Status</TableCell>
+            <TableCell align="center">Version</TableCell>
+            <TableCell align="center">Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody className={classes.tableBody}>
@@ -79,22 +67,25 @@ const ResourceTable = ({ resources, onChange }) => {
                   alignItems: 'center'
                 }}
               >
-                <Img src={row.avatar ? row.avatar : noImagePng} width="40" />
+                <Img
+                  src={row.avatar?.url ? row.avatar.url : noImagePng}
+                  width="40"
+                />
                 &nbsp; &nbsp;
                 {row.name}
               </TableCell>
               <TableCell align="left">
-                {row.title && row.title.length > 50
-                  ? `${row.title.substring(0, 50)}... ...`
-                  : row.title}
+                {row.desc?.title && row.desc?.title.length > 50
+                  ? `${row.desc.title.substring(0, 50)}... ...`
+                  : row.desc?.title}
               </TableCell>
               <TableCell align="left">
-                {row.long && row.long.length > 120
-                  ? `${row.long.substring(0, 120)}... ...`
-                  : row.long}
+                {row.desc?.long && row.desc?.long.length > 120
+                  ? `${row.desc?.long.substring(0, 120)}... ...`
+                  : row.desc?.long}
               </TableCell>
-              <TableCell align="right">{row.version}</TableCell>
-              <TableCell align="right">{row.status}</TableCell>
+              <TableCell align="center">{row.version}</TableCell>
+              <TableCell align="center">{row.status}</TableCell>
             </TableRow>
           ))}
           {emptyRows > 0 && (

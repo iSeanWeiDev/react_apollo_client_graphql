@@ -43,16 +43,16 @@ const ResourceDetail = ({ resources, onChange }) => {
             <Grid item xs={12} sm={12} md={10} lg={9}>
               <Box display="flex">
                 <AvatarForm
-                  docId={resources.id}
-                  resources={resources.avatar}
+                  docId={resources['_id']}
+                  resources={resources.avatar?.url}
                   acceptedFiles={['image/png']}
                   onChange={(value) => onChange('avatar', value)}
                 />
                 <DescriptionForm
                   resources={{
-                    title: resources.title,
-                    short: resources.short,
-                    long: resources.long
+                    title: resources.desc?.title,
+                    short: resources.desc?.short,
+                    long: resources.desc?.long
                   }}
                   onChange={(value) => onChange('desc', value)}
                 />
@@ -80,8 +80,8 @@ const ResourceDetail = ({ resources, onChange }) => {
             justify="flex-start"
             alignItems="flex-start"
           >
-            <Grid item xs={12} sm={12} md={10} lg={10}>
-              <AttachmentForm />
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <AttachmentForm resources={resources.docAssets} />
             </Grid>
           </Grid>
         </TabPanel>

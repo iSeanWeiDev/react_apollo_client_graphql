@@ -1,14 +1,14 @@
-import React, { useState, createRef } from 'react';
+import React, { useState, createRef, useEffect } from 'react';
 import clsx from 'clsx';
 import {
   Box,
+  Grid,
   Typography,
   IconButton,
   Divider,
   List,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction,
   ListItemIcon
 } from '@material-ui/core';
 import {
@@ -21,6 +21,7 @@ import { CloudUpload, Delete, GetApp } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LoadingCard } from '@app/components/Cards';
 import { useSnackbar } from 'notistack';
+import PreviewAttachment from './Preview';
 import useStyles from './style';
 
 const getIcon = (type) => {
@@ -36,15 +37,22 @@ const getIcon = (type) => {
   return faPaperclip;
 };
 
-const AttachmentForm = () => {
+const AttachmentForm = ({ resources }) => {
   const classes = useStyles();
   const refUploader = createRef(null);
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [isDropping, setIsDropping] = useState(false);
   const [canDelete, setCanDelete] = useState(false);
-  const [selectedFile, setSelectedFile] = useState({});
+  const [loadedData, setLoadedData] = useState([]);
+  const [selectedFile, setSelectedFile] = useState();
   const [file, setFile] = useState();
+
+  useEffect(() => {
+    if (resources) {
+      setLoadedData(resources);
+    }
+  }, [resources]);
 
   const handleDrag = (type, event) => {
     event.preventDefault();
@@ -65,14 +73,6 @@ const AttachmentForm = () => {
     }
 
     setFile(event.dataTransfer.files[0]);
-    // const fileName = event.dataTransfer.files[0].name;
-    // setOpenCreate(true);
-    // setFileInfo({
-    //   name: fileName,
-    //   url: '',
-    //   type: '',
-    //   altText: ''
-    // });
   };
 
   const handleFormAction = (type) => {
@@ -82,13 +82,18 @@ const AttachmentForm = () => {
 
     if (type === 'download') {
       const elDom = document.createElement('a');
-      elDom.setAttribute('href', selectedFile.url);
+      elDom.setAttribute('href', selectedFile?.url);
       elDom.setAttribute('download', '');
       elDom.setAttribute('rel', 'noopener noreferrer');
       elDom.click();
     }
   };
   const handleFileUpload = () => {};
+
+  const handleElClick = (value) => {
+    setSelectedFile(value);
+    setCanDelete(true);
+  };
 
   return (
     <LoadingCard loading={loading} height={`calc(100vh - 330px)`}>
@@ -141,7 +146,40 @@ const AttachmentForm = () => {
         onDrop={handleDrop}
       >
         {isDropping && <FontAwesomeIcon icon={faPaperclip} size="6x" />}
-        {!isDropping && <Box></Box>}
+        {!isDropping && (
+          <Grid
+            spacing={2}
+            container
+            direction="row"
+            justify="flex-start"
+            alignItems="flex-start"
+          >
+            <Grid item xs={12} sm={12} md={7} lg={7}>
+              <List>
+                {loadedData.map((el) => (
+                  <ListItem
+                    key={el.url}
+                    onClick={() => handleElClick(el)}
+                    className={clsx(classes.listItems, {
+                      [classes.listItem]: selectedFile?.url !== el.url,
+                      [classes.listItemSelected]: selectedFile?.url === el.url
+                    })}
+                  >
+                    <ListItemIcon className={classes.listItemIcon}>
+                      <FontAwesomeIcon icon={getIcon(el.type)} size="lg" />
+                    </ListItemIcon>
+                    <ListItemText className={classes.listItemText}>
+                      <Typography variant="subtitle1">{el.name}</Typography>
+                    </ListItemText>
+                  </ListItem>
+                ))}
+              </List>
+            </Grid>
+            <Grid item xs={12} sm={12} md={5} lg={5}>
+              {selectedFile && <PreviewAttachment resources={selectedFile} />}
+            </Grid>
+          </Grid>
+        )}
       </main>
     </LoadingCard>
   );

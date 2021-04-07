@@ -37,18 +37,7 @@ const ResourceContainer = ({ history, match }) => {
   useEffect(() => {
     if (params.id && resourceData) {
       const tmp = resourceData.find((el) => el['_id'] === params.id);
-      setSelectedData({
-        id: tmp['_id'],
-        name: tmp.name,
-        avatar: tmp.avatar?.url || '',
-        title: tmp.desc?.title || '',
-        short: tmp.desc?.short || '',
-        long: tmp.desc?.long || '',
-        version: tmp.version,
-        status: tmp.status,
-        schemaVer: tmp.schemaVer,
-        schemaType: tmp.schemaType
-      });
+      setSelectedData(tmp);
     } else {
       setSelectedData();
     }
@@ -56,7 +45,7 @@ const ResourceContainer = ({ history, match }) => {
 
   const handleTableChange = (value) => {
     setSelectedData(value);
-    history.push({ pathname: `/resources/${value.id}` });
+    history.push({ pathname: `/resources/${value['_id']}` });
   };
 
   const handleBack = () => {
@@ -108,7 +97,7 @@ const ResourceContainer = ({ history, match }) => {
                   <BackIcon />
                 </IconButton>
               </Box>
-              <Img src={selectedData.avatar} width="50" height="50" />
+              <Img src={selectedData.avatar?.url} width="50" height="50" />
               <Box marginLeft={2}>
                 <Typography variant="h6">{selectedData.name}</Typography>
                 <Typography variant="caption">Resource detail</Typography>

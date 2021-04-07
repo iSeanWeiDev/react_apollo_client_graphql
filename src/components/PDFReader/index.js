@@ -6,7 +6,7 @@ import config from '@app/Config';
 import useStyles from './style';
 import './style.css';
 
-const PDFReader = ({ url }) => {
+const PDFReader = ({ url, style }) => {
   const classes = useStyles();
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);

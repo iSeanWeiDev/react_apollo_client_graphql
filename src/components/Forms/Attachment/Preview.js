@@ -1,40 +1,78 @@
-import React from 'react';
-import { Box } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Box, Divider, Typography, TextField, Button } from '@material-ui/core';
+import { Img } from 'react-image';
 import PDFReader from '@app/components/PDFReader';
+import useStyles from './style';
 
 const AttachmentPreview = ({ resources }) => {
-  const { type, url } = resources;
+  const classes = useStyles();
+  const [loadedData, setLoadedData] = useState({});
 
+  useEffect(() => {
+    setLoadedData(resources);
+  }, [resources]);
+
+  const handleInputChange = (field, value) => {
+    setLoadedData({
+      ...loadedData,
+      [field]: value
+    });
+  };
   return (
-    <React.Fragment>
-      {type === 'video/mp4' && (
-        <Box
-          mt="2"
-          borderRadius="2px"
-          component="video"
-          controls
-          autoPlay
-          width="100%"
-          src={url}
-        />
-      )}
+    <Box className={classes.preview}>
+      <Box justifyContent="space-between" display="flex" alignItems="center">
+        <Typography variant="h6" className={classes.previewTitle}>
+          Preview
+        </Typography>
+        <Button size="small" className={classes.updateBtn}>
+          Update
+        </Button>
+      </Box>
+      <Divider className={classes.separator} />
+      <TextField
+        value={loadedData.name}
+        variant="outlined"
+        size="small"
+        label="Name *"
+        className={classes.inputArea}
+        onChange={(e) => handleInputChange('name', e.target.value)}
+      />
+      <TextField
+        value={loadedData.altText}
+        variant="outlined"
+        size="small"
+        label="Alternative Text"
+        className={classes.inputArea}
+        onChange={(e) => handleInputChange('altText', e.target.value)}
+      />
+      <Box display="flex" justifyContent="center">
+        {loadedData.type === 'video/mp4' && (
+          <video
+            src={loadedData.url}
+            controls
+            autoPlay
+            className={classes.previewVideo}
+          />
+        )}
 
-      {(type === 'image/png' || type === 'image/jpeg') && (
-        <Box
-          mt="2"
-          borderRadius="2px"
-          component="img"
-          controls
-          autoPlay
-          width="100%"
-          src={url}
-        />
-      )}
+        {(loadedData.type === 'image/png' ||
+          loadedData.type === 'image/jpeg') && (
+          <Img src={loadedData.url} className={classes.previewImg} />
+        )}
 
-      {type === 'application/pdf' && (
-        <Box mt="2" borderRadius="2px" component={PDFReader} url={url} />
-      )}
-    </React.Fragment>
+        {loadedData.type === 'application/pdf' && (
+          <Box className={classes.previewPdf}>
+            <PDFReader url={loadedData.url} />
+          </Box>
+        )}
+      </Box>
+
+      <Box textAlign="center">
+        <Typography variant="caption" className={classes.previewUrl}>
+          {loadedData.url}
+        </Typography>
+      </Box>
+    </Box>
   );
 };
 

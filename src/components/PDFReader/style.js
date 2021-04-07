@@ -3,11 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((thtme) => ({
   root: {
     flex: 1,
-    overflowX: 'hidden'
+    overflowX: 'hidden',
+    maxHeight: 250
   },
-  content: {
-    maxWidth: 500
-  }
+  content: {}
 }));
 
 export default useStyles;
