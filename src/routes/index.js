@@ -13,6 +13,7 @@ import AdminContainer from '@app/pages/Admin';
 import DashboardContainer from '@app/pages/Dashboard';
 import TopologyContainer from '@app/pages/Topology';
 import ResourceContainer from '@app/pages/Resource';
+import GalleryContainer from '@app/pages/Gallery';
 import NotFound from '@app/pages/NotFound';
 
 const AppRoutes = () => (
@@ -42,6 +43,11 @@ const AppRoutes = () => (
     <PrivateRoute
       path="/resources/:id?"
       component={ResourceContainer}
+      layout={DashboardLayout}
+    />
+    <PrivateRoute
+      path="/galleries/:type?/:id?"
+      component={GalleryContainer}
       layout={DashboardLayout}
     />
     <PrivateRoute

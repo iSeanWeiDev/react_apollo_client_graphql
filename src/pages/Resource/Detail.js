@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, AppBar, Tab, Grid } from '@material-ui/core';
 import { TabContext, TabList, TabPanel } from '@material-ui/lab';
 import {
@@ -12,7 +12,7 @@ import useStyles from './style';
 
 const ResourceDetail = ({ resources, onChange }) => {
   const classes = useStyles();
-  const [value, setValue] = React.useState('1');
+  const [value, setValue] = useState('1');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
