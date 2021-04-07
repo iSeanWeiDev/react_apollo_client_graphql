@@ -19,11 +19,8 @@ import {
   faBox,
   faSwatchbook,
   faSitemap,
-  faChartBar,
   faFileArchive,
   faPhotoVideo,
-  faTools,
-  faChalkboardTeacher,
   faBookOpen,
   faUsersCog,
   faInfoCircle
@@ -47,22 +44,26 @@ const AppDrawer = ({ location }) => {
     {
       icon: faBookOpen,
       text: 'Lessons',
-      url: '/lessons'
+      url: '/lessons',
+      disabled: true
     },
     {
       icon: faBox,
       text: 'Packages',
-      url: '/packages'
+      url: '/packages',
+      disabled: false
     },
     {
       icon: faPhotoVideo,
       text: 'Galleries',
-      url: '/galleries'
+      url: '/galleries',
+      disabled: false
     },
     {
       icon: faSwatchbook,
       text: 'Resources',
-      url: '/resources'
+      url: '/resources',
+      disabled: false
     },
     {
       icon: faFileArchive,
@@ -179,6 +180,7 @@ const AppDrawer = ({ location }) => {
             key={index}
             className={classes.listItems}
             onClick={() => handleListClick(el)}
+            disabled={el.disabled}
           >
             <ListItemIcon className={classes.listItemIcons}>
               <FontAwesomeIcon
@@ -209,6 +211,7 @@ const AppDrawer = ({ location }) => {
             key={index}
             className={classes.listItems}
             onClick={() => handleListClick(el)}
+            disabled={el.disabled}
           >
             <ListItemIcon className={classes.listItemIcons}>
               <FontAwesomeIcon
