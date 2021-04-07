@@ -9,6 +9,7 @@ import {
   TablePagination
 } from '@material-ui/core';
 import { Img } from 'react-image';
+import noImagePng from '@app/assets/imgs/no-image.png';
 import useStyles from './style';
 
 const ResourceTable = ({ resources, onChange }) => {
@@ -54,7 +55,7 @@ const ResourceTable = ({ resources, onChange }) => {
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
+            <TableCell width="200">Name</TableCell>
             <TableCell align="left">Title</TableCell>
             <TableCell align="left">Description</TableCell>
             <TableCell align="right">Version</TableCell>
@@ -78,7 +79,7 @@ const ResourceTable = ({ resources, onChange }) => {
                   alignItems: 'center'
                 }}
               >
-                <Img src={row.avatar} width="40" />
+                <Img src={row.avatar ? row.avatar : noImagePng} width="40" />
                 &nbsp; &nbsp;
                 {row.name}
               </TableCell>
