@@ -2,7 +2,9 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flex: 1
+    flex: 1,
+    maxWidth: 250,
+    margin: theme.spacing(2)
   },
   dropzoneCard: {
     background: theme.palette.blueGrey['50'],
@@ -10,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
   dropzone: {
     width: '100%',
-    maxWidth: 250,
+    maxWidth: 245,
     minHeight: 280,
     outline: 'none',
     border: `2px dashed ${theme.palette.blueGrey['700']}`,
@@ -34,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     right: 0,
     top: -5
+  },
+  changeLogo: {
+    color: theme.palette.blueGrey['700']
   }
 }));
 

@@ -3,6 +3,9 @@ export default {
     http: 'https://dev-core.emp-sig.com:4001/',
     ws: 'wss://dev-core.emp-sig.com:4001/'
   },
+  dev: {
+    corsHandler: 'https://cors-anywhere-handler.herokuapp.com/'
+  },
   aws: {
     aws_project_region: 'us-east-2',
     aws_cognito_identity_pool_id:
@@ -18,5 +21,11 @@ export default {
     bottomLogo: 'https://configs.emp-sig.com/assets/PoweredByLogo.png',
     profileImage:
       'https://www.webxcreation.com/event-recruitment/images/profile-1.jpg'
-  }
+  },
+  signedUrl: {
+    endpoint:
+      'https://i7zrpnsiz8.execute-api.us-east-2.amazonaws.com/dev/getSignedUrl',
+    bucketName: 'assets.emp-sig.com'
+  },
+  assetUrl: 'https://s3.us-east-2.amazonaws.com/assets.emp-sig.com'
 };

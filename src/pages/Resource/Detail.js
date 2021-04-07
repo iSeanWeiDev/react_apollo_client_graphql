@@ -10,7 +10,7 @@ import {
 } from '@app/components/Forms';
 import useStyles from './style';
 
-const ResourceDetail = () => {
+const ResourceDetail = ({ resources, onChange }) => {
   const classes = useStyles();
   const [value, setValue] = React.useState('1');
 
@@ -41,20 +41,22 @@ const ResourceDetail = () => {
             alignItems="flex-start"
           >
             <Grid item xs={12} sm={12} md={10} lg={9}>
-              <Grid
-                container
-                direction="row"
-                justify="flex-start"
-                alignItems="flex-start"
-                spacing={2}
-              >
-                <Grid item xs={12} sm={5} md={4} lg={3}>
-                  <AvatarForm />
-                </Grid>
-                <Grid item xs={12} sm={7} md={8} lg={9}>
-                  <DescriptionForm />
-                </Grid>
-              </Grid>
+              <Box display="flex">
+                <AvatarForm
+                  docId={resources['_id']}
+                  resources={resources.avatar?.url}
+                  acceptedFiles={['image/png']}
+                  onChange={(value) => onChange('avatar', value)}
+                />
+                <DescriptionForm
+                  resources={{
+                    title: resources.desc?.title,
+                    short: resources.desc?.short,
+                    long: resources.desc?.long
+                  }}
+                  onChange={(value) => onChange('desc', value)}
+                />
+              </Box>
               <TagForm />
             </Grid>
           </Grid>
@@ -78,8 +80,8 @@ const ResourceDetail = () => {
             justify="flex-start"
             alignItems="flex-start"
           >
-            <Grid item xs={12} sm={12} md={10} lg={10}>
-              <AttachmentForm />
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <AttachmentForm resources={resources.docAssets} />
             </Grid>
           </Grid>
         </TabPanel>

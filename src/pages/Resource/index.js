@@ -22,6 +22,7 @@ import ResourceDetail from './Detail';
 import useStyles from './style';
 
 const ResourceContainer = ({ history, match }) => {
+  const [canUpdate, setCanUpdate] = useState(false);
   const { params } = match;
   const classes = useStyles();
   const [loadedData, setLoadedData] = useState();
@@ -29,34 +30,32 @@ const ResourceContainer = ({ history, match }) => {
   const resourceData = useGroupingQuery({ schemaType: 'resource' });
 
   useEffect(() => {
+    setCanUpdate(false);
     setLoadedData(resourceData);
   }, [resourceData]);
 
   useEffect(() => {
     if (params.id && resourceData) {
       const tmp = resourceData.find((el) => el['_id'] === params.id);
-      setSelectedData({
-        id: tmp['_id'],
-        name: tmp.name,
-        avatar: tmp.avatar?.url || '',
-        title: tmp.desc?.title || '',
-        long: tmp.desc?.long || '',
-        version: tmp.version,
-        status: tmp.status,
-        schemaVer: tmp.schemaVer,
-        schemaType: tmp.schemaType
-      });
+      setSelectedData(tmp);
+    } else {
+      setSelectedData();
     }
   }, [params, resourceData]);
 
   const handleTableChange = (value) => {
     setSelectedData(value);
-    history.push({ pathname: `/resources/${value.id}` });
+    history.push({ pathname: `/resources/${value['_id']}` });
   };
 
   const handleBack = () => {
     setSelectedData();
     history.goBack();
+  };
+
+  const handleDetailChange = (type, value) => {
+    console.log(type, value);
+    setCanUpdate(true);
   };
 
   return (
@@ -98,7 +97,7 @@ const ResourceContainer = ({ history, match }) => {
                   <BackIcon />
                 </IconButton>
               </Box>
-              <Img src={selectedData.avatar} width="50" height="50" />
+              <Img src={selectedData.avatar?.url} width="50" height="50" />
               <Box marginLeft={2}>
                 <Typography variant="h6">{selectedData.name}</Typography>
                 <Typography variant="caption">Resource detail</Typography>
@@ -113,7 +112,11 @@ const ResourceContainer = ({ history, match }) => {
                 <DeleteIcon /> &nbsp; Remove
               </IconButton>
               &nbsp; &nbsp;
-              <Button variant="contained" className={classes.addButton}>
+              <Button
+                variant="contained"
+                className={classes.saveButton}
+                disabled={!canUpdate}
+              >
                 Save
               </Button>
             </Box>
@@ -124,7 +127,12 @@ const ResourceContainer = ({ history, match }) => {
         {!selectedData && (
           <ResourceTable resources={loadedData} onChange={handleTableChange} />
         )}
-        {selectedData && <ResourceDetail resources={selectedData} />}
+        {selectedData && (
+          <ResourceDetail
+            resources={selectedData}
+            onChange={handleDetailChange}
+          />
+        )}
       </Box>
     </Box>
   );

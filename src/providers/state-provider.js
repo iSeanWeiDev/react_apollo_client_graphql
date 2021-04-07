@@ -92,7 +92,7 @@ const AppStateProvider = ({ ...props }) => {
           schemaType: schemaType
         }
       });
-
+      console.log(existData);
       let tmp = existData ? existData.grouping.slice() : [];
       const data = tmp.findIndex((el) => el['_id'] !== _id);
 
