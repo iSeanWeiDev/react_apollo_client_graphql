@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import clsx from 'clsx';
 import {
-  Grid,
   Box,
   Paper,
   Button,
@@ -11,17 +10,18 @@ import {
   IconButton
 } from '@material-ui/core';
 import { Search as SearchIcon } from '@material-ui/icons';
-import { Img } from 'react-image';
 import { useSnackbar } from 'notistack';
 import { faBox } from '@fortawesome/free-solid-svg-icons';
 import { useGroupingQuery } from '@app/utils/hooks/apollo';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { packaging } from '@app/api';
 import PreviewPackage from './Preview';
 import PackageTable from './Table';
 import useStyles from './style';
 
 const PackageContainer = () => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const [loadedData, setLoadedData] = useState([]);
   const [selectedData, setSelectedData] = useState();
   const resourceData = useGroupingQuery({ schemaType: 'package' });
@@ -46,6 +46,17 @@ const PackageContainer = () => {
 
   const handleTableChange = (value) => {
     setSelectedData(value);
+  };
+
+  const handlePackaging = async () => {
+    try {
+      const response = await packaging();
+      console.log(response);
+      enqueueSnackbar('Successfully packaged', { variant: 'success' });
+    } catch (error) {
+      console.log(error.message);
+      enqueueSnackbar(error.message, { variant: 'error' });
+    }
   };
 
   return (
@@ -73,9 +84,9 @@ const PackageContainer = () => {
         <Button
           variant="contained"
           className={classes.addButton}
-          // onClick={() => setOpenCreate(!openCreate)}
+          onClick={handlePackaging}
         >
-          Publish
+          Packaging
         </Button>
       </Box>
       <Box

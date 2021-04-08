@@ -27,5 +27,11 @@ export default {
       'https://i7zrpnsiz8.execute-api.us-east-2.amazonaws.com/dev/getSignedUrl',
     bucketName: 'assets.emp-sig.com'
   },
-  assetUrl: 'https://s3.us-east-2.amazonaws.com/assets.emp-sig.com'
+  assetUrl: 'https://s3.us-east-2.amazonaws.com/assets.emp-sig.com',
+  api: {
+    studentAndTeacherUpload:
+      'https://xs9e660jm1.execute-api.us-east-2.amazonaws.com/users/multiple',
+    packaging:
+      'https://xs9e660jm1.execute-api.us-east-2.amazonaws.com/packaging'
+  }
 };
