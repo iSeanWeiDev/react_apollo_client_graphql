@@ -68,6 +68,34 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(5),
     marginRight: theme.spacing(5),
     borderRadius: 20
+  },
+  previewRoot: {
+    width: 550
+  },
+  table: {
+    minWidth: 750,
+    width: '100%',
+    padding: theme.spacing(1)
+  },
+  pagination: {
+    display: 'flex',
+    position: 'absolute',
+    bottom: 0,
+    right: 10
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute',
+    top: 20,
+    width: 1
+  },
+  container: {
+    maxHeight: `calc(100vh - 300px)`
   }
 }));
 

@@ -15,3 +15,7 @@
   background: #90a4ae;
   border-radius: 10px;
 }
+
+.MuiTable-stickyHeader {
+  background-color: white !important;
+}

@@ -42,7 +42,7 @@ fragment Grouping_grouping on Grouping {
   desc {
     ...Desc_desc
   }
-  # body
+  body
   tagList
   categories
   rank

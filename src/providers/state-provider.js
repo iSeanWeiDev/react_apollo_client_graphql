@@ -92,8 +92,11 @@ const AppStateProvider = ({ ...props }) => {
           schemaType: schemaType
         }
       });
-      console.log(existData);
-      let tmp = existData ? existData.grouping.slice() : [];
+
+      let tmp =
+        existData || Object.keys(existData).length > 0
+          ? existData.grouping.slice()
+          : [];
       const data = tmp.findIndex((el) => el['_id'] !== _id);
 
       client.writeQuery({
