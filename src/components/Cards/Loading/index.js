@@ -34,7 +34,9 @@ const LoadingCard = ({
       )}
       <main>
         {loading ? (
-          <Skeleton variant="rect" width={'100%'} height={height} />
+          <Box className={classes.skeleton}>
+            <Skeleton variant="rect" width={'100%'} height={height} />
+          </Box>
         ) : (
           children
         )}

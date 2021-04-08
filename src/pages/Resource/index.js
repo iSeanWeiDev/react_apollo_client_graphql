@@ -19,6 +19,7 @@ import {
 import { Img } from 'react-image';
 import { useSnackbar } from 'notistack';
 import { useGroupingQuery } from '@app/utils/hooks/apollo';
+import { LoadingCard } from '@app/components/Cards';
 import graphql from '@app/graphql';
 import ResourceTable from './Table';
 import ResourceDetail from './Detail';
@@ -29,6 +30,7 @@ const ResourceContainer = ({ history, match }) => {
   const { params } = match;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false);
   const [canUpdate, setCanUpdate] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
   const [loadedData, setLoadedData] = useState();
@@ -113,8 +115,12 @@ const ResourceContainer = ({ history, match }) => {
   });
 
   useEffect(() => {
-    setCanUpdate(false);
-    setLoadedData(resourceData);
+    setLoading(true);
+    if (resourceData) {
+      setCanUpdate(false);
+      setLoadedData(resourceData);
+      setLoading(false);
+    }
   }, [resourceData]);
 
   useEffect(() => {
@@ -323,7 +329,12 @@ const ResourceContainer = ({ history, match }) => {
           </React.Fragment>
         )}
       </Box>
-      <Box component={Paper} className={classes.main}>
+      <LoadingCard
+        loading={loading}
+        height={`calc(100vh - 350px)`}
+        component={Paper}
+        className={classes.main}
+      >
         {!selectedData && (
           <ResourceTable resources={loadedData} onChange={handleTableChange} />
         )}
@@ -333,7 +344,7 @@ const ResourceContainer = ({ history, match }) => {
             onChange={handleDetailChange}
           />
         )}
-      </Box>
+      </LoadingCard>
       <CreateResource open={openCreate} onChange={handleCreateDialogChange} />
     </Box>
   );

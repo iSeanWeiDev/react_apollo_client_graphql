@@ -15,20 +15,24 @@ import { faBox } from '@fortawesome/free-solid-svg-icons';
 import { useGroupingQuery } from '@app/utils/hooks/apollo';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { packaging } from '@app/api';
+import { LoadingCard } from '@app/components/Cards';
 import PreviewPackage from './Preview';
 import PackageTable from './Table';
 import useStyles from './style';
 
 const PackageContainer = () => {
   const classes = useStyles();
+  const [loading, setLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [loadedData, setLoadedData] = useState([]);
   const [selectedData, setSelectedData] = useState();
   const resourceData = useGroupingQuery({ schemaType: 'package' });
 
   useEffect(() => {
+    setLoading(true);
     if (resourceData) {
       setLoadedData(resourceData);
+      setLoading(false);
     }
   }, [resourceData]);
 
@@ -89,7 +93,9 @@ const PackageContainer = () => {
           Packaging
         </Button>
       </Box>
-      <Box
+      <LoadingCard
+        loading={loading}
+        height={`calc(100vh - 350px)`}
         component={Paper}
         className={clsx(classes.main, {
           [classes.mainMd]: !selectedData,
@@ -101,7 +107,7 @@ const PackageContainer = () => {
           onChange={handleTableChange}
           dense={!!selectedData}
         />
-      </Box>
+      </LoadingCard>
       {selectedData && (
         <PreviewPackage
           resources={selectedData}

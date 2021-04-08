@@ -6,6 +6,9 @@ const useStyles = makeStyles((theme) => ({
   },
   loading: {
     height: 2
+  },
+  skeleton: {
+    padding: theme.spacing(2)
   }
 }));
 
