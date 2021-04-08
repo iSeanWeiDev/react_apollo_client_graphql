@@ -61,13 +61,54 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   main: {
-    width: '100%',
     height: 'calc(100vh - 215px)',
     position: 'relative',
     top: 120,
-    marginLeft: theme.spacing(5),
-    marginRight: theme.spacing(5),
     borderRadius: 20
+  },
+  mainMd: {
+    width: '100%',
+    marginLeft: theme.spacing(5),
+    marginRight: theme.spacing(5)
+  },
+  mainSm: {
+    width: 'calc(100% - 550px)',
+    marginLeft: theme.spacing(5),
+    marginRight: theme.spacing(2)
+  },
+  previewRoot: {
+    position: 'relative',
+    top: 220,
+    maxHeight: 'calc(100vh - 315px)'
+  },
+  table: {
+    minWidth: 750,
+    padding: theme.spacing(1)
+  },
+  pagination: {
+    display: 'flex',
+    position: 'absolute',
+    bottom: 0,
+    right: 10
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute',
+    top: 20,
+    width: 1
+  },
+  container: {
+    width: '100%',
+    maxHeight: `calc(100vh - 300px)`
+  },
+  containerDense: {
+    maxHeight: `calc(100vh - 300px)`,
+    width: '60%'
   }
 }));
 
