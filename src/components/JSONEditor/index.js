@@ -33,6 +33,7 @@ const JSONEditor = ({ disable, resources, onChange }) => {
         onChange={onChange}
         ace={ace}
         theme="ace/theme/github"
+        height={500}
       />
     </Box>
   );

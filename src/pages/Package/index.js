@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
+import clsx from 'clsx';
 import {
+  Grid,
   Box,
   Paper,
   Button,
@@ -21,6 +23,7 @@ import useStyles from './style';
 const PackageContainer = () => {
   const classes = useStyles();
   const [loadedData, setLoadedData] = useState([]);
+  const [selectedData, setSelectedData] = useState();
   const resourceData = useGroupingQuery({ schemaType: 'package' });
 
   useEffect(() => {
@@ -39,6 +42,10 @@ const PackageContainer = () => {
     } else {
       setLoadedData(resourceData);
     }
+  };
+
+  const handleTableChange = (value) => {
+    setSelectedData(value);
   };
 
   return (
@@ -71,10 +78,25 @@ const PackageContainer = () => {
           Publish
         </Button>
       </Box>
-      <Box component={Paper} className={classes.main}>
-        <PackageTable resources={loadedData} />
-        {/* <PreviewPackage /> */}
+      <Box
+        component={Paper}
+        className={clsx(classes.main, {
+          [classes.mainMd]: !selectedData,
+          [classes.mainSm]: !!selectedData
+        })}
+      >
+        <PackageTable
+          resources={loadedData}
+          onChange={handleTableChange}
+          dense={!!selectedData}
+        />
       </Box>
+      {selectedData && (
+        <PreviewPackage
+          resources={selectedData}
+          onChange={() => setSelectedData()}
+        />
+      )}
     </Box>
   );
 };

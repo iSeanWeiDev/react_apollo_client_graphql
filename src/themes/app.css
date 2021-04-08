@@ -16,6 +16,6 @@
   border-radius: 10px;
 }
 
-.MuiTable-stickyHeader {
-  background-color: white !important;
+.jsoneditor {
+  height: calc(100vh - 400px);
 }
