@@ -67,6 +67,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(5),
     borderRadius: 20
   },
+  container: {
+    padding: theme.spacing(1),
+    width: '100%',
+    maxHeight: `calc(100vh - 300px)`
+  },
   table: {
     minWidth: 750,
     padding: theme.spacing(1)

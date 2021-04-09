@@ -62,11 +62,15 @@ const useStyles = makeStyles((theme) => ({
   },
   main: {
     width: '100%',
-    height: 'calc(100vh - 215px)',
     position: 'relative',
-    top: 120,
-    marginLeft: theme.spacing(5),
-    marginRight: theme.spacing(5),
+    top: 120
+  },
+  mainSidebar: {
+    width: 300
+  },
+  mainContent: {
+    width: 'calc(100% - 300px)',
+    minHeight: 'calc(100vh - 205px)',
     borderRadius: 20
   },
   appbar: {

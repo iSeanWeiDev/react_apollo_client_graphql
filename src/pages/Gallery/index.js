@@ -52,34 +52,13 @@ const GalleryContainer = () => {
             <SearchIcon />
           </IconButton>
         </Box>
-        <Button
-          variant="contained"
-          className={classes.addButton}
-          // onClick={() => setOpenCreate(!openCreate)}
-        >
+        <Button variant="contained" className={classes.addButton}>
           Add New Gallery
         </Button>
       </Box>
-      <Box component={Paper} className={classes.main}>
-        <TabContext value={value} className={classes.tabContext}>
-          <AppBar position="static" className={classes.appbar}>
-            <TabList
-              onChange={handleChange}
-              classes={{
-                indicator: classes.indicator
-              }}
-            >
-              <Tab label="Images" value="1" />
-              <Tab label="Banners" value="2" />
-              <Tab label="Logos" value="3" />
-              <Tab label="Avatars" value="4" />
-            </TabList>
-          </AppBar>
-          <TabPanel value="1"></TabPanel>
-          <TabPanel value="2"></TabPanel>
-          <TabPanel value="3"></TabPanel>
-          <TabPanel value="4"></TabPanel>
-        </TabContext>
+      <Box className={classes.main}>
+        <Box className={classes.mainSidebar}></Box>
+        <Box component={Paper} className={classes.mainContent}></Box>
       </Box>
     </Box>
   );

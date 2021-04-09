@@ -44,3 +44,18 @@ export const avatarUpload = async (url, file) => {
     throw error;
   }
 };
+
+export const packaging = async () => {
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: `${config.dev.corsHandler}${config.api.packaging}`,
+      data: {
+        bucketName: 'packages.emp-sig.com'
+      }
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
