@@ -11,7 +11,26 @@ const useStyles = makeStyles((theme) => ({
   },
   inputArea: {
     width: '100%',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
+    '&:hover + $buttonPos': {
+      display: 'block'
+    }
+  },
+  validError: {
+    color: 'red',
+    marginBottom: '16px'
+  },
+  containInputField: {
+    position: 'relative'
+  },
+  buttonPos: {
+    position: 'absolute',
+    top: 0,
+    right: '10px',
+    display: 'none',
+    '&:hover': {
+      display: 'block'
+    }
   }
 }));
 
