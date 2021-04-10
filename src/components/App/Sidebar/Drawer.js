@@ -45,7 +45,7 @@ const AppDrawer = ({ location }) => {
       icon: faBookOpen,
       text: 'Lessons',
       url: '/lessons',
-      disabled: true
+      disabled: false
     },
     {
       icon: faBox,
