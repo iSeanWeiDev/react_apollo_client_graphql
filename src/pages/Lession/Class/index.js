@@ -51,6 +51,18 @@ const LessonClass = ({ resources }) => {
     }
   }, [resources, currMainWidth, openView]);
 
+  const handleSearchChange = (e) => {
+    const filterKey = e.target.value;
+    if (filterKey.length >= 3) {
+      const filteredData = resources.filter((el) =>
+        el.name.toLowerCase().includes(filterKey.toLowerCase())
+      );
+      setLoadedData(filteredData);
+    } else {
+      setLoadedData(resources);
+    }
+  };
+
   const handleCardAction = (type, value) => {
     if (type === 'view') {
       setOpenView(true);
@@ -81,7 +93,7 @@ const LessonClass = ({ resources }) => {
         <Box component={Paper} className={classes.search}>
           <InputBase
             className={classes.input}
-            // onChange={handleSearchChange}
+            onChange={handleSearchChange}
             placeholder="Search classes... ... "
             inputProps={{ 'aria-label': 'search google maps' }}
           />
