@@ -20,7 +20,10 @@ import { LoadingCard } from '@app/components/Cards';
 import { fade, withStyles } from '@material-ui/core/styles';
 import { TreeView, TreeItem } from '@material-ui/lab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBookOpen,
+  faChalkboardTeacher
+} from '@fortawesome/free-solid-svg-icons';
 import {
   MinusSquare,
   PlusSquare,
@@ -142,7 +145,17 @@ const LessonTreeView = ({ loading, open, resources, onChange }) => {
               defaultCollapseIcon={<MinusSquare />}
               defaultExpandIcon={<PlusSquare />}
               defaultEndIcon={<CloseSquare />}
-            ></TreeView>
+            >
+              {loadedData.length > 0 &&
+                loadedData.map((el) => (
+                  <StyledTreeItem
+                    key={el['_id']}
+                    nodeId={el['_id']}
+                    label={el.name}
+                    labelIcon={faChalkboardTeacher}
+                  ></StyledTreeItem>
+                ))}
+            </TreeView>
           </LoadingCard>
         </main>
       )}
