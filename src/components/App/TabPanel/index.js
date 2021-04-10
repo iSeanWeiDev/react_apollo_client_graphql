@@ -1,18 +1,22 @@
 import React from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@material-ui/core';
 import useStyles from './style';
 
 const AppTabPanel = (props) => {
   const classes = useStyles();
-  const { children, value, index, ...other } = props;
+  const { children, value, index, style, ...other } = props;
 
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
-      className={classes.root}
+      className={clsx({
+        [classes.root]: !style,
+        [style]: style
+      })}
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
