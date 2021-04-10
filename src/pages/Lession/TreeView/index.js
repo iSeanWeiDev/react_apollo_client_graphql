@@ -20,13 +20,7 @@ import { LoadingCard } from '@app/components/Cards';
 import { fade, withStyles } from '@material-ui/core/styles';
 import { TreeView, TreeItem } from '@material-ui/lab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSitemap,
-  faBroadcastTower,
-  faSchool,
-  faStoreAlt,
-  faChalkboardTeacher
-} from '@fortawesome/free-solid-svg-icons';
+import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import {
   MinusSquare,
   PlusSquare,
@@ -66,7 +60,7 @@ const StyledTreeItem = withStyles((theme) => ({
   />
 ));
 
-const AppTreeView = ({ loading, open, resources, onChange }) => {
+const LessonTreeView = ({ loading, open, resources, onChange }) => {
   const classes = useStyles();
   const [openSearch, setOpenSearch] = useState(false);
   const [searchKey, setSearchKey] = useState('');
@@ -109,8 +103,8 @@ const AppTreeView = ({ loading, open, resources, onChange }) => {
             alignItems="center"
           >
             <Box component={Typography} variant="h6">
-              <FontAwesomeIcon icon={faSitemap} />
-              &nbsp; Topologies
+              <FontAwesomeIcon icon={faBookOpen} />
+              &nbsp; Lessons
             </Box>
             <IconButton
               onClick={() => setOpenSearch(!openSearch)}
@@ -124,7 +118,7 @@ const AppTreeView = ({ loading, open, resources, onChange }) => {
           {openSearch && (
             <FormControl fullWidth className={classes.searchBar}>
               <Input
-                placeholder="Search topology..."
+                placeholder="Search lessons..."
                 type="text"
                 size="small"
                 variant="outline"
@@ -148,44 +142,7 @@ const AppTreeView = ({ loading, open, resources, onChange }) => {
               defaultCollapseIcon={<MinusSquare />}
               defaultExpandIcon={<PlusSquare />}
               defaultEndIcon={<CloseSquare />}
-            >
-              {loadedData.length > 0 &&
-                loadedData.map((sd) => (
-                  <StyledTreeItem
-                    key={sd.parent['_id']}
-                    nodeId={sd.parent['_id']}
-                    label={sd.parent.name}
-                    labelIcon={faBroadcastTower}
-                  >
-                    {sd.children.map((sdc) => (
-                      <StyledTreeItem
-                        key={sdc.parent['_id']}
-                        nodeId={sdc.parent['_id']}
-                        label={sdc.parent.name}
-                        labelIcon={faSchool}
-                      >
-                        {sdc.children.map((sdcc) => (
-                          <StyledTreeItem
-                            key={sdcc.parent['_id']}
-                            nodeId={sdcc.parent['_id']}
-                            label={sdcc.parent?.name}
-                            labelIcon={faStoreAlt}
-                          >
-                            {sdcc.children.map((sdccc) => (
-                              <StyledTreeItem
-                                key={sdccc['_id']}
-                                nodeId={sdccc['_id']}
-                                label={sdccc.name}
-                                labelIcon={faChalkboardTeacher}
-                              />
-                            ))}
-                          </StyledTreeItem>
-                        ))}
-                      </StyledTreeItem>
-                    ))}
-                  </StyledTreeItem>
-                ))}
-            </TreeView>
+            ></TreeView>
           </LoadingCard>
         </main>
       )}
@@ -193,4 +150,4 @@ const AppTreeView = ({ loading, open, resources, onChange }) => {
   );
 };
 
-export default AppTreeView;
+export default LessonTreeView;

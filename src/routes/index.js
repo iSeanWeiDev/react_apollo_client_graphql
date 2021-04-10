@@ -15,6 +15,7 @@ import TopologyContainer from '@app/pages/Topology';
 import ResourceContainer from '@app/pages/Resource';
 import GalleryContainer from '@app/pages/Gallery';
 import PackageContainer from '@app/pages/Package';
+import LessonContainer from '@app/pages/Lession';
 import NotFound from '@app/pages/NotFound';
 
 const AppRoutes = () => (
@@ -59,6 +60,11 @@ const AppRoutes = () => (
     <PrivateRoute
       path="/admins/:type?/:id?"
       component={AdminContainer}
+      layout={DashboardLayout}
+    />
+    <PrivateRoute
+      path="/lessons"
+      component={LessonContainer}
       layout={DashboardLayout}
     />
     <PublicRoute path="**" component={NotFound} layout={BasicLayout} />
