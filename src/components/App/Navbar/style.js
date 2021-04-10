@@ -9,6 +9,11 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: drawerWidth
     }
   },
+  appBarFull: {
+    [theme.breakpoints.up('sm')]: {
+      width: '100%'
+    }
+  },
   menuButton: {
     marginRight: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {

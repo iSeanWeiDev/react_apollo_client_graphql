@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import clsx from 'clsx';
 import { Auth } from 'aws-amplify';
 import { useHistory } from 'react-router-dom';
 import { Img } from 'react-image';
@@ -9,6 +10,7 @@ import {
   MenuItem,
   AppBar,
   Toolbar,
+  Button,
   IconButton
 } from '@material-ui/core';
 import {
@@ -23,7 +25,7 @@ HideOnScroll.propTypes = {
   window: PropTypes.func
 };
 
-const AppNavbar = ({ onChange }) => {
+const AppNavbar = ({ fullWidth, position, canClose, onChange }) => {
   const classes = useStyles();
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -47,7 +49,14 @@ const AppNavbar = ({ onChange }) => {
   };
 
   return (
-    <AppBar position="fixed" color="inherit" className={classes.appBar}>
+    <AppBar
+      position={position}
+      color="inherit"
+      className={clsx({
+        [classes.appBar]: !fullWidth,
+        [classes.appBarFull]: fullWidth
+      })}
+    >
       <Toolbar>
         <IconButton
           color="inherit"
@@ -68,9 +77,15 @@ const AppNavbar = ({ onChange }) => {
             src="https://configs.emp-sig.com/assets/PoweredByLogo.png"
             height="50"
           />
-          <IconButton onClick={handleClick}>
-            <AccountIcon />
-          </IconButton>
+          {!canClose ? (
+            <IconButton onClick={handleClick}>
+              <AccountIcon />
+            </IconButton>
+          ) : (
+            <Button size="small" onClick={() => onChange('close')}>
+              Close
+            </Button>
+          )}
         </Box>
         <Menu
           id="simple-menu"
