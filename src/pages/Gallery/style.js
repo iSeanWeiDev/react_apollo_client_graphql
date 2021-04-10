@@ -63,13 +63,15 @@ const useStyles = makeStyles((theme) => ({
   main: {
     width: '100%',
     position: 'relative',
-    top: 120
+    top: 120,
+    display: 'flex'
   },
   mainSidebar: {
-    width: 300
+    width: 200,
+    paddingTop: 100
   },
   mainContent: {
-    width: 'calc(100% - 300px)',
+    width: 'calc(100% - 250px)',
     minHeight: 'calc(100vh - 205px)',
     borderRadius: 20
   },
@@ -81,6 +83,21 @@ const useStyles = makeStyles((theme) => ({
   },
   indicator: {
     backgroundColor: theme.palette.blueGrey['700']
+  },
+  listMain: {
+    width: '100%'
+  },
+  card: {
+    width: 300,
+    margin: theme.spacing(1)
+  },
+  cardContent: {
+    minHeight: 150
+  },
+  cardAction: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
 }));
 

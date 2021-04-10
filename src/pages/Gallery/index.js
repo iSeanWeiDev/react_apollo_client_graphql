@@ -3,31 +3,42 @@ import { withRouter } from 'react-router-dom';
 import {
   Box,
   Paper,
-  AppBar,
   Tab,
+  Tabs,
   Button,
   Typography,
   InputBase,
   IconButton
 } from '@material-ui/core';
-import {
-  Search as SearchIcon,
-  ArrowBack as BackIcon,
-  DeleteOutline as DeleteIcon
-} from '@material-ui/icons';
-import { Img } from 'react-image';
-import { useSnackbar } from 'notistack';
-import { TabContext, TabList, TabPanel } from '@material-ui/lab';
+import { Search as SearchIcon } from '@material-ui/icons';
+import { AppTabPanel } from '@app/components/App';
+// import { Img } from 'react-image';
+// import { useSnackbar } from 'notistack';
 import { faPhotoVideo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import GalleryList from './List';
 import useStyles from './style';
+
+const tabData = [
+  { label: 'Stock Images', value: 'stockImage' },
+  { label: 'Stock Banners', value: 'stockBanner' },
+  { label: 'Stock Logos', value: 'stockLogo' },
+  { label: 'Stock Avatars', value: 'stockAvatar' }
+];
+
+const a11yProps = (index) => {
+  return {
+    id: `vertical-tab-${index}`,
+    'aria-controls': `vertical-tabpanel-${index}`
+  };
+};
 
 const GalleryContainer = () => {
   const classes = useStyles();
-  const [value, setValue] = useState('1');
+  const [currentTab, setCurrentTab] = useState(0);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setCurrentTab(newValue);
   };
 
   return (
@@ -57,8 +68,40 @@ const GalleryContainer = () => {
         </Button>
       </Box>
       <Box className={classes.main}>
-        <Box className={classes.mainSidebar}></Box>
-        <Box component={Paper} className={classes.mainContent}></Box>
+        <Box className={classes.mainSidebar}>
+          <Tabs
+            orientation="vertical"
+            variant="scrollable"
+            value={currentTab}
+            onChange={handleChange}
+            aria-label="admin vertical tabs"
+            className={classes.tabs}
+            classes={{
+              indicator: classes.indicator
+            }}
+          >
+            {tabData.map((el, index) => (
+              <Tab
+                key={index}
+                label={el.label}
+                className={classes.tabHeader}
+                {...a11yProps(index)}
+              />
+            ))}
+          </Tabs>
+        </Box>
+        <Box component={Paper} className={classes.mainContent}>
+          {tabData.map((el, index) => (
+            <AppTabPanel
+              key={index}
+              value={currentTab}
+              index={index}
+              style={{ width: '100%' }}
+            >
+              <GalleryList type={el.value} />
+            </AppTabPanel>
+          ))}
+        </Box>
       </Box>
     </Box>
   );
