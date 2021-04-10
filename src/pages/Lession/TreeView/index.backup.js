@@ -14,8 +14,7 @@ import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Search as SearchIcon,
-  KeyboardReturn as KeyboardReturnIcon,
-  Loop as LoopIcon
+  KeyboardReturn as KeyboardReturnIcon
 } from '@material-ui/icons';
 import { LoadingCard } from '@app/components/Cards';
 import { fade, withStyles } from '@material-ui/core/styles';
@@ -93,7 +92,6 @@ const RenderTreeViewEls = ({ id, treeData }) => {
 const LessonTreeView = ({ loading, open, classData, treeData, onChange }) => {
   const classes = useStyles();
   const [openSearch, setOpenSearch] = useState(false);
-  const [canRefresh, setCanRefresh] = useState(false);
   const [searchKey, setSearchKey] = useState('');
   const [loadedClassData, setLoadedClassData] = useState([]);
   const [loadedTreeData, setLoadedTreeData] = useState({});
@@ -106,43 +104,56 @@ const LessonTreeView = ({ loading, open, classData, treeData, onChange }) => {
   }, [classData, treeData]);
 
   const handleSubmit = () => {
-    if (searchKey.length > 0) {
-      const tmp = Object.values(treeData);
-      const filteredData = tmp.filter((el) =>
-        el.name.toLowerCase().includes(searchKey.toLowerCase())
-      );
+    const tmp = Object.values(loadedTreeData);
+    const filteredData = tmp.filter((el) =>
+      el.name.toLowerCase().includes(searchKey.toLowerCase())
+    );
 
-      var hist = {};
-      const tmpClassData = [];
-      filteredData.forEach((el) => {
-        if (el.topology?.class) tmpClassData.push(el.topology.class);
-      });
+    // let tmpTreeData = {};
+    // for (let obj of filteredData) {
+    //   obj.parentIdList.forEach((el) => {
+    //     tmpTreeData[el] = loadedTreeData[el];
+    //   });
+    // }
 
-      tmpClassData.map(function (a) {
-        if (a in hist) hist[a]++;
-        else hist[a] = 1;
-      });
+    // let tmpTreeValues = Object.values(tmpTreeData).slice();
+    // tmpTreeValues = tmpTreeValues.map((parent) => {
+    //   const tmpChildIdList = [];
+    //   parent.childrenIdList.forEach((child) => {
+    //     const idx = Object.values(tmpTreeData).findIndex(
+    //       (el) => el['_id'] === child
+    //     );
+    //     if (idx > -1) tmpChildIdList.push(child);
+    //   });
 
-      const filteredClassData = [];
-      Object.keys(hist).forEach((el) => {
-        const idx = classData.findIndex((cl) => cl['_id'] === el);
-        if (idx > -1) filteredClassData.push(classData[idx]);
-      });
+    //   return {
+    //     ...parent,
+    //     childrenIdList: tmpChildIdList
+    //   };
+    // });
 
-      setLoadedClassData(filteredClassData);
-    } else {
-      setLoadedTreeData(treeData);
-      setLoadedClassData(classData);
-    }
+    // let xTmpTreeData = {};
+    // tmpTreeValues.forEach((el) => {
+    //   xTmpTreeData[el['_id']] = el;
+    // });
 
-    setOpenSearch(!openSearch);
-    setCanRefresh(true);
-  };
+    var hist = {};
+    const tmpClassData = filteredData.map((el) => el.topology.class);
+    tmpClassData.map(function (a) {
+      if (a in hist) hist[a]++;
+      else hist[a] = 1;
+    });
 
-  const handleRefresh = () => {
-    setLoadedTreeData(treeData);
-    setLoadedClassData(classData);
-    setCanRefresh(false);
+    const filteredClassData = [];
+    Object.keys(hist).forEach((el) => {
+      const idx = classData.findIndex((cl) => cl['_id'] === el);
+      if (idx > -1) filteredClassData.push(classData[idx]);
+    });
+
+    setLoadedClassData(filteredClassData);
+    // setLoadedTreeData(xTmpTreeData);
+
+    // setOpenSearch(!openSearch);
   };
 
   return (
@@ -178,23 +189,13 @@ const LessonTreeView = ({ loading, open, classData, treeData, onChange }) => {
               <FontAwesomeIcon icon={faBookOpen} />
               &nbsp; Lessons
             </Box>
-            <Box>
-              <IconButton
-                onClick={handleRefresh}
-                size="small"
-                className={classes.actionBtn}
-                disabled={!canRefresh}
-              >
-                <LoopIcon />
-              </IconButton>
-              <IconButton
-                onClick={() => setOpenSearch(!openSearch)}
-                size="small"
-                className={classes.actionBtn}
-              >
-                <SearchIcon />
-              </IconButton>
-            </Box>
+            <IconButton
+              onClick={() => setOpenSearch(!openSearch)}
+              size="small"
+              className={classes.actionBtn}
+            >
+              <SearchIcon />
+            </IconButton>
           </Box>
           {/* <Divider className={classes.separator} /> */}
           {openSearch && (
