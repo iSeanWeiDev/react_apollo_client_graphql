@@ -84,7 +84,17 @@ const useStyles = makeStyles((theme) => ({
   preview: {
     margin: theme.spacing(2),
     width: 'calc(100% - 300px)',
-    minHeight: 'calc(100vh - 200px)'
+    minHeight: 'calc(100vh - 200px)',
+    borderRadius: '20px 20px 0 0'
+  },
+  appbar: {
+    padding: '8px 8px 0 8px',
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.blueGrey['800'],
+    borderRadius: '20px 20px 0 0'
+  },
+  indicator: {
+    backgroundColor: theme.palette.blueGrey['700']
   }
 }));
 

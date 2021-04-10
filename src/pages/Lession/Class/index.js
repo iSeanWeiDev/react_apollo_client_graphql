@@ -1,24 +1,25 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import clsx from 'clsx';
 import {
+  Grid,
   List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
   Box,
   Paper,
   Button,
   IconButton,
   InputBase,
-  Typography
+  Typography,
+  AppBar,
+  Tab
 } from '@material-ui/core';
-import clsx from 'clsx';
-import { Search as SearchIcon, Image as ImageIcon } from '@material-ui/icons';
+
+import { Search as SearchIcon, Close as CloseIcon } from '@material-ui/icons';
 import { faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LoadingCard } from '@app/components/Cards';
-import noLogo from '@app/assets/imgs/no-logo.jpg';
 import ClassCard from './partials/Card';
+import ClassList from './partials/List';
+import ClassDetail from './Detail';
 import useStyles from './style';
 
 const LessonClass = ({ resources }) => {
@@ -56,6 +57,13 @@ const LessonClass = ({ resources }) => {
     if (type === 'view') {
       setOpenView(true);
       setSelectedData(value);
+    }
+  };
+
+  const handleDetailChange = (type, value) => {
+    if (type === 'close') {
+      setOpenView(false);
+      setSelectedData();
     }
   };
 
@@ -109,28 +117,22 @@ const LessonClass = ({ resources }) => {
             <Box component={List}>
               {openView &&
                 loadedData.map((el) => (
-                  <ListItem
+                  <ClassList
                     key={el['_id']}
-                    className={clsx(classes.listItem, {
-                      [classes.listItem]: el['_id'] !== selectedData['_id'],
-                      [classes.listItemSelected]:
-                        el['_id'] === selectedData['_id']
-                    })}
-                    onClick={() => setSelectedData(el)}
-                  >
-                    <ListItemAvatar>
-                      <Avatar
-                        alt="Remy Sharp"
-                        src={el.avatar?.url ? el.avatar?.url : noLogo}
-                      />
-                    </ListItemAvatar>
-                    <ListItemText primary={el.name} secondary={el.createdAt} />
-                  </ListItem>
+                    data={el}
+                    selectedData={selectedData}
+                    onChange={(value) => setSelectedData(value)}
+                  />
                 ))}
             </Box>
           </Box>
           {openView && (
-            <Box component={Paper} className={classes.preview}></Box>
+            <Box component={Paper} className={classes.preview}>
+              <ClassDetail
+                resources={selectedData}
+                onChange={handleDetailChange}
+              />
+            </Box>
           )}
         </Box>
       </LoadingCard>
