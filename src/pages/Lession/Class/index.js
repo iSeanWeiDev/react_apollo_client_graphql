@@ -65,8 +65,9 @@ const LessonClass = ({ resources }) => {
     }
   };
 
-  const handleCreate = async (type, value) => {
+  const handleCreate = async (flag, value) => {
     try {
+      setOpenCreate(false);
     } catch (error) {}
   };
 

@@ -17,7 +17,7 @@ const DashboardLayout = ({ window, children }) => {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppNavbar onChange={handleDrawerToggle} />
+      <AppNavbar position="fixed" onChange={handleDrawerToggle} />
       <AppSidebar
         mobileOpen={mobileOpen}
         onChange={handleDrawerToggle}
