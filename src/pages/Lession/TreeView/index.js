@@ -217,7 +217,11 @@ const LessonTreeView = ({ loading, open, classData, treeData, onChange }) => {
               />
             </FormControl>
           )}
-          <LoadingCard loading={loading} height={`calc(100vh - 200px)`}>
+          <LoadingCard
+            loading={loading}
+            height={`calc(100vh - 200px)`}
+            className={classes.treeViewMain}
+          >
             <TreeView
               className={classes.treeView}
               defaultExpanded={['1']}

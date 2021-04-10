@@ -51,6 +51,12 @@ const useStyles = makeStyles((theme) => ({
   searchBar: {
     padding: theme.spacing(1)
   },
+  treeViewMain: {
+    width: '100%',
+    height: 'calc(100vh - 125px)',
+    overflowY: 'scroll',
+    overflowX: 'hidden'
+  },
   treeView: {
     padding: theme.spacing(1),
     color: theme.palette.blueGrey['800']
