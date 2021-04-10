@@ -84,7 +84,42 @@ const useStyles = makeStyles((theme) => ({
   preview: {
     margin: theme.spacing(2),
     width: 'calc(100% - 300px)',
-    minHeight: 'calc(100vh - 200px)'
+    minHeight: 'calc(100vh - 200px)',
+    borderRadius: '20px 20px 0 0'
+  },
+  appbar: {
+    padding: '8px 8px 0 8px',
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.blueGrey['800'],
+    borderRadius: '20px 20px 0 0'
+  },
+  indicator: {
+    backgroundColor: theme.palette.blueGrey['700']
+  },
+  detailRoot: {
+    flexGrow: 1
+  },
+  dialogTitle: {
+    color: theme.palette.blueGrey['700'],
+    paddingBottom: theme.spacing(0)
+  },
+  detailAppbar: {
+    padding: '8px 8px 0 8px',
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.blueGrey['800'],
+    borderRadius: '20px 20px 0 0'
+  },
+  steperRoot: {
+    width: '100%'
+  },
+  steperButton: {
+    marginRight: theme.spacing(1)
+  },
+  backButton: {
+    marginRight: theme.spacing(1)
+  },
+  completed: {
+    display: 'inline-block'
   }
 }));
 

@@ -1,10 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import clsx from 'clsx';
 import {
   List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
   Box,
   Paper,
   Button,
@@ -12,13 +9,14 @@ import {
   InputBase,
   Typography
 } from '@material-ui/core';
-import clsx from 'clsx';
-import { Search as SearchIcon, Image as ImageIcon } from '@material-ui/icons';
+import { Search as SearchIcon } from '@material-ui/icons';
 import { faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LoadingCard } from '@app/components/Cards';
-import noLogo from '@app/assets/imgs/no-logo.jpg';
 import ClassCard from './partials/Card';
+import ClassList from './partials/List';
+import ClassDetail from './Detail';
+import CreateClass from './Create';
 import useStyles from './style';
 
 const LessonClass = ({ resources }) => {
@@ -28,6 +26,7 @@ const LessonClass = ({ resources }) => {
   const [selectedData, setSelectedData] = useState({});
   const [currMainWidth, setCurrMainWidth] = useState(null);
   const [openView, setOpenView] = useState(false);
+  const [openCreate, setOpenCreate] = useState(false);
 
   const mainRef = useCallback((node) => {
     if (node !== null) {
@@ -59,6 +58,18 @@ const LessonClass = ({ resources }) => {
     }
   };
 
+  const handleDetailChange = (type, value) => {
+    if (type === 'close') {
+      setOpenView(false);
+      setSelectedData();
+    }
+  };
+
+  const handleCreate = async (type, value) => {
+    try {
+    } catch (error) {}
+  };
+
   return (
     <Box className={classes.root}>
       <Box className={classes.toolbar}>
@@ -81,7 +92,11 @@ const LessonClass = ({ resources }) => {
             <SearchIcon />
           </IconButton>
         </Box>
-        <Button variant="contained" className={classes.addButton}>
+        <Button
+          variant="contained"
+          className={classes.addButton}
+          onClick={() => setOpenCreate(true)}
+        >
           Add New Class
         </Button>
       </Box>
@@ -109,31 +124,26 @@ const LessonClass = ({ resources }) => {
             <Box component={List}>
               {openView &&
                 loadedData.map((el) => (
-                  <ListItem
+                  <ClassList
                     key={el['_id']}
-                    className={clsx(classes.listItem, {
-                      [classes.listItem]: el['_id'] !== selectedData['_id'],
-                      [classes.listItemSelected]:
-                        el['_id'] === selectedData['_id']
-                    })}
-                    onClick={() => setSelectedData(el)}
-                  >
-                    <ListItemAvatar>
-                      <Avatar
-                        alt="Remy Sharp"
-                        src={el.avatar?.url ? el.avatar?.url : noLogo}
-                      />
-                    </ListItemAvatar>
-                    <ListItemText primary={el.name} secondary={el.createdAt} />
-                  </ListItem>
+                    data={el}
+                    selectedData={selectedData}
+                    onChange={(value) => setSelectedData(value)}
+                  />
                 ))}
             </Box>
           </Box>
           {openView && (
-            <Box component={Paper} className={classes.preview}></Box>
+            <Box component={Paper} className={classes.preview}>
+              <ClassDetail
+                resources={selectedData}
+                onChange={handleDetailChange}
+              />
+            </Box>
           )}
         </Box>
       </LoadingCard>
+      <CreateClass open={openCreate} onChange={handleCreate} />
     </Box>
   );
 };
