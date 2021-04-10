@@ -6,11 +6,6 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     padding: theme.spacing(3)
   },
-  cardAction: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
   addBtn: {
     color: theme.palette.common.white,
     backgroundColor: theme.palette.blueGrey['500'],
@@ -45,6 +40,11 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContent: {
     minHeight: 150
+  },
+  cardAction: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   inputArea: {
     width: '100%',
