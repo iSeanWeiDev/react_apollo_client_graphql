@@ -14,7 +14,16 @@ const LessonContainer = () => {
   const materialData = useGroupingQuery({ schemaType: 'material' });
 
   const generateTreeStructure = (arr1, arr2) => {
-    return arr1;
+    const tmpArr1 = [...arr1, ...arr2];
+
+    let nodeObj = {};
+    tmpArr1.forEach((el) => {
+      nodeObj = {
+        ...nodeObj,
+        [el['_id']]: el
+      };
+    });
+    return nodeObj;
   };
 
   useEffect(() => {
@@ -31,7 +40,8 @@ const LessonContainer = () => {
       <LessonTreeView
         loading={treeLoading}
         open={openTreeView}
-        resources={treeData}
+        classData={classData}
+        treeData={treeData}
         onChange={() => setOpenTreeView(!openTreeView)}
       />
       <main

@@ -21,6 +21,8 @@ import { fade, withStyles } from '@material-ui/core/styles';
 import { TreeView, TreeItem } from '@material-ui/lab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faFolder,
+  faFileAlt,
   faBookOpen,
   faChalkboardTeacher
 } from '@fortawesome/free-solid-svg-icons';
@@ -63,18 +65,96 @@ const StyledTreeItem = withStyles((theme) => ({
   />
 ));
 
-const LessonTreeView = ({ loading, open, resources, onChange }) => {
+const RenderTreeViewEls = ({ id, treeData }) => {
+  return (
+    treeData[id] &&
+    treeData[id].childrenIdList &&
+    treeData[id].childrenIdList.map((el) => {
+      let childid = el;
+      let childobj = treeData[childid];
+
+      return (
+        <StyledTreeItem
+          key={childid}
+          nodeId={childid}
+          label={childobj?.name}
+          labelIcon={childobj?.childrenIdList ? faFolder : faFileAlt}
+        >
+          {childobj?.childrenIdList && (
+            <RenderTreeViewEls id={childid} treeData={treeData} />
+          )}
+        </StyledTreeItem>
+      );
+    })
+  );
+};
+
+const LessonTreeView = ({ loading, open, classData, treeData, onChange }) => {
   const classes = useStyles();
   const [openSearch, setOpenSearch] = useState(false);
   const [searchKey, setSearchKey] = useState('');
-  const [loadedData, setLoadedData] = useState([]);
-  const handleSubmit = () => {
-    setOpenSearch(!openSearch);
-  };
+  const [loadedClassData, setLoadedClassData] = useState([]);
+  const [loadedTreeData, setLoadedTreeData] = useState({});
 
   useEffect(() => {
-    setLoadedData(resources);
-  }, [resources]);
+    if (classData && treeData) {
+      setLoadedTreeData(treeData);
+      setLoadedClassData(classData);
+    }
+  }, [classData, treeData]);
+
+  const handleSubmit = () => {
+    const tmp = Object.values(loadedTreeData);
+    const filteredData = tmp.filter((el) =>
+      el.name.toLowerCase().includes(searchKey.toLowerCase())
+    );
+
+    let tmpTreeData = {};
+    for (let obj of filteredData) {
+      obj.parentIdList.forEach((el) => {
+        tmpTreeData[el] = loadedTreeData[el];
+      });
+    }
+
+    let tmpTreeValues = Object.values(tmpTreeData).slice();
+    tmpTreeValues = tmpTreeValues.map((parent) => {
+      const tmpChildIdList = [];
+      parent.childrenIdList.forEach((child) => {
+        const idx = Object.values(tmpTreeData).findIndex(
+          (el) => el['_id'] === child
+        );
+        if (idx > -1) tmpChildIdList.push(child);
+      });
+
+      return {
+        ...parent,
+        childrenIdList: tmpChildIdList
+      };
+    });
+
+    let xTmpTreeData = {};
+    tmpTreeValues.forEach((el) => {
+      xTmpTreeData[el['_id']] = el;
+    });
+
+    var hist = {};
+    const tmpClassData = filteredData.map((el) => el.topology.class);
+    tmpClassData.map(function (a) {
+      if (a in hist) hist[a]++;
+      else hist[a] = 1;
+    });
+
+    const filteredClassData = [];
+    Object.keys(hist).forEach((el) => {
+      const idx = classData.findIndex((cl) => cl['_id'] === el);
+      if (idx > -1) filteredClassData.push(classData[idx]);
+    });
+
+    setLoadedClassData(filteredClassData);
+    setLoadedTreeData(xTmpTreeData);
+
+    // setOpenSearch(!openSearch);
+  };
 
   return (
     <Box
@@ -146,14 +226,19 @@ const LessonTreeView = ({ loading, open, resources, onChange }) => {
               defaultExpandIcon={<PlusSquare />}
               defaultEndIcon={<CloseSquare />}
             >
-              {loadedData.length > 0 &&
-                loadedData.map((el) => (
+              {loadedClassData.length > 0 &&
+                loadedClassData.map((el) => (
                   <StyledTreeItem
                     key={el['_id']}
                     nodeId={el['_id']}
                     label={el.name}
                     labelIcon={faChalkboardTeacher}
-                  ></StyledTreeItem>
+                  >
+                    <RenderTreeViewEls
+                      id={el['_id']}
+                      treeData={loadedTreeData}
+                    />
+                  </StyledTreeItem>
                 ))}
             </TreeView>
           </LoadingCard>
