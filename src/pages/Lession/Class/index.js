@@ -1,25 +1,22 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import {
-  Grid,
   List,
   Box,
   Paper,
   Button,
   IconButton,
   InputBase,
-  Typography,
-  AppBar,
-  Tab
+  Typography
 } from '@material-ui/core';
-
-import { Search as SearchIcon, Close as CloseIcon } from '@material-ui/icons';
+import { Search as SearchIcon } from '@material-ui/icons';
 import { faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LoadingCard } from '@app/components/Cards';
 import ClassCard from './partials/Card';
 import ClassList from './partials/List';
 import ClassDetail from './Detail';
+import CreateClass from './Create';
 import useStyles from './style';
 
 const LessonClass = ({ resources }) => {
@@ -29,6 +26,7 @@ const LessonClass = ({ resources }) => {
   const [selectedData, setSelectedData] = useState({});
   const [currMainWidth, setCurrMainWidth] = useState(null);
   const [openView, setOpenView] = useState(false);
+  const [openCreate, setOpenCreate] = useState(false);
 
   const mainRef = useCallback((node) => {
     if (node !== null) {
@@ -67,6 +65,11 @@ const LessonClass = ({ resources }) => {
     }
   };
 
+  const handleCreate = async (type, value) => {
+    try {
+    } catch (error) {}
+  };
+
   return (
     <Box className={classes.root}>
       <Box className={classes.toolbar}>
@@ -89,7 +92,11 @@ const LessonClass = ({ resources }) => {
             <SearchIcon />
           </IconButton>
         </Box>
-        <Button variant="contained" className={classes.addButton}>
+        <Button
+          variant="contained"
+          className={classes.addButton}
+          onClick={() => setOpenCreate(true)}
+        >
           Add New Class
         </Button>
       </Box>
@@ -136,6 +143,7 @@ const LessonClass = ({ resources }) => {
           )}
         </Box>
       </LoadingCard>
+      <CreateClass open={openCreate} onChange={handleCreate} />
     </Box>
   );
 };

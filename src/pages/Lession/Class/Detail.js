@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@material-ui/lab';
-import { Grid, Box, IconButton, AppBar, Tab } from '@material-ui/core';
+import { Grid, Box, Button, AppBar, Tab } from '@material-ui/core';
 import { TagForm, AvatarForm, DescriptionForm } from '@app/components/Forms';
-import { Close as CloseIcon } from '@material-ui/icons';
 import useStyles from './style';
 
 const ClassDetail = ({ resources, onChange }) => {
@@ -29,9 +28,9 @@ const ClassDetail = ({ resources, onChange }) => {
             <Tab label="Educators" value="2" />
             <Tab label="Students" value="3" />
           </TabList>
-          <IconButton size="small" onClick={() => onChange('close')}>
-            <CloseIcon />
-          </IconButton>
+          <Button size="small" onClick={() => onChange('close')}>
+            Close
+          </Button>
         </Box>
       </AppBar>
       <TabPanel value="1">

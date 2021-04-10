@@ -54,7 +54,7 @@ const ClassCard = ({ data, onChange, ...rest }) => {
           color="primary"
           onClick={() => onChange('view', data)}
         >
-          view
+          load more
         </Button>
       </CardActions>
     </Card>
