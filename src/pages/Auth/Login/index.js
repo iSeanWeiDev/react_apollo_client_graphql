@@ -86,7 +86,7 @@ const LoginContainer = () => {
       if (other?.schemaType === 'educator' && other?.name === email) {
         history.push('/educator');
       } else {
-        history.push('/dashboard');
+        history.push('/topologies');
       }
       setLoading(false);
     } catch (error) {
@@ -118,7 +118,7 @@ const LoginContainer = () => {
         user
       );
 
-      history.push('/dashboard');
+      history.push('/topologies');
       setLoading(false);
       // setUserInfo(loadedUsers, email);
     } catch (error) {

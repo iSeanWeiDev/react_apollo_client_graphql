@@ -8,6 +8,7 @@ import {
   Typography,
   FormControl,
   Input,
+  Divider,
   InputAdornment
 } from '@material-ui/core';
 import {
@@ -66,7 +67,7 @@ const StyledTreeItem = withStyles((theme) => ({
   />
 ));
 
-const AppTreeView = ({ loading, open, resources, onChange }) => {
+const AppTreeView = ({ loading, open, preview, resources, onChange }) => {
   const classes = useStyles();
   const [openSearch, setOpenSearch] = useState(false);
   const [searchKey, setSearchKey] = useState('');
@@ -76,7 +77,9 @@ const AppTreeView = ({ loading, open, resources, onChange }) => {
   };
 
   useEffect(() => {
-    setLoadedData(resources);
+    if (resources) {
+      setLoadedData(resources);
+    }
   }, [resources]);
 
   return (
@@ -87,18 +90,20 @@ const AppTreeView = ({ loading, open, resources, onChange }) => {
         [classes.close]: !open
       })}
     >
-      <Box
-        position="relative"
-        component={IconButton}
-        size="small"
-        onClick={() => onChange()}
-        className={clsx(classes.collapseBtn, {
-          [classes.openBtn]: open,
-          [classes.closeBtn]: !open
-        })}
-      >
-        {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-      </Box>
+      {!preview && (
+        <Box
+          position="relative"
+          component={IconButton}
+          size="small"
+          onClick={() => onChange()}
+          className={clsx(classes.collapseBtn, {
+            [classes.openBtn]: open,
+            [classes.closeBtn]: !open
+          })}
+        >
+          {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+        </Box>
+      )}
 
       {open && (
         <main className={classes.main}>
@@ -112,15 +117,17 @@ const AppTreeView = ({ loading, open, resources, onChange }) => {
               <FontAwesomeIcon icon={faSitemap} />
               &nbsp; Topologies
             </Box>
-            <IconButton
-              onClick={() => setOpenSearch(!openSearch)}
-              size="small"
-              className={classes.actionBtn}
-            >
-              <SearchIcon />
-            </IconButton>
+            {!preview && (
+              <IconButton
+                onClick={() => setOpenSearch(!openSearch)}
+                size="small"
+                className={classes.actionBtn}
+              >
+                <SearchIcon />
+              </IconButton>
+            )}
           </Box>
-          {/* <Divider className={classes.separator} /> */}
+          {preview && <Divider className={classes.separator} />}
           {openSearch && (
             <FormControl fullWidth className={classes.searchBar}>
               <Input

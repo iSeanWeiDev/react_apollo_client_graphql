@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { withRouter } from 'react-router-dom';
 import { useGroupingQuery } from '@app/utils/hooks/apollo';
-import TreeView from './TreeView';
+import { TopologyTreeView } from '@app/components/TreeView';
+import { useAppStateContext } from '@app/providers';
 import TStation from './Station';
 import TDistrict from './District';
 import TSchool from './School';
@@ -12,6 +13,7 @@ import useStyles from './style';
 const TopologyContainer = ({ match, history }) => {
   const classes = useStyles();
   const { params } = match;
+  const [appStateContext, setAppStateContext] = useAppStateContext();
   const [openTreeView, setOpenTreeView] = useState(true);
   const [treeData, setTreeData] = useState([]);
   const [currPage, setCurrPage] = useState('');
@@ -81,12 +83,17 @@ const TopologyContainer = ({ match, history }) => {
 
       setTreeData(tmp);
       setTreeLoading(false);
+
+      setAppStateContext({
+        ...appStateContext,
+        topologies: tmp
+      });
     }
   }, [stationData, districtData, schoolData, classData]);
 
   return (
     <div className={classes.root}>
-      <TreeView
+      <TopologyTreeView
         loading={treeLoading}
         open={openTreeView}
         resources={treeData}

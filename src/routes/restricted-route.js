@@ -40,7 +40,7 @@ const RestrictedRoute = ({ component: Component, layout: Layout, ...rest }) => {
           userProfile?.schemaType === 'educator' ? (
             <Redirect to="/educator"></Redirect>
           ) : (
-            <Redirect to="/dashboard"></Redirect>
+            <Redirect to="/topologies"></Redirect>
           )
         ) : isAuth === 0 ? (
           <Layout>
