@@ -45,6 +45,17 @@ const TopologyContainer = ({ match, history }) => {
     }
   };
 
+  const handleDistrictChange = (type, value) => {
+    if (type === 'view') {
+      // let pathname = '';
+      setOpenTreeView(false);
+
+      // if (value) pathname = `/topologies/dist/${value['_id']}`;
+      // else pathname = `/topologies/stations`;
+      // history.push({ pathname });
+    }
+  };
+
   const handleTreeChange = (type, value) => {
     if (type === 'close') setOpenTreeView(!openTreeView);
     console.log(type, value);
@@ -71,6 +82,7 @@ const TopologyContainer = ({ match, history }) => {
             params={params}
             stationData={stationData}
             resources={districtData}
+            onChange={handleDistrictChange}
           />
         )}
       </main>

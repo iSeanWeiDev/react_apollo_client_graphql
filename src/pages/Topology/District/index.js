@@ -1,18 +1,21 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useCallback } from 'react';
 import clsx from 'clsx';
-import { Box, Paper } from '@material-ui/core';
+import { Box, Paper, List } from '@material-ui/core';
 import { useHistory, withRouter } from 'react-router-dom';
 import { LoadingCard } from '@app/components/Cards';
 import DistrictHeader from './partials/Header';
 import DistrictCard from './partials/Card';
+import DistrictList from './partials/List';
 import useStyles from './style';
 
-const TDistrict = ({ params, stationData, resources }) => {
+const TDistrict = ({ params, stationData, resources, onChange }) => {
   const classes = useStyles();
   const history = useHistory();
   const [openView, setOpenView] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
   const [loadedData, setLoadedData] = useState([]);
+  const [selectedData, setSelectedData] = useState({});
   const [currStation, setCurrStation] = useState({});
   const [currMainWidth, setCurrMainWidth] = useState(null);
 
@@ -47,7 +50,13 @@ const TDistrict = ({ params, stationData, resources }) => {
     }
   }, []);
 
-  const handleCardAction = () => {};
+  const handleCardAction = (type, value) => {
+    if (type === 'view') {
+      setOpenView(true);
+      setSelectedData(value);
+      onChange('view', value);
+    }
+  };
 
   return (
     <Box className={classes.root}>
@@ -73,17 +82,17 @@ const TDistrict = ({ params, stationData, resources }) => {
                   />
                 )
               )}
-            {/* <Box component={List}>
+            <Box component={List}>
               {openView &&
                 loadedData.map((el) => (
-                  <StationList
+                  <DistrictList
                     key={el['_id']}
                     data={el}
                     selectedData={selectedData}
                     onChange={(value) => setSelectedData(value)}
                   />
                 ))}
-            </Box> */}
+            </Box>
           </Box>
           {openView && (
             <Box component={Paper} className={classes.preview}></Box>
