@@ -50,9 +50,9 @@ const AppTreeView = ({ open, preview, onChange }) => {
   const classData = useGroupingQuery({ schemaType: 'class' });
 
   const popOverData = [
-    { label: 'Create', value: 0 },
-    { label: 'Edit', value: 1 },
-    { label: 'Delete', value: 2 }
+    { label: 'Create', value: 'create' },
+    { label: 'Edit', value: 'edit' },
+    { label: 'Delete', value: 'delete' }
   ];
   const handleSubmit = () => {
     setOpenSearch(!openSearch);
@@ -90,7 +90,11 @@ const AppTreeView = ({ open, preview, onChange }) => {
 
   const openPopover = Boolean(anchorEl);
 
-  const handleActionClick = () => {};
+  const handleActionClick = (value) => {
+    onChange(value, selectedNode);
+    setAnchorEl(null);
+  };
+
   const handleNodeSelect = (event, value) => {
     setSelectedNode(value);
   };
@@ -107,7 +111,7 @@ const AppTreeView = ({ open, preview, onChange }) => {
           position="relative"
           component={IconButton}
           size="small"
-          onClick={() => onChange()}
+          onClick={() => onChange('close')}
           className={clsx(classes.collapseBtn, {
             [classes.openBtn]: open,
             [classes.closeBtn]: !open
@@ -232,7 +236,7 @@ const AppTreeView = ({ open, preview, onChange }) => {
                   <ListItem
                     key={el.value}
                     className={classes.listItem}
-                    onClick={handleActionClick}
+                    onClick={() => handleActionClick(el.value)}
                   >
                     <ListItemText primary={el.label} />
                   </ListItem>

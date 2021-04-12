@@ -36,12 +36,14 @@ const TopologyContainer = ({ match, history }) => {
     }
   };
 
+  const handleTreeChange = (type, value) => {
+    if (type === 'close') setOpenTreeView(!openTreeView);
+    console.log(type, value);
+  };
+
   return (
     <div className={classes.root}>
-      <TopologyTreeView
-        open={openTreeView}
-        onChange={() => setOpenTreeView(!openTreeView)}
-      />
+      <TopologyTreeView open={openTreeView} onChange={handleTreeChange} />
       <main
         className={clsx({
           [classes.mainOpen]: openTreeView,
