@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { lightBlue } from '@material-ui/core/colors';
+import { lightBlue, green } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,6 +58,14 @@ const useStyles = makeStyles((theme) => ({
       background: theme.palette.blueGrey['300'],
       color: theme.palette.common.light
     }
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
   },
   main: {
     display: 'flex'

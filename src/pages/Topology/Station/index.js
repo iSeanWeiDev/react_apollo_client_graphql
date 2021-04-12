@@ -7,7 +7,8 @@ import {
   Button,
   IconButton,
   InputBase,
-  Typography
+  Typography,
+  CircularProgress
 } from '@material-ui/core';
 import {
   Search as SearchIcon,
@@ -31,38 +32,12 @@ const TStation = ({ params, resources, onChange }) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [loadingPage, setLoadingPage] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
+  const [canUpdate, setCanUpdate] = useState(false);
   const [loadedData, setLoadedData] = useState([]);
   const [selectedData, setSelectedData] = useState();
   const [currMainWidth, setCurrMainWidth] = useState(null);
   const [openView, setOpenView] = useState(false);
-
-  const [createGrouping] = useMutation(graphql.mutations.createGrouping, {
-    update(cache, { data: { createGrouping } }) {
-      const existData = cache.readQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: 'station'
-        }
-      });
-      let data = existData ? existData.grouping.slice() : [];
-      const idx = data.findIndex((el) => el['_id'] === createGrouping['_id']);
-      if (idx > -1) {
-        data[idx] = createGrouping;
-      } else {
-        data = [...data, createGrouping];
-      }
-
-      cache.writeQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: 'station'
-        },
-        data: {
-          grouping: data
-        }
-      });
-    }
-  });
 
   const [deleteDocument] = useMutation(graphql.mutations.deleteDocument, {
     update(cache, { data: { deleteDocument } }) {
@@ -75,6 +50,32 @@ const TStation = ({ params, resources, onChange }) => {
       });
 
       const tmp = existData.grouping.filter((el) => el['_id'] !== idx);
+      cache.writeQuery({
+        query: graphql.queries.grouping,
+        variables: {
+          schemaType: 'station'
+        },
+        data: {
+          grouping: tmp
+        }
+      });
+    }
+  });
+
+  const [updateGrouping] = useMutation(graphql.mutations.updateGrouping, {
+    update(cache, { data: { updateGrouping } }) {
+      const existData = cache.readQuery({
+        query: graphql.queries.grouping,
+        variables: {
+          schemaType: 'station'
+        }
+      });
+      let tmp = existData.grouping.slice();
+      const idx = tmp.findIndex((el) => el['_id'] === updateGrouping['_id']);
+      if (idx > -1) {
+        tmp[idx] = updateGrouping;
+      }
+
       cache.writeQuery({
         query: graphql.queries.grouping,
         variables: {
@@ -157,6 +158,23 @@ const TStation = ({ params, resources, onChange }) => {
       setOpenView(false);
       setSelectedData();
       onChange('view');
+    } else {
+      if (type === 'avatar') {
+        setSelectedData({
+          ...selectedData,
+          avatar: {
+            ...selectedData.avatar,
+            url: value
+          }
+        });
+      } else {
+        setSelectedData({
+          ...selectedData,
+          [type]: value
+        });
+      }
+
+      setCanUpdate(true);
     }
   };
 
@@ -164,7 +182,6 @@ const TStation = ({ params, resources, onChange }) => {
     setOpenView(false);
     setSelectedData();
     onChange('view');
-    // history.goBack();
   };
 
   const handleDelete = async () => {
@@ -178,6 +195,46 @@ const TStation = ({ params, resources, onChange }) => {
       const { data } = response;
       enqueueSnackbar(data.deleteDocument, { variant: 'success' });
     } catch (error) {
+      console.log(error.message);
+      enqueueSnackbar(error.message, { variant: 'error' });
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      setLoadingSave(true);
+      const response = await updateGrouping({
+        variables: {
+          id: selectedData['_id'],
+          name: selectedData.name,
+          schemaType: 'station',
+          schemaVer: selectedData.schemaVer,
+          version: selectedData.version,
+          desc: {
+            title: selectedData.desc?.title,
+            short: selectedData.desc?.short,
+            long: selectedData.desc?.long
+          },
+          tagList: selectedData.tagList,
+          avatar: {
+            type: selectedData.avatar?.type,
+            url: selectedData.avatar?.url,
+            name: selectedData.avatar?.name,
+            iconUrl: selectedData.avatar?.iconUrl,
+            mimeType: selectedData.avatar?.mimeType,
+            altText: selectedData.avatar?.altText
+          },
+          body: selectedData.body
+        }
+      });
+      const { data } = response;
+      enqueueSnackbar(
+        `Successfully User ${data.updateGrouping.name} updated.`,
+        { variant: 'success' }
+      );
+      setLoadingSave(false);
+    } catch (error) {
+      setLoadingSave(false);
       console.log(error.message);
       enqueueSnackbar(error.message, { variant: 'error' });
     }
@@ -252,14 +309,22 @@ const TStation = ({ params, resources, onChange }) => {
                 <DeleteIcon /> &nbsp; Remove
               </IconButton>
               &nbsp; &nbsp;
-              <Button
-                variant="contained"
-                className={classes.saveButton}
-                // onClick={handleSave}
-                // disabled={!canUpdate}
-              >
-                Save
-              </Button>
+              <Box position="relative">
+                <Button
+                  variant="contained"
+                  className={classes.saveButton}
+                  onClick={handleSave}
+                  disabled={!canUpdate || loadingSave}
+                >
+                  Save
+                  {loadingSave && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </Button>
+              </Box>
             </Box>
           </React.Fragment>
         )}
