@@ -161,7 +161,6 @@ const LessonTreeView = ({ open, preview, onChange }) => {
               </Box>
             )}
           </Box>
-          {preview && <Divider className={classes.separator} />}
           {openSearch && (
             <FormControl fullWidth className={classes.searchBar}>
               <Input
@@ -182,6 +181,7 @@ const LessonTreeView = ({ open, preview, onChange }) => {
               />
             </FormControl>
           )}
+          {!openSearch && <Divider className={classes.separator} />}
           <LoadingCard
             loading={loading}
             height={`calc(100vh - 200px)`}

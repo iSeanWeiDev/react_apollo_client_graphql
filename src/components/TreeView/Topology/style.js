@@ -54,6 +54,12 @@ const useStyles = makeStyles((theme) => ({
   treeView: {
     padding: theme.spacing(1),
     color: theme.palette.blueGrey['800']
+  },
+  listItem: {
+    cursor: 'pointer',
+    '&:hover': {
+      background: theme.palette.blueGrey['50']
+    }
   }
 }));
 

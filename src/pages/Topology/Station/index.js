@@ -1,301 +1,154 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import clsx from 'clsx';
 import {
+  List,
   Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Typography,
-  CardActions,
+  Paper,
   Button,
-  Divider,
-  FormControl,
+  IconButton,
   InputBase,
-  InputAdornment,
-  IconButton
+  Typography
 } from '@material-ui/core';
-import { Add as AddIcon, Search as SearchIcon } from '@material-ui/icons';
-import { useSnackbar } from 'notistack';
-import { useMutation } from '@apollo/client';
-import { faBroadcastTower } from '@fortawesome/free-solid-svg-icons';
+import { Search as SearchIcon } from '@material-ui/icons';
+import { faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LoadingCard } from '@app/components/Cards';
-import CreateStation from './Create';
-import PreviewStation from './Preview';
-import graphql from '@app/graphql';
-import noLogo from '@app/assets/imgs/no-logo.jpg';
+import StationEdit from './Edit';
+import StationCard from './partials/Card';
+import StationList from './partials/List';
 import useStyles from './style';
 
-const TStation = ({ resources }) => {
+const TStation = ({ resources, onChange }) => {
   const classes = useStyles();
-  const history = useHistory();
-  const { enqueueSnackbar } = useSnackbar();
   const [loadingPage, setLoadingPage] = useState(false);
   const [loadedData, setLoadedData] = useState([]);
-  const [openCreate, setOpenCreate] = useState(false);
-  const [openPreview, setOpenPreview] = useState(false);
-  const [selectedData, setSelectedData] = useState();
+  const [selectedData, setSelectedData] = useState({});
   const [currMainWidth, setCurrMainWidth] = useState(null);
-  const [searchKey, setSearchKey] = useState('');
-
-  const [createGrouping] = useMutation(graphql.mutations.createGrouping, {
-    update(cache, { data: { createGrouping } }) {
-      const existData = cache.readQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: 'station'
-        }
-      });
-      let data = existData ? existData.grouping.slice() : [];
-      const idx = data.findIndex((el) => el['_id'] === createGrouping['_id']);
-      if (idx > -1) {
-        data[idx] = createGrouping;
-      } else {
-        data = [...data, createGrouping];
-      }
-
-      cache.writeQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: 'station'
-        },
-        data: {
-          grouping: data
-        }
-      });
-    }
-  });
-
-  const [deleteDocument] = useMutation(graphql.mutations.deleteDocument, {
-    update(cache, { data: { deleteDocument } }) {
-      const idx = deleteDocument.split(' ')[1];
-      const existData = cache.readQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: 'station'
-        }
-      });
-
-      const tmp = existData.grouping.filter((el) => el['_id'] !== idx);
-      cache.writeQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: 'station'
-        },
-        data: {
-          grouping: tmp
-        }
-      });
-    }
-  });
+  const [openView, setOpenView] = useState(false);
 
   const mainRef = useCallback((node) => {
     if (node !== null) {
       setCurrMainWidth(node.offsetWidth);
-      //fetch(...)   load data
     }
   }, []);
 
   useEffect(() => {
     setLoadingPage(true);
     if (resources && currMainWidth) {
-      const elPerRow = Math.floor(currMainWidth / 300);
+      const elPerRow = Math.floor(currMainWidth / 250);
       const countElLastRow = resources.length % elPerRow;
       const tmp = resources.slice();
-      for (let i = 0; i < elPerRow - countElLastRow; i++) {
-        tmp.push({ _id: i, name: '', status: 'fake_data' });
+      if (!openView) {
+        for (let i = 0; i < elPerRow - countElLastRow; i++) {
+          tmp.push({ _id: i, name: '', status: 'fake_data' });
+        }
       }
 
       setLoadedData(tmp);
       setLoadingPage(false);
     }
-  }, [resources, currMainWidth]);
+  }, [resources, currMainWidth, openView]);
 
-  const handleSearch = (e) => {
-    let countElLastRow, tmp;
-    setSearchKey(e.target.value);
-    const elPerRow = Math.floor(currMainWidth / 300);
-
-    if (e.target.value.length >= 3) {
-      const filteredData = loadedData.filter((el) =>
-        el.name.toLowerCase().includes(e.target.value.toLowerCase())
+  const handleSearchChange = (e) => {
+    const filterKey = e.target.value;
+    if (filterKey.length >= 3) {
+      const filteredData = resources.filter((el) =>
+        el.name.toLowerCase().includes(filterKey.toLowerCase())
       );
-      countElLastRow = filteredData.length % elPerRow;
-      tmp = filteredData.slice();
+      setLoadedData(filteredData);
     } else {
-      countElLastRow = resources.length % elPerRow;
-      tmp = resources.slice();
+      setLoadedData(resources);
     }
-
-    for (let i = 0; i < elPerRow - countElLastRow; i++) {
-      tmp.push({ _id: i, name: '', status: 'fake_data' });
-    }
-
-    setLoadedData(tmp);
   };
 
-  const handleCardAction = async (method, value) => {
-    try {
+  const handleCardAction = (type, value) => {
+    if (type === 'view') {
+      setOpenView(true);
       setSelectedData(value);
-      if (method === 'delete') {
-        const response = await deleteDocument({
-          variables: {
-            id: value['_id'],
-            schemaType: 'station'
-          }
-        });
-        const { data } = response;
-        enqueueSnackbar(data.deleteDocument, { variant: 'success' });
-      }
-
-      if (method === 'view') {
-        setOpenPreview(true);
-      }
-
-      if (method === 'body') {
-        const id = value['_id'];
-
-        history.push({ pathname: `/topologies/districts/null/${id}` });
-      }
-    } catch (error) {
-      console.log(error.message);
-      enqueueSnackbar(error.message, { variant: 'error' });
+      onChange('view', value);
     }
   };
 
-  const handleCreateDialogChange = async (flag, value) => {
-    try {
-      if (flag) {
-        await createGrouping({
-          variables: {
-            schemaType: 'station',
-            schemaVer: 1,
-            version: 1,
-            name: value.name,
-            desc: {
-              title: value.title,
-              short: value.short,
-              long: value.long
-            }
-          }
-        });
-        enqueueSnackbar('Successfully station created!', {
-          variant: 'success'
-        });
-      }
-
-      setOpenCreate(false);
-    } catch (error) {
-      console.log(error.message);
-      enqueueSnackbar(error.message, { variant: 'error' });
+  const handleDetailChange = (type, value) => {
+    if (type === 'close') {
+      setOpenView(false);
+      setSelectedData();
+      onChange('view');
     }
   };
 
   return (
     <Box className={classes.root}>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="h6" className={classes.panelTitle}>
-          <FontAwesomeIcon
-            icon={faBroadcastTower}
-            className={classes.panelIcon}
-          />
-          Stations
-        </Typography>
-        <Box display="flex" alignItems="center">
-          <FormControl className={classes.searchBar}>
-            <InputBase
-              placeholder="Search stations..."
-              type="text"
-              variant="outline"
-              autoFocus
-              value={searchKey}
-              onChange={handleSearch}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton size="small">
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-          <Button
-            variant="contained"
-            className={classes.addBtn}
-            onClick={() => setOpenCreate(true)}
-          >
-            <AddIcon />
-            New Station
-          </Button>
+      <Box className={classes.toolbar}>
+        <Box component={Typography} variant="h5" className={classes.title}>
+          <FontAwesomeIcon icon={faChalkboardTeacher} />
+          &nbsp; &nbsp; Stations
         </Box>
+        <Box component={Paper} className={classes.search}>
+          <InputBase
+            className={classes.input}
+            onChange={handleSearchChange}
+            placeholder="Search stations... ... "
+            inputProps={{ 'aria-label': 'search stations' }}
+          />
+          <IconButton
+            type="submit"
+            className={classes.iconButton}
+            aria-label="search"
+          >
+            <SearchIcon />
+          </IconButton>
+        </Box>
+        <Button
+          variant="contained"
+          className={classes.addButton}
+          // onClick={() => setOpenCreate(true)}
+        >
+          Add New Station
+        </Button>
       </Box>
-      <Divider className={classes.separator} />
       <LoadingCard loading={loadingPage} height={`calc(100vh - 200px)`}>
-        <main className={classes.main} ref={mainRef}>
-          {loadedData.map((el) =>
-            el.status === 'fake_data' ? (
-              <div key={el['_id']} style={{ width: 300, margin: 8 }}></div>
-            ) : (
-              <Card className={classes.card} key={el['_id']}>
-                <CardActionArea onClick={() => handleCardAction('body', el)}>
-                  <CardMedia
-                    component="img"
-                    alt="Contemplative Reptile"
-                    height="140"
-                    image={el.avatar?.url ? el.avatar?.url : noLogo}
-                    title="Contemplative Reptile"
+        <Box className={classes.main}>
+          <Box
+            className={clsx({
+              [classes.elements]: !openView,
+              [classes.elementsOnView]: openView
+            })}
+            ref={mainRef}
+          >
+            {!openView &&
+              loadedData.map((el) =>
+                el.status === 'fake_data' ? (
+                  <div key={el['_id']} style={{ width: 250, margin: 8 }}></div>
+                ) : (
+                  <StationCard
+                    data={el}
+                    key={el['_id']}
+                    onChange={handleCardAction}
                   />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h6" component="h2">
-                      {el.name}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      component="p"
-                    >
-                      {!el.desc || !el.desc?.long ? (
-                        <em>No description</em>
-                      ) : (
-                        <React.Fragment>
-                          {el.desc.long.length > 150
-                            ? `${el.desc.long.substring(0, 150)}... ...`
-                            : el.desc.long}
-                        </React.Fragment>
-                      )}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-                <CardActions className={classes.cardAction}>
-                  <Button
-                    size="small"
-                    color="secondary"
-                    onClick={() => handleCardAction('delete', el)}
-                  >
-                    delete
-                  </Button>
-                  <Button
-                    size="small"
-                    color="primary"
-                    onClick={() => handleCardAction('view', el)}
-                  >
-                    view
-                  </Button>
-                </CardActions>
-              </Card>
-            )
+                )
+              )}
+            <Box component={List}>
+              {openView &&
+                loadedData.map((el) => (
+                  <StationList
+                    key={el['_id']}
+                    data={el}
+                    selectedData={selectedData}
+                    onChange={(value) => setSelectedData(value)}
+                  />
+                ))}
+            </Box>
+          </Box>
+          {openView && (
+            <Box component={Paper} className={classes.preview}>
+              <StationEdit
+                resources={selectedData}
+                onChange={handleDetailChange}
+              />
+            </Box>
           )}
-          <CreateStation
-            open={openCreate}
-            onChange={handleCreateDialogChange}
-          />
-          <PreviewStation
-            open={openPreview}
-            resources={selectedData}
-            onChange={() => setOpenPreview(!openPreview)}
-          />
-        </main>
+        </Box>
       </LoadingCard>
     </Box>
   );
