@@ -51,7 +51,11 @@ const TopologyContainer = ({ match, history }) => {
         })}
       >
         {currPage === 'station' && (
-          <TStation resources={stationData} onChange={handleStationChange} />
+          <TStation
+            params={params}
+            resources={stationData}
+            onChange={handleStationChange}
+          />
         )}
       </main>
     </div>

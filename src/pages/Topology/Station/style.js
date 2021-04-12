@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { lightBlue } from '@material-ui/core/colors';
+import { lightBlue, green } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,6 +43,29 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       background: lightBlue['400']
     }
+  },
+  saveButton: {
+    height: 40,
+    borderRadius: 40,
+    background: lightBlue['300'],
+    color: theme.palette.blueGrey['900'],
+    fontWeight: 500,
+    fontSize: '.75rem',
+    '&:hover': {
+      background: lightBlue['400']
+    },
+    '&:disabled': {
+      background: theme.palette.blueGrey['300'],
+      color: theme.palette.common.light
+    }
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
   },
   main: {
     display: 'flex'

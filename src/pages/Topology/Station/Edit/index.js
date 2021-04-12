@@ -6,8 +6,6 @@ import useStyles from './style';
 const StationEdit = ({ resources, onChange }) => {
   const classes = useStyles();
 
-  const handleFormChange = () => {};
-
   return (
     <div className={classes.root}>
       <Box className={classes.title}>
@@ -32,7 +30,7 @@ const StationEdit = ({ resources, onChange }) => {
                 docId={resources['_id']}
                 resources={resources.avatar?.url}
                 acceptedFiles={['image/png']}
-                onChange={(value) => handleFormChange('avatar', value)}
+                onChange={(value) => onChange('avatar', value)}
               />
               <DescriptionForm
                 resources={{
@@ -40,12 +38,12 @@ const StationEdit = ({ resources, onChange }) => {
                   short: resources.desc?.short,
                   long: resources.desc?.long
                 }}
-                onChange={(value) => handleFormChange('desc', value)}
+                onChange={(value) => onChange('desc', value)}
               />
             </Box>
             <TagForm
               resources={resources.tagList}
-              onChange={(value) => handleFormChange('tagList', value)}
+              onChange={(value) => onChange('tagList', value)}
             />
           </Grid>
         </Grid>
