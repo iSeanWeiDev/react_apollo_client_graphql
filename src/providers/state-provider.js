@@ -1,5 +1,6 @@
 import React, { useState, useContext, createContext } from 'react';
 import { useSubscription } from '@apollo/client';
+import { isEmptyObject } from '@app/utils/data-format';
 import graphql from '@app/graphql';
 
 const AppStateContext = createContext(null);
@@ -26,7 +27,7 @@ const AppStateProvider = ({ ...props }) => {
         }
       });
 
-      let data = existData ? existData.grouping.slice() : [];
+      let data = isEmptyObject(existData) ? existData.grouping.slice() : [];
       const idx = data.findIndex((el) => el['_id'] === groupingAdd['_id']);
       if (idx > -1) {
         data[idx] = groupingAdd;
@@ -60,7 +61,7 @@ const AppStateProvider = ({ ...props }) => {
         }
       });
 
-      let tmp = existData ? existData.grouping.slice() : [];
+      let tmp = isEmptyObject(existData) ? existData.grouping.slice() : [];
       const idx = tmp.findIndex((el) => el['_id'] === groupingUpdate['_id']);
       if (idx > -1) {
         tmp[idx] = groupingUpdate;
@@ -93,10 +94,7 @@ const AppStateProvider = ({ ...props }) => {
         }
       });
 
-      let tmp =
-        existData || Object.keys(existData).length > 0
-          ? existData.grouping.slice()
-          : [];
+      let tmp = isEmptyObject(existData) ? existData.grouping.slice() : [];
       const data = tmp.findIndex((el) => el['_id'] !== _id);
 
       client.writeQuery({

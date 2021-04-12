@@ -11,6 +11,9 @@ const TagForm = ({ resources, onChange }) => {
     if (resources) {
       setLoadedData(resources);
       setValue(resources);
+    } else {
+      setLoadedData([]);
+      setValue([]);
     }
   }, [resources]);
 

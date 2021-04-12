@@ -33,3 +33,17 @@ export const genLessonTreeData = (arr1, arr2) => {
   });
   return nodeObj;
 };
+
+export const isEmptyObject = (value) => {
+  if (!value) return false;
+  if (!value.isArray) {
+    if (typeof value === 'object') {
+      if (Object.keys(value).length > 0) return true;
+      else return false;
+    }
+
+    return false;
+  }
+
+  return true;
+};
