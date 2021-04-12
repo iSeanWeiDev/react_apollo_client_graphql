@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@material-ui/lab';
 import { Grid, Box, Button, AppBar, Tab } from '@material-ui/core';
 import { TagForm, AvatarForm, DescriptionForm } from '@app/components/Forms';
+import { UserTable } from '@app/components/Tables';
 import useStyles from './style';
 
 const ClassDetail = ({ resources, onChange }) => {
@@ -64,8 +65,12 @@ const ClassDetail = ({ resources, onChange }) => {
           </Grid>
         </Grid>
       </TabPanel>
-      <TabPanel value="2"></TabPanel>
-      <TabPanel value="3"></TabPanel>
+      <TabPanel value="2">
+        <UserTable />
+      </TabPanel>
+      <TabPanel value="3">
+        <UserTable />
+      </TabPanel>
     </TabContext>
   );
 };
