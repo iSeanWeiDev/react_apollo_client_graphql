@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => ({
   },
   mainOpen: {
     marginLeft: 270,
-    width: 'calc(100vw - 510px)'
+    width: 'calc(100vw - 490px)'
   },
   mainClose: {
     marginLeft: 30,

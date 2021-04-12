@@ -1,84 +1,62 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
+import { lightBlue, green } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flex: 1,
-    padding: theme.spacing(3)
+    flex: 1
   },
-  cardAction: {
+  toolbar: {
+    width: '100%',
+    height: 100,
+    background: theme.palette.blueGrey['900'],
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: theme.spacing(3)
   },
-  addBtn: {
-    color: theme.palette.common.white,
-    backgroundColor: theme.palette.blueGrey['500'],
+  title: {
+    fontWeight: 700,
+    color: theme.palette.common.white
+  },
+  search: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: 400,
+    height: 40,
+    borderRadius: 40
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1
+  },
+  iconButton: {
+    padding: 10
+  },
+  addButton: {
+    height: 40,
+    borderRadius: 40,
+    background: lightBlue['300'],
+    color: theme.palette.blueGrey['900'],
+    fontWeight: 500,
+    fontSize: '.75rem',
     '&:hover': {
-      background: theme.palette.blueGrey['500'],
-      color: theme.palette.blueGrey['50']
+      background: lightBlue['400']
     }
   },
-  panelIcon: {
-    color: theme.palette.blueGrey['500'],
-    marginRight: theme.spacing(1)
-  },
-  searchBar: {
-    marginRight: theme.spacing(2)
-  },
-  panelTitle: {
-    color: theme.palette.blueGrey['500']
-  },
-  separator: {
-    marginTop: 5,
-    background: theme.palette.blueGrey['500'],
-    height: 2
-  },
-  main: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap'
-  },
-  card: {
-    width: 300,
-    margin: theme.spacing(1)
-  },
-  cardContent: {
-    minHeight: 150
-  },
-  inputArea: {
-    width: '100%',
-    marginBottom: theme.spacing(1)
-  },
-  textArea: {
-    minWidth: '100%',
-    maxWidth: '100%',
-    fontFamily: 'Roboto',
-    fontSize: 16,
-    paddingTop: 9,
-    paddingLeft: 12,
-    outlineColor: theme.palette.primary.main,
-    borderRadius: 5,
-    borderColor: '#c1bdbd'
-  },
-  dialogTitle: {
-    color: theme.palette.blueGrey['700'],
-    paddingBottom: theme.spacing(0)
-  },
-  dialogPaper: {
-    minHeight: '100vh',
-    maxHeight: '100vh',
-    position: 'absolute',
-    right: 0,
-    margin: 0,
-    borderRadius: 0
-  },
-  buttonSuccess: {
-    color: theme.palette.common.white,
-    backgroundColor: theme.palette.blueGrey['500'],
+  saveButton: {
+    height: 40,
+    borderRadius: 40,
+    background: lightBlue['300'],
+    color: theme.palette.blueGrey['900'],
+    fontWeight: 500,
+    fontSize: '.75rem',
     '&:hover': {
-      background: theme.palette.blueGrey['500'],
-      color: theme.palette.blueGrey['50']
+      background: lightBlue['400']
+    },
+    '&:disabled': {
+      background: theme.palette.blueGrey['300'],
+      color: theme.palette.common.light
     }
   },
   buttonProgress: {
@@ -88,6 +66,49 @@ const useStyles = makeStyles((theme) => ({
     left: '50%',
     marginTop: -12,
     marginLeft: -12
+  },
+  main: {
+    display: 'flex'
+  },
+  elements: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap'
+  },
+  elementsOnView: {
+    width: 300,
+    maxHeight: 'calc(100vh - 200px)',
+    overflow: 'auto'
+  },
+  card: {
+    width: 250,
+    margin: theme.spacing(1)
+  },
+  cardContent: {
+    minHeight: 110,
+    padding: '8px 16px 8px 16px'
+  },
+  cardAction: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '0 16px 0 16px'
+  },
+  listItem: {
+    cursor: 'pointer',
+    padding: '4px 8px 4px 8px'
+  },
+  listItemSelected: {
+    width: 270,
+    margin: '4px 8px 4px 8px',
+    background: theme.palette.blueGrey['100']
+  },
+  preview: {
+    margin: theme.spacing(2),
+    width: 'calc(100% - 300px)',
+    minHeight: 'calc(100vh - 200px)',
+    borderRadius: '20px 20px 0 0'
   }
 }));
 

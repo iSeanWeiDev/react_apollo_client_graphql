@@ -87,7 +87,7 @@ const StationCreate = ({ open, onChange }) => {
   const handleChange = async () => {
     try {
       setLoading(true);
-      await createGrouping({
+      const response = await createGrouping({
         variables: {
           schemaType: 'station',
           schemaVer: 1,
@@ -100,7 +100,8 @@ const StationCreate = ({ open, onChange }) => {
           }
         }
       });
-      enqueueSnackbar('Successfully station created!', {
+      const { data } = response;
+      enqueueSnackbar(`Successfully ${data.createGrouping.name} created!`, {
         variant: 'success'
       });
       setLoading(false);

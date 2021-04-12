@@ -18,7 +18,7 @@ import {
 import { useMutation } from '@apollo/client';
 import { Img } from 'react-image';
 import { useSnackbar } from 'notistack';
-import { faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
+import { faBroadcastTower } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LoadingCard } from '@app/components/Cards';
 import noLogo from '@app/assets/imgs/no-logo.jpg';
@@ -106,7 +106,7 @@ const TStation = ({ params, resources, onChange }) => {
       const countElLastRow = resources.length % elPerRow;
       const tmp = resources.slice();
       if (!openView) {
-        for (let i = 0; i < elPerRow - countElLastRow; i++) {
+        for (let i = 0; i < elPerRow - countElLastRow + 1; i++) {
           tmp.push({ _id: i, name: '', status: 'fake_data' });
         }
       }
@@ -151,6 +151,10 @@ const TStation = ({ params, resources, onChange }) => {
         });
         const { data } = response;
         enqueueSnackbar(data.deleteDocument, { variant: 'success' });
+      }
+
+      if (type === 'body') {
+        onChange(type, value);
       }
     } catch (error) {
       console.log(error.message);
@@ -251,7 +255,7 @@ const TStation = ({ params, resources, onChange }) => {
         {!selectedData ? (
           <React.Fragment>
             <Box component={Typography} variant="h5" className={classes.title}>
-              <FontAwesomeIcon icon={faChalkboardTeacher} />
+              <FontAwesomeIcon icon={faBroadcastTower} />
               &nbsp; &nbsp; Stations
             </Box>
             <Box component={Paper} className={classes.search}>
