@@ -32,7 +32,7 @@ const AppRoutes = () => (
       layout={BasicLayout}
     />
     <PrivateRoute
-      path="/topologies/:type?/:typeId?/:parentID?"
+      path="/topologies/:type?/:typeId?"
       component={TopologyContainer}
       layout={DashboardLayout}
     />

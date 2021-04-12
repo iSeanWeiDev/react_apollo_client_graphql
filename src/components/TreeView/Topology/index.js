@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   Box,
@@ -9,7 +8,11 @@ import {
   FormControl,
   Input,
   Divider,
-  InputAdornment
+  InputAdornment,
+  Popover,
+  List,
+  ListItem,
+  ListItemText
 } from '@material-ui/core';
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -17,10 +20,6 @@ import {
   Search as SearchIcon,
   KeyboardReturn as KeyboardReturnIcon
 } from '@material-ui/icons';
-import { LoadingCard } from '@app/components/Cards';
-import { fade, withStyles } from '@material-ui/core/styles';
-import { TreeView, TreeItem } from '@material-ui/lab';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSitemap,
   faBroadcastTower,
@@ -28,60 +27,77 @@ import {
   faStoreAlt,
   faChalkboardTeacher
 } from '@fortawesome/free-solid-svg-icons';
-import {
-  MinusSquare,
-  PlusSquare,
-  CloseSquare,
-  TransitionComponent
-} from './utils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { LoadingCard } from '@app/components/Cards';
+import { TreeView } from '@material-ui/lab';
+import { useGroupingQuery } from '@app/utils/hooks/apollo';
+import { genTopologyTreeData } from '@app/utils/data-format';
+import { MinusSquare, PlusSquare, CloseSquare } from './utils';
+import TreeItem from './TreeItem';
 import useStyles from './style';
 
-TransitionComponent.propTypes = {
-  /**
-   * Show the component; triggers the enter or exit states
-   */
-  in: PropTypes.bool
-};
-
-const StyledTreeItem = withStyles((theme) => ({
-  iconContainer: {
-    '& .close': {
-      opacity: 0.3
-    }
-  },
-  group: {
-    marginLeft: 7,
-    paddingLeft: 18,
-    borderLeft: `1px dashed ${fade(theme.palette.text.primary, 0.4)}`
-  }
-}))(({ label, labelIcon, ...rest }) => (
-  <TreeItem
-    label={
-      <React.Fragment>
-        <FontAwesomeIcon icon={labelIcon} size="xs" />
-        &nbsp; <Typography variant="caption">{label}</Typography>
-      </React.Fragment>
-    }
-    {...rest}
-    TransitionComponent={TransitionComponent}
-  />
-));
-
-const AppTreeView = ({ loading, open, preview, resources, onChange }) => {
+const AppTreeView = ({ open, preview, onChange }) => {
   const classes = useStyles();
+  const [loading, setLoading] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
   const [searchKey, setSearchKey] = useState('');
   const [loadedData, setLoadedData] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedNode, setSelectedNode] = useState();
+  const stationData = useGroupingQuery({ schemaType: 'station' });
+  const districtData = useGroupingQuery({ schemaType: 'district' });
+  const schoolData = useGroupingQuery({ schemaType: 'school' });
+  const classData = useGroupingQuery({ schemaType: 'class' });
+
+  const popOverData = [
+    { label: 'Create', value: 'create' },
+    { label: 'Edit', value: 'edit' },
+    { label: 'Delete', value: 'delete' }
+  ];
   const handleSubmit = () => {
     setOpenSearch(!openSearch);
   };
 
   useEffect(() => {
-    if (resources) {
-      setLoadedData(resources);
-    }
-  }, [resources]);
+    setLoading(true);
+    if (stationData && districtData && schoolData && classData) {
+      const tmp = genTopologyTreeData(
+        stationData,
+        districtData,
+        schoolData,
+        classData
+      );
 
+      setLoadedData(tmp);
+      setLoading(false);
+    }
+  }, [stationData, districtData, schoolData, classData]);
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleRightClick = (event) => {
+    event.preventDefault();
+    const strDom = event.target.outerHTML;
+    const doc = new DOMParser().parseFromString(strDom, 'text/xml');
+    const tmp = doc.firstChild.getAttribute('value');
+    if (tmp) {
+      setAnchorEl(event.target);
+      setSelectedNode(tmp);
+    }
+  };
+
+  const openPopover = Boolean(anchorEl);
+
+  const handleActionClick = (value) => {
+    onChange(value, selectedNode);
+    setAnchorEl(null);
+  };
+
+  const handleNodeSelect = (event, value) => {
+    setSelectedNode(value);
+  };
   return (
     <Box
       component={Paper}
@@ -95,7 +111,7 @@ const AppTreeView = ({ loading, open, preview, resources, onChange }) => {
           position="relative"
           component={IconButton}
           size="small"
-          onClick={() => onChange()}
+          onClick={() => onChange('close')}
           className={clsx(classes.collapseBtn, {
             [classes.openBtn]: open,
             [classes.closeBtn]: !open
@@ -127,7 +143,6 @@ const AppTreeView = ({ loading, open, preview, resources, onChange }) => {
               </IconButton>
             )}
           </Box>
-          {preview && <Divider className={classes.separator} />}
           {openSearch && (
             <FormControl fullWidth className={classes.searchBar}>
               <Input
@@ -148,6 +163,7 @@ const AppTreeView = ({ loading, open, preview, resources, onChange }) => {
               />
             </FormControl>
           )}
+          {!openSearch && <Divider className={classes.separator} />}
           <LoadingCard loading={loading} height={`calc(100vh - 200px)`}>
             <TreeView
               className={classes.treeView}
@@ -155,44 +171,78 @@ const AppTreeView = ({ loading, open, preview, resources, onChange }) => {
               defaultCollapseIcon={<MinusSquare />}
               defaultExpandIcon={<PlusSquare />}
               defaultEndIcon={<CloseSquare />}
+              onContextMenu={handleRightClick}
+              onNodeSelect={handleNodeSelect}
             >
               {loadedData.length > 0 &&
                 loadedData.map((sd) => (
-                  <StyledTreeItem
+                  <TreeItem
                     key={sd.parent['_id']}
-                    nodeId={sd.parent['_id']}
+                    nodeId={`station-${sd.parent['_id']}`}
                     label={sd.parent.name}
                     labelIcon={faBroadcastTower}
+                    resources={sd.parent}
                   >
                     {sd.children.map((sdc) => (
-                      <StyledTreeItem
+                      <TreeItem
                         key={sdc.parent['_id']}
-                        nodeId={sdc.parent['_id']}
+                        nodeId={`district-${sdc.parent['_id']}`}
                         label={sdc.parent.name}
                         labelIcon={faSchool}
+                        resources={sdc.parent}
                       >
                         {sdc.children.map((sdcc) => (
-                          <StyledTreeItem
+                          <TreeItem
                             key={sdcc.parent['_id']}
-                            nodeId={sdcc.parent['_id']}
+                            nodeId={`school-${sdcc.parent['_id']}`}
                             label={sdcc.parent?.name}
                             labelIcon={faStoreAlt}
+                            resources={sdcc.parent}
                           >
                             {sdcc.children.map((sdccc) => (
-                              <StyledTreeItem
+                              <TreeItem
                                 key={sdccc['_id']}
-                                nodeId={sdccc['_id']}
+                                nodeId={`class-${sdccc['_id']}`}
                                 label={sdccc.name}
                                 labelIcon={faChalkboardTeacher}
+                                resources={sdccc}
                               />
                             ))}
-                          </StyledTreeItem>
+                          </TreeItem>
                         ))}
-                      </StyledTreeItem>
+                      </TreeItem>
                     ))}
-                  </StyledTreeItem>
+                  </TreeItem>
                 ))}
             </TreeView>
+            <Popover
+              id={'popover-label'}
+              style={{ pointerEvents: 'fill' }}
+              open={openPopover}
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left'
+              }}
+              onClose={handlePopoverClose}
+              disableRestoreFocus
+            >
+              <List dense className={classes.list}>
+                {popOverData.map((el) => (
+                  <ListItem
+                    key={el.value}
+                    className={classes.listItem}
+                    onClick={() => handleActionClick(el.value)}
+                  >
+                    <ListItemText primary={el.label} />
+                  </ListItem>
+                ))}
+              </List>
+            </Popover>
           </LoadingCard>
         </main>
       )}

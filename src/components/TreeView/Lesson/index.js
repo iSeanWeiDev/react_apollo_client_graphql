@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   Box,
@@ -19,99 +18,46 @@ import {
   Loop as LoopIcon
 } from '@material-ui/icons';
 import { LoadingCard } from '@app/components/Cards';
-import { fade, withStyles } from '@material-ui/core/styles';
-import { TreeView, TreeItem } from '@material-ui/lab';
+
+import { TreeView } from '@material-ui/lab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faFolder,
-  faFileAlt,
   faBookOpen,
   faChalkboardTeacher
 } from '@fortawesome/free-solid-svg-icons';
+import { useGroupingQuery } from '@app/utils/hooks/apollo';
+import { genLessonTreeData } from '@app/utils/data-format';
 import {
   MinusSquare,
   PlusSquare,
   CloseSquare,
-  TransitionComponent
+  StyledTreeItem,
+  RenderTreeViewEls
 } from './utils';
 import useStyles from './style';
 
-TransitionComponent.propTypes = {
-  /**
-   * Show the component; triggers the enter or exit states
-   */
-  in: PropTypes.bool
-};
-
-const StyledTreeItem = withStyles((theme) => ({
-  iconContainer: {
-    '& .close': {
-      opacity: 0.3
-    }
-  },
-  group: {
-    marginLeft: 7,
-    paddingLeft: 18,
-    borderLeft: `1px dashed ${fade(theme.palette.text.primary, 0.4)}`
-  }
-}))(({ label, labelIcon, ...rest }) => (
-  <TreeItem
-    label={
-      <React.Fragment>
-        <FontAwesomeIcon icon={labelIcon} size="xs" />
-        &nbsp; <Typography variant="caption">{label}</Typography>
-      </React.Fragment>
-    }
-    {...rest}
-    TransitionComponent={TransitionComponent}
-  />
-));
-
-const RenderTreeViewEls = ({ id, treeData }) => {
-  return (
-    treeData[id] &&
-    treeData[id].childrenIdList &&
-    treeData[id].childrenIdList.map((el) => {
-      let childid = el;
-      let childobj = treeData[childid];
-
-      return (
-        <StyledTreeItem
-          key={childid}
-          nodeId={childid}
-          label={childobj?.name}
-          labelIcon={childobj?.childrenIdList ? faFolder : faFileAlt}
-        >
-          {childobj?.childrenIdList && (
-            <RenderTreeViewEls id={childid} treeData={treeData} />
-          )}
-        </StyledTreeItem>
-      );
-    })
-  );
-};
-
-const LessonTreeView = ({
-  loading,
-  open,
-  preview,
-  classData,
-  treeData,
-  onChange
-}) => {
+const LessonTreeView = ({ open, preview, onChange }) => {
   const classes = useStyles();
+  const [loading, setLoading] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
   const [canRefresh, setCanRefresh] = useState(false);
   const [searchKey, setSearchKey] = useState('');
   const [loadedClassData, setLoadedClassData] = useState([]);
+  const [treeData, setTreeData] = useState({});
   const [loadedTreeData, setLoadedTreeData] = useState({});
+  const classData = useGroupingQuery({ schemaType: 'class' });
+  const materialData = useGroupingQuery({ schemaType: 'material' });
 
   useEffect(() => {
-    if (classData && treeData) {
-      setLoadedTreeData(treeData);
+    setLoading(true);
+    if (materialData && classData) {
+      const tmp = genLessonTreeData(classData, materialData);
+      setTreeData(tmp);
       setLoadedClassData(classData);
+      setLoadedTreeData(tmp);
+      setLoading(false);
     }
-  }, [classData, treeData]);
+  }, [materialData, classData]);
 
   const handleSubmit = () => {
     if (searchKey.length > 0) {
@@ -215,7 +161,6 @@ const LessonTreeView = ({
               </Box>
             )}
           </Box>
-          {preview && <Divider className={classes.separator} />}
           {openSearch && (
             <FormControl fullWidth className={classes.searchBar}>
               <Input
@@ -236,6 +181,7 @@ const LessonTreeView = ({
               />
             </FormControl>
           )}
+          {!openSearch && <Divider className={classes.separator} />}
           <LoadingCard
             loading={loading}
             height={`calc(100vh - 200px)`}

@@ -3,117 +3,55 @@ import clsx from 'clsx';
 import { withRouter } from 'react-router-dom';
 import { useGroupingQuery } from '@app/utils/hooks/apollo';
 import { TopologyTreeView } from '@app/components/TreeView';
-import { useAppStateContext } from '@app/providers';
 import TStation from './Station';
-import TDistrict from './District';
-import TSchool from './School';
-import TClass from './Class';
+// import TDistrict from './District';
+// import TSchool from './School';
+// import TClass from './Class';
 import useStyles from './style';
 
 const TopologyContainer = ({ match, history }) => {
   const classes = useStyles();
   const { params } = match;
-  const [appStateContext, setAppStateContext] = useAppStateContext();
   const [openTreeView, setOpenTreeView] = useState(true);
-  const [treeData, setTreeData] = useState([]);
-  const [currPage, setCurrPage] = useState('');
-  const [treeLoading, setTreeLoading] = useState(false);
+  const [currPage, setCurrPage] = useState('station');
   const stationData = useGroupingQuery({ schemaType: 'station' });
-  const districtData = useGroupingQuery({ schemaType: 'district' });
-  const schoolData = useGroupingQuery({ schemaType: 'school' });
-  const classData = useGroupingQuery({ schemaType: 'class' });
+  // const districtData = useGroupingQuery({ schemaType: 'district' });
+  // const schoolData = useGroupingQuery({ schemaType: 'school' });
+  // const classData = useGroupingQuery({ schemaType: 'class' });
 
   useEffect(() => {
     if (params) {
       if (!params.type) history.push({ pathname: '/topologies/stations' });
-
-      switch (params.type) {
-        case 'stations':
-          setCurrPage('station');
-          break;
-        case 'districts':
-          setCurrPage('district');
-          break;
-        case 'schools':
-          setCurrPage('school');
-          break;
-        case 'classes':
-          setCurrPage('class');
-          break;
-        default:
-          break;
-      }
     }
   }, [params]);
 
-  const generateTreeStructure = (arr1, arr2, arr3, arr4) => {
-    const tmp1 = [];
-    arr1.forEach((station) => {
-      const dis = arr2.filter((el) => el.topology?.station === station['_id']);
-      const tmp2 = [];
-      dis.forEach((district) => {
-        const sch = arr3.filter(
-          (el) => el.topology?.district === district['_id']
-        );
+  const handleStationChange = (type, value) => {
+    if (type === 'view') {
+      let pathname = '';
+      setOpenTreeView(false);
 
-        const tmp3 = [];
-        sch.forEach((school) => {
-          const cls = arr4.filter(
-            (el) => el.topology?.school === school['_id']
-          );
-          tmp3.push({ parent: school, children: cls });
-        });
-        tmp2.push({ parent: district, children: tmp3 });
-      });
-      tmp1.push({ parent: station, children: tmp2 });
-    });
-
-    return tmp1;
+      if (value) pathname = `/topologies/stations/${value['_id']}`;
+      else pathname = `/topologies/stations`;
+      history.push({ pathname });
+    }
   };
 
-  useEffect(() => {
-    setTreeLoading(true);
-    if (stationData && districtData && schoolData && classData) {
-      const tmp = generateTreeStructure(
-        stationData,
-        districtData,
-        schoolData,
-        classData
-      );
-
-      setTreeData(tmp);
-      setTreeLoading(false);
-
-      setAppStateContext({
-        ...appStateContext,
-        topologies: tmp
-      });
-    }
-  }, [stationData, districtData, schoolData, classData]);
+  const handleTreeChange = (type, value) => {
+    if (type === 'close') setOpenTreeView(!openTreeView);
+    console.log(type, value);
+  };
 
   return (
     <div className={classes.root}>
-      <TopologyTreeView
-        loading={treeLoading}
-        open={openTreeView}
-        resources={treeData}
-        onChange={() => setOpenTreeView(!openTreeView)}
-      />
+      <TopologyTreeView open={openTreeView} onChange={handleTreeChange} />
       <main
         className={clsx({
           [classes.mainOpen]: openTreeView,
           [classes.mainClose]: !openTreeView
         })}
       >
-        {currPage === 'station' && <TStation resources={stationData} />}
-        {currPage === 'district' && (
-          <TDistrict resources={districtData} stations={stationData} />
-        )}
-        {currPage === 'school' && (
-          <TSchool resources={schoolData} districts={districtData} />
-        )}
-        {currPage === 'class' && (
-          <TClass resources={classData} schools={schoolData} />
+        {currPage === 'station' && (
+          <TStation resources={stationData} onChange={handleStationChange} />
         )}
       </main>
     </div>
