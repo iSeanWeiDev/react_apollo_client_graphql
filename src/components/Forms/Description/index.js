@@ -30,7 +30,7 @@ const DescriptionForm = ({ resources, onChange }) => {
         label="Title *"
         size="small"
         variant="outlined"
-        value={loadedData?.title}
+        value={loadedData?.title || ''}
         onChange={(e) => handleInputChange('title', e.target.value)}
         className={classes.inputArea}
       />
@@ -38,7 +38,7 @@ const DescriptionForm = ({ resources, onChange }) => {
         label="Short description"
         size="small"
         variant="outlined"
-        value={loadedData?.short}
+        value={loadedData?.short || ''}
         onChange={(e) => handleInputChange('short', e.target.value)}
         className={classes.inputArea}
         multiline
@@ -50,7 +50,7 @@ const DescriptionForm = ({ resources, onChange }) => {
         variant="outlined"
         multiline
         rows={8}
-        value={loadedData?.long}
+        value={loadedData?.long || ''}
         onChange={(e) => handleInputChange('long', e.target.value)}
         className={classes.inputArea}
       />
