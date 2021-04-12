@@ -31,6 +31,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LoadingCard } from '@app/components/Cards';
 import { TreeView } from '@material-ui/lab';
 import { useGroupingQuery } from '@app/utils/hooks/apollo';
+import { isEmptyObject } from '@app/utils/data-format';
 import { genTopologyTreeData } from '@app/utils/data-format';
 import { MinusSquare, PlusSquare, CloseSquare } from './utils';
 import TreeItem from './TreeItem';
@@ -60,7 +61,12 @@ const AppTreeView = ({ open, preview, onChange }) => {
 
   useEffect(() => {
     setLoading(true);
-    if (stationData && districtData && schoolData && classData) {
+    if (
+      isEmptyObject(stationData) &&
+      isEmptyObject(districtData) &&
+      isEmptyObject(schoolData) &&
+      isEmptyObject(classData)
+    ) {
       const tmp = genTopologyTreeData(
         stationData,
         districtData,

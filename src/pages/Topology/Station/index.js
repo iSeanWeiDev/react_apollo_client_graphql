@@ -23,6 +23,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LoadingCard } from '@app/components/Cards';
 import noLogo from '@app/assets/imgs/no-logo.jpg';
 import graphql from '@app/graphql';
+import { isEmptyObject } from '@app/utils/data-format';
+import StationCreate from './Create';
 import StationEdit from './Edit';
 import StationCard from './partials/Card';
 import StationList from './partials/List';
@@ -38,6 +40,7 @@ const TStation = ({ params, resources, onChange }) => {
   const [selectedData, setSelectedData] = useState();
   const [currMainWidth, setCurrMainWidth] = useState(null);
   const [openView, setOpenView] = useState(false);
+  const [openCreate, setOpenCreate] = useState(false);
 
   const [deleteDocument] = useMutation(graphql.mutations.deleteDocument, {
     update(cache, { data: { deleteDocument } }) {
@@ -49,16 +52,18 @@ const TStation = ({ params, resources, onChange }) => {
         }
       });
 
-      const tmp = existData.grouping.filter((el) => el['_id'] !== idx);
-      cache.writeQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: 'station'
-        },
-        data: {
-          grouping: tmp
-        }
-      });
+      if (isEmptyObject(existData.grouping)) {
+        const tmp = existData.grouping.filter((el) => el['_id'] !== idx);
+        cache.writeQuery({
+          query: graphql.queries.grouping,
+          variables: {
+            schemaType: 'station'
+          },
+          data: {
+            grouping: tmp
+          }
+        });
+      }
     }
   });
 
@@ -96,7 +101,7 @@ const TStation = ({ params, resources, onChange }) => {
 
   useEffect(() => {
     setLoadingPage(true);
-    if (resources && currMainWidth) {
+    if (isEmptyObject(resources) && currMainWidth) {
       const elPerRow = Math.floor(currMainWidth / 250);
       const countElLastRow = resources.length % elPerRow;
       const tmp = resources.slice();
@@ -267,7 +272,7 @@ const TStation = ({ params, resources, onChange }) => {
             <Button
               variant="contained"
               className={classes.addButton}
-              // onClick={() => setOpenCreate(true)}
+              onClick={() => setOpenCreate(true)}
             >
               Add New Station
             </Button>
@@ -372,6 +377,7 @@ const TStation = ({ params, resources, onChange }) => {
           )}
         </Box>
       </LoadingCard>
+      <StationCreate open={openCreate} onChange={() => setOpenCreate(false)} />
     </Box>
   );
 };

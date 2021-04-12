@@ -7,8 +7,8 @@ export const useGroupingQuery = (variables) => {
 
   const { loading, error, data } = useQuery(graphql.queries.grouping, {
     variables,
-    fetchPolicy: 'cache-and-network',
-    nextFetchPolicy: 'cache-first'
+    fetchPolicy: 'cache-and-network'
+    // nextFetchPolicy: 'cache-first'
   });
 
   useEffect(() => {
