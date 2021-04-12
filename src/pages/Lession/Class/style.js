@@ -120,6 +120,10 @@ const useStyles = makeStyles((theme) => ({
   },
   completed: {
     display: 'inline-block'
+  },
+  conatiner: {
+    marginLeft: 270,
+    width: 'calc(100vw - 490px)'
   }
 }));
 

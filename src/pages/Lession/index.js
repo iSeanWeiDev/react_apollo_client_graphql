@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { Box } from '@material-ui/core';
 import { useGroupingQuery } from '@app/utils/hooks/apollo';
-import LessonTreeView from './TreeView';
+import { useAppStateContext } from '@app/providers';
+import { LessonTreeView } from '@app/components/TreeView';
 import LessonClass from './Class';
 import useStyles from './style';
 
 const LessonContainer = () => {
   const classes = useStyles();
+  const [appStateContext, setAppStateContext] = useAppStateContext();
   const [treeData, setTreeData] = useState([]);
   const [treeLoading, setTreeLoading] = useState(false);
   const [openTreeView, setOpenTreeView] = useState(false);
@@ -33,6 +35,12 @@ const LessonContainer = () => {
       const tmp = generateTreeStructure(classData, materialData);
       setTreeData(tmp);
       setTreeLoading(false);
+
+      setAppStateContext({
+        ...appStateContext,
+        materials: tmp,
+        classes: classData
+      });
     }
   }, [materialData, classData]);
 

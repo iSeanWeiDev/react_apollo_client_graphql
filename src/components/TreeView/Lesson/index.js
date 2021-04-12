@@ -8,7 +8,8 @@ import {
   Typography,
   FormControl,
   Input,
-  InputAdornment
+  InputAdornment,
+  Divider
 } from '@material-ui/core';
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -90,7 +91,14 @@ const RenderTreeViewEls = ({ id, treeData }) => {
   );
 };
 
-const LessonTreeView = ({ loading, open, classData, treeData, onChange }) => {
+const LessonTreeView = ({
+  loading,
+  open,
+  preview,
+  classData,
+  treeData,
+  onChange
+}) => {
   const classes = useStyles();
   const [openSearch, setOpenSearch] = useState(false);
   const [canRefresh, setCanRefresh] = useState(false);
@@ -118,7 +126,8 @@ const LessonTreeView = ({ loading, open, classData, treeData, onChange }) => {
         if (el.topology?.class) tmpClassData.push(el.topology.class);
       });
 
-      tmpClassData.map(function (a) {
+      // eslint-disable-next-line array-callback-return
+      tmpClassData.map((a) => {
         if (a in hist) hist[a]++;
         else hist[a] = 1;
       });
@@ -153,18 +162,20 @@ const LessonTreeView = ({ loading, open, classData, treeData, onChange }) => {
         [classes.close]: !open
       })}
     >
-      <Box
-        position="relative"
-        component={IconButton}
-        size="small"
-        onClick={() => onChange()}
-        className={clsx(classes.collapseBtn, {
-          [classes.openBtn]: open,
-          [classes.closeBtn]: !open
-        })}
-      >
-        {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-      </Box>
+      {!preview && (
+        <Box
+          position="relative"
+          component={IconButton}
+          size="small"
+          onClick={() => onChange()}
+          className={clsx(classes.collapseBtn, {
+            [classes.openBtn]: open,
+            [classes.closeBtn]: !open
+          })}
+        >
+          {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+        </Box>
+      )}
 
       {open && (
         <main className={classes.main}>
@@ -175,28 +186,36 @@ const LessonTreeView = ({ loading, open, classData, treeData, onChange }) => {
             alignItems="center"
           >
             <Box component={Typography} variant="h6">
-              <FontAwesomeIcon icon={faBookOpen} />
-              &nbsp; Lessons
+              {preview ? (
+                'Lesson Tree View'
+              ) : (
+                <React.Fragment>
+                  <FontAwesomeIcon icon={faBookOpen} />
+                  &nbsp; Lessons
+                </React.Fragment>
+              )}
             </Box>
-            <Box>
-              <IconButton
-                onClick={handleRefresh}
-                size="small"
-                className={classes.actionBtn}
-                disabled={!canRefresh}
-              >
-                <LoopIcon />
-              </IconButton>
-              <IconButton
-                onClick={() => setOpenSearch(!openSearch)}
-                size="small"
-                className={classes.actionBtn}
-              >
-                <SearchIcon />
-              </IconButton>
-            </Box>
+            {!preview && (
+              <Box>
+                <IconButton
+                  onClick={handleRefresh}
+                  size="small"
+                  className={classes.actionBtn}
+                  disabled={!canRefresh}
+                >
+                  <LoopIcon />
+                </IconButton>
+                <IconButton
+                  onClick={() => setOpenSearch(!openSearch)}
+                  size="small"
+                  className={classes.actionBtn}
+                >
+                  <SearchIcon />
+                </IconButton>
+              </Box>
+            )}
           </Box>
-          {/* <Divider className={classes.separator} /> */}
+          {preview && <Divider className={classes.separator} />}
           {openSearch && (
             <FormControl fullWidth className={classes.searchBar}>
               <Input

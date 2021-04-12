@@ -1,28 +1,11 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItem from '@material-ui/core/ListItem';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
+import React, { useEffect, useState } from 'react';
+import { Dialog, Box, Container } from '@material-ui/core';
 import Slide from '@material-ui/core/Slide';
+import { useAppStateContext } from '@app/providers';
 import { AppNavbar } from '@app/components/App';
-
-const useStyles = makeStyles((theme) => ({
-  appBar: {
-    position: 'relative'
-  },
-  title: {
-    marginLeft: theme.spacing(2),
-    flex: 1
-  }
-}));
+import { TopologyTreeView } from '@app/components/TreeView';
+import LessonStepper from './partials/Stepper';
+import useStyles from './style';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -30,6 +13,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const CreateClass = ({ open, onChange }) => {
   const classes = useStyles();
+  const [loadingTreeView, setLoadingTreeView] = useState(false);
+  const [treeData, setTreeData] = useState({});
+  const [appStateContext] = useAppStateContext();
 
   const handleClickOpen = () => {
     onChange(true);
@@ -38,6 +24,13 @@ const CreateClass = ({ open, onChange }) => {
   const handleClose = () => {
     onChange(false);
   };
+  useEffect(() => {
+    setLoadingTreeView(true);
+    if (Object.keys(appStateContext).length > 0) {
+      setTreeData(appStateContext.topologies);
+      setLoadingTreeView(false);
+    }
+  }, [appStateContext]);
 
   return (
     <Dialog
@@ -52,6 +45,18 @@ const CreateClass = ({ open, onChange }) => {
         canClose
         onChange={() => onChange(false)}
       />
+      <main>
+        <TopologyTreeView
+          open
+          preview
+          loading={loadingTreeView}
+          resources={treeData}
+        />
+
+        <Container className={classes.conatiner}>
+          <LessonStepper />
+        </Container>
+      </main>
     </Dialog>
   );
 };
