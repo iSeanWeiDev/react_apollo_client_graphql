@@ -1,7 +1,12 @@
 /* eslint-disable max-len */
-import SvgIcon from '@material-ui/core/SvgIcon';
-import Collapse from '@material-ui/core/Collapse';
+import React from 'react';
+import { Collapse, Typography, SvgIcon } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { fade, withStyles } from '@material-ui/core/styles';
 import { useSpring, animated } from 'react-spring/web.cjs';
+import { faFolder, faFileAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { TreeItem } from '@material-ui/lab';
 
 export const MinusSquare = (props) => (
   <SvgIcon fontSize="inherit" style={{ width: 14, height: 14 }} {...props}>
@@ -46,5 +51,60 @@ export const TransitionComponent = (props) => {
     <animated.div style={style}>
       <Collapse {...props} />
     </animated.div>
+  );
+};
+
+TransitionComponent.propTypes = {
+  /**
+   * Show the component; triggers the enter or exit states
+   */
+  in: PropTypes.bool
+};
+
+export const StyledTreeItem = withStyles((theme) => ({
+  iconContainer: {
+    '& .close': {
+      opacity: 0.3
+    }
+  },
+  group: {
+    marginLeft: 7,
+    paddingLeft: 18,
+    borderLeft: `1px dashed ${fade(theme.palette.text.primary, 0.4)}`
+  }
+}))(({ label, labelIcon, ...rest }) => (
+  <TreeItem
+    label={
+      <React.Fragment>
+        <FontAwesomeIcon icon={labelIcon} size="xs" />
+        &nbsp; <Typography variant="caption">{label}</Typography>
+      </React.Fragment>
+    }
+    {...rest}
+    TransitionComponent={TransitionComponent}
+  />
+));
+
+export const RenderTreeViewEls = ({ id, treeData }) => {
+  return (
+    treeData[id] &&
+    treeData[id].childrenIdList &&
+    treeData[id].childrenIdList.map((el) => {
+      let childid = el;
+      let childobj = treeData[childid];
+
+      return (
+        <StyledTreeItem
+          key={childid}
+          nodeId={childid}
+          label={childobj?.name}
+          labelIcon={childobj?.childrenIdList ? faFolder : faFileAlt}
+        >
+          {childobj?.childrenIdList && (
+            <RenderTreeViewEls id={childid} treeData={treeData} />
+          )}
+        </StyledTreeItem>
+      );
+    })
   );
 };

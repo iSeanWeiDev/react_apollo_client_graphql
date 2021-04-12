@@ -17,10 +17,6 @@ import {
   Search as SearchIcon,
   KeyboardReturn as KeyboardReturnIcon
 } from '@material-ui/icons';
-import { LoadingCard } from '@app/components/Cards';
-import { fade, withStyles } from '@material-ui/core/styles';
-import { TreeView, TreeItem } from '@material-ui/lab';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSitemap,
   faBroadcastTower,
@@ -28,6 +24,12 @@ import {
   faStoreAlt,
   faChalkboardTeacher
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { LoadingCard } from '@app/components/Cards';
+import { fade, withStyles } from '@material-ui/core/styles';
+import { TreeView, TreeItem } from '@material-ui/lab';
+import { useGroupingQuery } from '@app/utils/hooks/apollo';
+import { genTopologyTreeData } from '@app/utils/data-format';
 import {
   MinusSquare,
   PlusSquare,
@@ -37,9 +39,6 @@ import {
 import useStyles from './style';
 
 TransitionComponent.propTypes = {
-  /**
-   * Show the component; triggers the enter or exit states
-   */
   in: PropTypes.bool
 };
 
@@ -67,20 +66,35 @@ const StyledTreeItem = withStyles((theme) => ({
   />
 ));
 
-const AppTreeView = ({ loading, open, preview, resources, onChange }) => {
+const AppTreeView = ({ open, preview, onChange }) => {
   const classes = useStyles();
+  const [loading, setLoading] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
   const [searchKey, setSearchKey] = useState('');
   const [loadedData, setLoadedData] = useState([]);
+  const stationData = useGroupingQuery({ schemaType: 'station' });
+  const districtData = useGroupingQuery({ schemaType: 'district' });
+  const schoolData = useGroupingQuery({ schemaType: 'school' });
+  const classData = useGroupingQuery({ schemaType: 'class' });
+
   const handleSubmit = () => {
     setOpenSearch(!openSearch);
   };
 
   useEffect(() => {
-    if (resources) {
-      setLoadedData(resources);
+    setLoading(true);
+    if (stationData && districtData && schoolData && classData) {
+      const tmp = genTopologyTreeData(
+        stationData,
+        districtData,
+        schoolData,
+        classData
+      );
+
+      setLoadedData(tmp);
+      setLoading(false);
     }
-  }, [resources]);
+  }, [stationData, districtData, schoolData, classData]);
 
   return (
     <Box
