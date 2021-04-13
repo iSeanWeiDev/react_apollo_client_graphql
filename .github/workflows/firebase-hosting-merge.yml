@@ -11,11 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - run: yarn install
-      - run: CI=false && yarn run build
+      - run: yarn build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
@@ -24,4 +20,3 @@ jobs:
           projectId: dashboard-pmep
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
-
