@@ -154,10 +154,13 @@ const UserTable = ({ schemaType, docId, onChange }) => {
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
-    <LoadingCard loading={loading} height={`calc(100vh - 330px)`}>
+    <LoadingCard loading={loading} height={`calc(100vh - 350px)`}>
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          <EnhancedTableToolbar numSelected={selected.length} />
+          <EnhancedTableToolbar
+            schemaType={schemaType}
+            numSelected={selected.length}
+          />
           <TableContainer>
             <Table
               className={classes.table}

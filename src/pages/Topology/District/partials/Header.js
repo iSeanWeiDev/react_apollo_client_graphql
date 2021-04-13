@@ -31,7 +31,7 @@ const DistrictHeader = ({ selectedData, stationData, onChange, ...rest }) => {
               <IconButton
                 color="inherit"
                 style={{ color: 'white' }}
-                // onClick={handleBack}
+                onClick={() => onChange('view')}
               >
                 <BackIcon />
               </IconButton>
@@ -77,7 +77,7 @@ const DistrictHeader = ({ selectedData, stationData, onChange, ...rest }) => {
               <IconButton
                 color="inherit"
                 style={{ color: 'white' }}
-                // onClick={handleBack}
+                onClick={() => onChange('back')}
               >
                 <BackIcon />
               </IconButton>

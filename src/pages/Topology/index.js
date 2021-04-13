@@ -47,12 +47,13 @@ const TopologyContainer = ({ match, history }) => {
 
   const handleDistrictChange = (type, value) => {
     if (type === 'view') {
-      // let pathname = '';
+      let pathname = '';
       setOpenTreeView(false);
 
-      // if (value) pathname = `/topologies/dist/${value['_id']}`;
-      // else pathname = `/topologies/stations`;
-      // history.push({ pathname });
+      if (value)
+        pathname = `/topologies/districts/${value['_id']}/${params.pId}`;
+      else pathname = `/topologies/stations`;
+      history.push({ pathname });
     }
   };
 
