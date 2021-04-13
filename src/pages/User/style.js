@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.blueGrey['500'],
     height: 2
   },
+  avatar: {
+    margin: 'auto'
+  },
   alert: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1)

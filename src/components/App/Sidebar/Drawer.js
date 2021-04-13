@@ -73,8 +73,8 @@ const AppDrawer = ({ location }) => {
     },
     {
       icon: faUsersCog,
-      text: 'Admins',
-      url: '/admins',
+      text: 'Users',
+      url: '/users',
       disabled: false
     }
   ];

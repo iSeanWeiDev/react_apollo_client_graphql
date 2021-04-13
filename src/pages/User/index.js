@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Tab, Tabs } from '@material-ui/core';
 import { AppTabPanel } from '@app/components/App';
-import AdminUsers from './AdminUsers';
+import Users from './Users';
 import useStyles from './style';
 
 const a11yProps = (index) => {
@@ -12,14 +12,16 @@ const a11yProps = (index) => {
   };
 };
 
-const AdminContainer = ({ history, match }) => {
+const UserContainer = ({ history, match }) => {
   const classes = useStyles();
   const [currentTab, setCurrentTab] = useState(0);
   const tabData = [
     { label: 'System Admins', value: 'sysAdmin' },
     { label: 'Station Admins', value: 'stationAdmin' },
     { label: 'District Admins', value: 'districtAdmin' },
-    { label: 'School Admins', value: 'schoolAdmin' }
+    { label: 'School Admins', value: 'schoolAdmin' },
+    { label: 'Educators', value: 'educator' },
+    { label: 'Students', value: 'student' }
   ];
 
   const handleChange = (event, newValue) => {
@@ -28,8 +30,10 @@ const AdminContainer = ({ history, match }) => {
     if (newValue === 1) tabPath = 'station-admins';
     if (newValue === 2) tabPath = 'district-admins';
     if (newValue === 3) tabPath = 'school-admins';
+    if (newValue === 4) tabPath = 'educators';
+    if (newValue === 5) tabPath = 'students';
 
-    history.push({ pathname: `/admins/${tabPath}` });
+    history.push({ pathname: `/users/${tabPath}` });
     setCurrentTab(newValue);
   };
 
@@ -49,6 +53,12 @@ const AdminContainer = ({ history, match }) => {
         case 'school-admins':
           setCurrentTab(3);
           break;
+        case 'educators':
+          setCurrentTab(4);
+          break;
+        case 'students':
+          setCurrentTab(5);
+          break;
         default:
           setCurrentTab(0);
           break;
@@ -66,7 +76,7 @@ const AdminContainer = ({ history, match }) => {
         variant="scrollable"
         value={currentTab}
         onChange={handleChange}
-        aria-label="admin vertical tabs"
+        aria-label="user vertical tabs"
         className={classes.tabs}
         classes={{
           indicator: classes.indicator
@@ -83,11 +93,11 @@ const AdminContainer = ({ history, match }) => {
       </Tabs>
       {tabData.map((el, index) => (
         <AppTabPanel key={index} value={currentTab} index={index}>
-          <AdminUsers type={el.value} />
+          <Users type={el.value} />
         </AppTabPanel>
       ))}
     </div>
   );
 };
 
-export default withRouter(AdminContainer);
+export default withRouter(UserContainer);
