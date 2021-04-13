@@ -16,7 +16,7 @@ const TDistrict = ({ params, stationData, resources, onChange }) => {
   const [openView, setOpenView] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
   const [loadedData, setLoadedData] = useState([]);
-  const [selectedData, setSelectedData] = useState({});
+  const [selectedData, setSelectedData] = useState();
   const [currStation, setCurrStation] = useState({});
   const [currMainWidth, setCurrMainWidth] = useState(null);
 
