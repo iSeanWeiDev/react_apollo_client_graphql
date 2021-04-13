@@ -80,7 +80,7 @@ const LoginContainer = () => {
         cookies.set('password', password, { path: '/' });
       }
 
-      const user = await Auth.signIn(email, password.slice(0, -2));
+      const user = await Auth.signIn(email, password);
       localStorage.setItem('profile', JSON.stringify(user.attributes));
 
       if (other?.schemaType === 'educator' && other?.name === email) {
