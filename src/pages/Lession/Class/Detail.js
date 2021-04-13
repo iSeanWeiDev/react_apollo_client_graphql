@@ -66,10 +66,10 @@ const ClassDetail = ({ resources, onChange }) => {
         </Grid>
       </TabPanel>
       <TabPanel value="2">
-        <UserTable />
+        <UserTable schemaType="educator" docId={resources['_id']} />
       </TabPanel>
       <TabPanel value="3">
-        <UserTable />
+        <UserTable schemaType="student" docId={resources['_id']} />
       </TabPanel>
     </TabContext>
   );

@@ -1,0 +1,48 @@
+fragment Tracking_tracking on Tracking {
+  serverId
+  IPaddress
+  url
+  userId
+  action
+  comment
+  timestamp
+}
+
+fragment DocTracking_docTracking on DocTracking {
+  schemaVer
+  schemaType
+  _id
+  tracking {
+    ...Tracking_tracking
+  }
+}
+
+query Tracking($schemaType: String!, $id: ID!) {
+  tracking(schemaType: $schemaType, _id: $id) {
+    ...Tracking_tracking
+  }
+}
+
+mutation UpsertTracking(
+  $schemaVer: Int!
+  $schemaType: String!
+  $id: ID!
+  $serverId: String
+  $url: String
+  $userId: String
+  $action: String!
+  $comment: String
+) {
+  upsertTracking(
+    schemaVer: $schemaVer
+    schemaType: $schemaType
+    _id: $id
+    serverId: $serverId
+    url: $url
+    userId: $userId
+    action: $action
+    comment: $comment
+  ) {
+    ...Tracking_tracking
+  }
+}

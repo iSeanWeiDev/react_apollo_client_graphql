@@ -8,14 +8,18 @@ import {
   GroupingUpdate
 } from './Grouping.gql';
 
+import { Tracking, UpsertTracking } from './Tracking.gql';
+
 export default {
   queries: {
-    grouping: Grouping
+    grouping: Grouping,
+    tracking: Tracking
   },
   mutations: {
     createGrouping: CreateGrouping,
     deleteDocument: DeleteDocument,
-    updateGrouping: UpdateGrouping
+    updateGrouping: UpdateGrouping,
+    upsertTracking: UpsertTracking
   },
   subscriptions: {
     groupingAdd: GroupingAdd,

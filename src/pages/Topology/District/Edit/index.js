@@ -63,7 +63,7 @@ const DistrictEdit = ({ resources, onChange }) => {
           <UserTable schemaType="educator" docId={resources['_id']} />
         </TabPanel>
         <TabPanel value="3">
-          <UserTable schemaType="student" />
+          <UserTable schemaType="student" docId={resources['_id']} />
         </TabPanel>
       </TabContext>
     </Box>
