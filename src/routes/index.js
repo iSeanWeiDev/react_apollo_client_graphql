@@ -9,7 +9,7 @@ import BasicLayout from '@app/layouts/basic-layout';
 import DashboardLayout from '@app/layouts/dashboard-layout';
 
 import { LoginContainer, ForgotPasswordContainer } from '@app/pages/Auth';
-import AdminContainer from '@app/pages/Admin';
+import UserContainer from '@app/pages/User';
 import TopologyContainer from '@app/pages/Topology';
 import ResourceContainer from '@app/pages/Resource';
 import GalleryContainer from '@app/pages/Gallery';
@@ -52,8 +52,8 @@ const AppRoutes = () => (
       layout={DashboardLayout}
     />
     <PrivateRoute
-      path="/admins/:type?/:id?"
-      component={AdminContainer}
+      path="/users/:type?/:id?"
+      component={UserContainer}
       layout={DashboardLayout}
     />
     <PrivateRoute

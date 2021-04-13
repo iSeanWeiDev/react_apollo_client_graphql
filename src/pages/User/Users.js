@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { Box, Divider, Typography, Button } from '@material-ui/core';
+import { useMutation } from '@apollo/client';
+import { Box, Divider, Typography, Button, Avatar } from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
 import { Alert } from '@material-ui/lab';
@@ -8,11 +8,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { DataGrid } from '@material-ui/data-grid';
 import graphql from '@app/graphql';
+import { useGroupingQuery } from '@app/utils/hooks/apollo';
+import { isEmptyObject } from '@app/utils/data-format';
 import CreateUserDialog from './CreateUser';
 import EditUserDialog from './EditUser';
+import noUserFemale from '@app/assets/imgs/no-user-female.jpeg';
 import useStyles from './style';
 
-const AdminUsers = ({ type }) => {
+const Users = ({ type }) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [loadedData, setLoadedData] = useState([]);
@@ -22,28 +25,62 @@ const AdminUsers = ({ type }) => {
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
+  const [columns, setColumns] = useState([]);
+  const [classOptions, setClassOptions] = useState([]);
+  const [districtOptions, setDistrictOptions] = useState([]);
 
-  const columns = [
+  const initialData = useGroupingQuery({ schemaType: type });
+  const districtData = useGroupingQuery({ schemaType: 'district' });
+  const classData = useGroupingQuery({ schemaType: 'class' });
+
+  const commonCol = [
+    {
+      field: 'photo',
+      headerName: 'User photo',
+      width: 150,
+      renderCell: (params) => (
+        <Avatar src={params.value} className={classes.avatar} />
+      )
+    },
     { field: 'name', headerName: 'User name', width: 250 },
     { field: 'firstName', headerName: 'First name', width: 200 },
     { field: 'lastName', headerName: 'Last name', width: 200 },
     { field: 'email', headerName: 'Email', width: 250 },
-    { field: 'phone', headerName: 'Phone', width: 150 }
+    { field: 'phone', headerName: 'Phone', width: 250 }
   ];
 
   useEffect(() => {
     switch (type) {
       case 'sysAdmin':
         setTitle('System Admins');
+        setColumns(commonCol);
         break;
       case 'stationAdmin':
         setTitle('Station Admins');
+        setColumns(commonCol);
         break;
       case 'districtAdmin':
         setTitle('District Admins');
+        setColumns(commonCol);
         break;
       case 'schoolAdmin':
         setTitle('School Admins');
+        setColumns(commonCol);
+        break;
+      case 'educator':
+        setTitle('Educators');
+        setColumns([
+          ...commonCol,
+          { field: 'district', headerName: 'District', width: 200 }
+        ]);
+        break;
+      case 'student':
+        setTitle('Students');
+        setColumns([
+          ...commonCol,
+          { field: 'district', headerName: 'District', width: 200 },
+          { field: 'classes', headerName: 'Classes', width: 250 }
+        ]);
         break;
       default:
         break;
@@ -105,30 +142,35 @@ const AdminUsers = ({ type }) => {
           schemaType: type
         }
       });
-      const tmp = existData.grouping.filter(
-        (el) => el['_id'] !== selectedUser.idx
-      );
-      cache.writeQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: type
-        },
-        data: {
-          grouping: tmp
-        }
-      });
-    }
-  });
-
-  const { loading, data, error } = useQuery(graphql.queries.grouping, {
-    variables: {
-      schemaType: type
+      console.log(existData);
+      if (isEmptyObject(existData.grouping)) {
+        const tmp = existData.grouping.filter(
+          (el) => el['_id'] !== selectedUser.idx
+        );
+        cache.writeQuery({
+          query: graphql.queries.grouping,
+          variables: {
+            schemaType: type
+          },
+          data: {
+            grouping: tmp
+          }
+        });
+      }
     }
   });
 
   useEffect(() => {
-    if (!loading && !error) {
-      const tmp = data.grouping.map((el, index) => ({
+    if (initialData && districtData && classData) {
+      const tmpClassOptions = classData.map((el) => ({
+        label: el.name,
+        value: el['_id']
+      }));
+      const tmpDistrictOptions = districtData.map((el) => ({
+        label: el.name,
+        value: el['_id']
+      }));
+      const tmp = initialData.map((el, index) => ({
         id: index + 1,
         idx: el['_id'],
         name: el.name,
@@ -137,12 +179,26 @@ const AdminUsers = ({ type }) => {
         email: el.contact?.email,
         phone: el.contact?.phone,
         schemaVer: el.schemaVer,
-        version: el.version
+        version: el.version,
+        photo: el.avatar?.url,
+        district:
+          districtData.find(
+            (district) => district._id === el.topology?.district
+          ) &&
+          districtData.find(
+            (district) => district._id === el.topology?.district
+          ).name,
+        classes:
+          classData.find((cls) => cls._id === el.topology?.class) &&
+          classData.find((cls) => cls._id === el.topology?.class).name,
+        topology: el.topology || {}
       }));
       setLoadedData(tmp);
       setTotalRow(tmp.length);
+      setClassOptions(tmpClassOptions);
+      setDistrictOptions(tmpDistrictOptions);
     }
-  }, [loading, data, error]);
+  }, [initialData, districtData, classData]);
 
   const handleCreateDialogChange = async (flag, value) => {
     try {
@@ -158,6 +214,12 @@ const AdminUsers = ({ type }) => {
               lastName: value.lastName,
               email: value.email,
               phone: value.phone
+            },
+            topology: {
+              district: value.district,
+              class: value.classes,
+              station: value.station ? value.station : '',
+              school: value.school ? value.school : ''
             }
           }
         });
@@ -167,7 +229,8 @@ const AdminUsers = ({ type }) => {
           {
             ...value,
             idx: data.createGrouping['_id'],
-            id: tmp.length > 0 ? tmp[tmp.length - 1]['id'] + 1 : 1
+            id: tmp.length > 0 ? tmp[tmp.length - 1]['id'] + 1 : 1,
+            photo: noUserFemale
           },
           ...tmp
         ]);
@@ -192,6 +255,9 @@ const AdminUsers = ({ type }) => {
               schemaType: type,
               schemaVer: findedData.schemaVer,
               version: findedData.version,
+              avatar: {
+                url: value.photo ? value.photo : findedData.avatar?.url
+              },
               contact: {
                 firstName: value.firstName
                   ? value.firstName
@@ -201,6 +267,16 @@ const AdminUsers = ({ type }) => {
                   : findedData?.lastName,
                 email: value.email ? value.email : findedData?.email,
                 phone: value.phone ? value.phone : findedData?.phone
+              },
+              topology: {
+                district: value.topology?.district
+                  ? value.topology?.district
+                  : findedData.topology?.district,
+                class: value.topology?.class
+                  ? value.topology?.class
+                  : findedData.topology?.class,
+                station: findedData.topology?.station,
+                school: findedData.topology?.school
               }
             }
           });
@@ -214,7 +290,25 @@ const AdminUsers = ({ type }) => {
             lastName: data.updateGrouping.contact?.lastName,
             email: data.updateGrouping.contact?.email,
             phone: data.updateGrouping.contact?.phone,
-            version: data.updateGrouping.version
+            version: data.updateGrouping.version,
+            photo: data.updateGrouping.avatar?.url,
+            district:
+              districtData.find(
+                (district) =>
+                  district._id === data.updateGrouping.topology?.district
+              ) &&
+              districtData.find(
+                (district) =>
+                  district._id === data.updateGrouping.topology?.district
+              ).name,
+            classes:
+              classData.find(
+                (cls) => cls._id === data.updateGrouping.topology?.class
+              ) &&
+              classData.find(
+                (cls) => cls._id === data.updateGrouping.topology?.class
+              ).name,
+            topology: data.updateGrouping.topology || {}
           };
 
           setLoadedData(tmp);
@@ -294,16 +388,20 @@ const AdminUsers = ({ type }) => {
       <EditUserDialog
         type={type}
         open={openEdit}
+        classOptions={classOptions}
+        districtOptions={districtOptions}
         resources={selectedUser}
         onChange={handleEditDialogChange}
       />
       <CreateUserDialog
         type={type}
         open={openCreate}
+        classOptions={classOptions}
+        districtOptions={districtOptions}
         onChange={handleCreateDialogChange}
       />
     </Box>
   );
 };
 
-export default AdminUsers;
+export default Users;

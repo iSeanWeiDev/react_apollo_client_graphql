@@ -5,13 +5,23 @@ import {
   DialogActions,
   TextField,
   DialogTitle,
-  Button
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@material-ui/core';
 import { useInput } from '@app/utils/hooks/form';
 import useStyles from './style';
 
-const CreateUserDialog = ({ open, type, onChange }) => {
-  const classes = useStyles();
+const CreateUserDialog = ({
+  open,
+  type,
+  classOptions,
+  districtOptions,
+  onChange
+}) => {
+  const _classes = useStyles();
   const [title, setTitle] = useState('');
   const {
     value: name,
@@ -43,6 +53,18 @@ const CreateUserDialog = ({ open, type, onChange }) => {
     setValue: setEmail,
     bind: bindEmail
   } = useInput('');
+  const {
+    value: district,
+    reset: resetDistrict,
+    setValue: setDistrict,
+    bind: bindDistrict
+  } = useInput('');
+  const {
+    value: classes,
+    reset: resetClasses,
+    setValue: setClasses,
+    bind: bindClasses
+  } = useInput('');
 
   useEffect(() => {
     resetName();
@@ -50,6 +72,8 @@ const CreateUserDialog = ({ open, type, onChange }) => {
     resetLastName();
     resetPhone();
     resetEmail();
+    resetClasses();
+    resetDistrict();
   }, [open]);
 
   useEffect(() => {
@@ -57,6 +81,8 @@ const CreateUserDialog = ({ open, type, onChange }) => {
     if (type === 'stationAdmin') return setTitle('Station Admin');
     if (type === 'districtAdmin') return setTitle('District Admin');
     if (type === 'schoolAdmin') return setTitle('School Admin');
+    if (type === 'educator') return setTitle('Educator');
+    if (type === 'student') return setTitle('Student');
   }, [type]);
 
   const handleClose = () => {
@@ -69,46 +95,88 @@ const CreateUserDialog = ({ open, type, onChange }) => {
       firstName,
       lastName,
       email,
-      phone
+      phone,
+      classes,
+      district
     });
   };
 
   return (
     <Dialog maxWidth="xs" onClose={handleClose} open={open}>
-      <DialogTitle className={classes.dialogTitle} onClose={handleClose}>
+      <DialogTitle className={_classes.dialogTitle} onClose={handleClose}>
         Add {title}
       </DialogTitle>
       <DialogContent>
         <TextField
           label="User name"
-          className={classes.createInput}
+          className={_classes.createInput}
           onChange={(e) => setName(e.target.value)}
           {...bindName}
         />
         <TextField
           label="First name"
-          className={classes.createInput}
+          className={_classes.createInput}
           onChange={(e) => setFirstName(e.target.value)}
           {...bindFirstName}
         />
         <TextField
           label="Last name"
-          className={classes.createInput}
+          className={_classes.createInput}
           onChange={(e) => setLastName(e.target.value)}
           {...bindLastName}
         />
         <TextField
           label="Email"
-          className={classes.createInput}
+          className={_classes.createInput}
           onChange={(e) => setEmail(e.target.value)}
           {...bindEmail}
         />
         <TextField
           label="Phone"
-          className={classes.createInput}
+          className={_classes.createInput}
           onChange={(e) => setPhone(e.target.value)}
           {...bindPhone}
         />
+        {(type === 'educator' || type === 'student') && (
+          <FormControl className={_classes.createInput}>
+            <InputLabel id="demo-simple-select-outlined-label">
+              District Name
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              onChange={(e) => setDistrict(e.target.value)}
+              label="Districts"
+              {...bindDistrict}
+            >
+              {districtOptions.map((el) => (
+                <MenuItem key={el.value} value={el.value}>
+                  {el.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+        {type === 'student' && (
+          <FormControl className={_classes.createInput}>
+            <InputLabel id="demo-simple-select-outlined-label">
+              Class Name
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              onChange={(e) => setClasses(e.target.value)}
+              label="Classes"
+              {...bindClasses}
+            >
+              {classOptions.map((el) => (
+                <MenuItem key={el.value} value={el.value}>
+                  {el.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={handleChange} color="primary">
@@ -117,7 +185,7 @@ const CreateUserDialog = ({ open, type, onChange }) => {
         <Button
           autoFocus
           onClick={handleClose}
-          className={classes.dialogAddBtn}
+          className={_classes.dialogAddBtn}
         >
           Close
         </Button>
