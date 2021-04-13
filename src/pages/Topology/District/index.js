@@ -7,6 +7,7 @@ import { LoadingCard } from '@app/components/Cards';
 import DistrictHeader from './partials/Header';
 import DistrictCard from './partials/Card';
 import DistrictList from './partials/List';
+import DistrictEdit from './Edit';
 import useStyles from './style';
 
 const TDistrict = ({ params, stationData, resources, onChange }) => {
@@ -60,7 +61,11 @@ const TDistrict = ({ params, stationData, resources, onChange }) => {
 
   return (
     <Box className={classes.root}>
-      <DistrictHeader stationData={currStation} className={classes.toolbar} />
+      <DistrictHeader
+        selectedData={selectedData}
+        stationData={currStation}
+        className={classes.toolbar}
+      />
       <LoadingCard loading={loadingPage} height={`calc(100vh - 200px)`}>
         <Box className={classes.main}>
           <Box
@@ -95,7 +100,9 @@ const TDistrict = ({ params, stationData, resources, onChange }) => {
             </Box>
           </Box>
           {openView && (
-            <Box component={Paper} className={classes.preview}></Box>
+            <Box component={Paper} className={classes.preview}>
+              <DistrictEdit resources={selectedData} onChange={() => {}} />
+            </Box>
           )}
         </Box>
       </LoadingCard>

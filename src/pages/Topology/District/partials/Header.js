@@ -89,7 +89,12 @@ const DistrictHeader = ({ selectedData, stationData, onChange, ...rest }) => {
             />
             <Box marginLeft={2} className={classes.title}>
               <Typography variant="h6">{selectedData.name}</Typography>
-              <Typography variant="caption">Station detail</Typography>
+              <Typography variant="caption">
+                <FontAwesomeIcon icon={faBroadcastTower} />
+                &nbsp; {stationData.name} / &nbsp;
+                <FontAwesomeIcon icon={faSchool} />
+                &nbsp; {selectedData.name}
+              </Typography>
             </Box>
           </Box>
           <Box

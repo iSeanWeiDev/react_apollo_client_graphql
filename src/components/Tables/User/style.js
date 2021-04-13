@@ -2,8 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 750,
-    padding: theme.spacing(1)
+    minWidth: 750
   },
   pagination: {
     display: 'flex',
