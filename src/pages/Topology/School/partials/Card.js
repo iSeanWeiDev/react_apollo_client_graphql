@@ -11,7 +11,7 @@ import {
 import noLogo from '@app/assets/imgs/no-logo.jpg';
 import useStyles from '../style';
 
-const DistrictCard = ({ data, onChange, ...rest }) => {
+const SchoolCard = ({ data, onChange, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -61,4 +61,4 @@ const DistrictCard = ({ data, onChange, ...rest }) => {
   );
 };
 
-export default DistrictCard;
+export default SchoolCard;

@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Box, AppBar, Tab, Grid } from '@material-ui/core';
 import { TabContext, TabList, TabPanel } from '@material-ui/lab';
 import { TagForm, AvatarForm, DescriptionForm } from '@app/components/Forms';
-import { UserTable } from '@app/components/Tables';
 import useStyles from './style';
 
-const DistrictEdit = ({ resources, onChange }) => {
+const SchoolEdit = ({ resources, onChange }) => {
   const classes = useStyles();
   const [value, setValue] = useState('1');
   const [loadedData, setLoadedData] = useState({});
@@ -33,8 +32,6 @@ const DistrictEdit = ({ resources, onChange }) => {
             }}
           >
             <Tab label="Basic Info *" value="1" />
-            <Tab label="Educators" value="2" />
-            <Tab label="Students" value="3" />
           </TabList>
         </AppBar>
         <TabPanel value="1">
@@ -68,15 +65,9 @@ const DistrictEdit = ({ resources, onChange }) => {
             </Grid>
           </Grid>
         </TabPanel>
-        <TabPanel value="2">
-          <UserTable schemaType="educator" docId={loadedData['_id']} />
-        </TabPanel>
-        <TabPanel value="3">
-          <UserTable schemaType="student" docId={loadedData['_id']} />
-        </TabPanel>
       </TabContext>
     </Box>
   );
 };
 
-export default DistrictEdit;
+export default SchoolEdit;

@@ -8,10 +8,10 @@ import { useHistory, withRouter } from 'react-router-dom';
 import { LoadingCard } from '@app/components/Cards';
 import graphql from '@app/graphql';
 import { isEmptyObject } from '@app/utils/data-format';
-import DistrictHeader from './partials/Header';
-import DistrictCard from './partials/Card';
-import DistrictList from './partials/List';
-import DistrictEdit from './Edit';
+import SchoolHeader from './partials/Header';
+import SchoolCard from './partials/Card';
+import SchoolList from './partials/List';
+import SchoolEdit from './Edit';
 import useStyles from './style';
 
 const TSchool = ({
@@ -31,6 +31,7 @@ const TSchool = ({
   const [loadedData, setLoadedData] = useState([]);
   const [selectedData, setSelectedData] = useState();
   const [currStation, setCurrStation] = useState({});
+  const [currDistrict, setCurrDistrict] = useState({});
   const [currMainWidth, setCurrMainWidth] = useState(null);
 
   const [deleteDocument] = useMutation(graphql.mutations.deleteDocument, {
@@ -39,7 +40,7 @@ const TSchool = ({
       const existData = cache.readQuery({
         query: graphql.queries.grouping,
         variables: {
-          schemaType: 'station'
+          schemaType: 'school'
         }
       });
 
@@ -48,7 +49,7 @@ const TSchool = ({
         cache.writeQuery({
           query: graphql.queries.grouping,
           variables: {
-            schemaType: 'station'
+            schemaType: 'school'
           },
           data: {
             grouping: tmp
@@ -63,7 +64,7 @@ const TSchool = ({
       const existData = cache.readQuery({
         query: graphql.queries.grouping,
         variables: {
-          schemaType: 'district'
+          schemaType: 'school'
         }
       });
       let tmp = existData.grouping.slice();
@@ -75,7 +76,7 @@ const TSchool = ({
       cache.writeQuery({
         query: graphql.queries.grouping,
         variables: {
-          schemaType: 'district'
+          schemaType: 'school'
         },
         data: {
           grouping: tmp
@@ -88,14 +89,14 @@ const TSchool = ({
     setLoadingPage(true);
     if (!params.pId) history.push({ pathname: '/topologies/stations' });
 
-    if (resources && params.pId && stationData) {
-      const districts = resources.filter(
-        (el) => el.topology?.station === params.pId
+    if (resources && params.pId && stationData && districtData) {
+      const schools = resources.filter(
+        (el) => el.topology?.district === params.pId
       );
 
       const elPerRow = Math.floor(currMainWidth / 250);
       const countElLastRow = resources.length % elPerRow;
-      const tmp = districts.slice();
+      const tmp = schools.slice();
       if (!openView) {
         for (let i = 0; i < elPerRow - countElLastRow + 1; i++) {
           tmp.push({ _id: i, name: '', status: 'fake_data' });
@@ -103,7 +104,11 @@ const TSchool = ({
       }
       setLoadedData(tmp);
 
-      const station = stationData.find((el) => el['_id'] === params.pId);
+      const district = districtData.find((el) => el['_id'] === params.pId);
+      const station = stationData.find(
+        (el) => el['_id'] === district.topology.station
+      );
+      setCurrDistrict(district);
       setCurrStation(station);
       setLoadingPage(false);
     }
@@ -118,6 +123,7 @@ const TSchool = ({
   const handleCardAction = async (type, value) => {
     try {
       if (type === 'view') {
+        console.log(value);
         setOpenView(true);
         setSelectedData(value);
         onChange('view', value);
@@ -127,7 +133,7 @@ const TSchool = ({
         const response = await deleteDocument({
           variables: {
             id: value['_id'],
-            schemaType: 'district'
+            schemaType: 'school'
           }
         });
         const { data } = response;
@@ -151,18 +157,18 @@ const TSchool = ({
       }
 
       if (type === 'search') {
-        const districts = resources.filter(
-          (el) => el.topology?.station === params.pId
+        const schools = resources.filter(
+          (el) => el.topology?.district === params.pId
         );
         if (value.length >= 2) {
-          const filteredData = districts.filter((el) =>
+          const filteredData = schools.filter((el) =>
             el.name.toLowerCase().includes(value.toLowerCase())
           );
           setLoadedData(filteredData);
         } else {
           const elPerRow = Math.floor(currMainWidth / 250);
           const countElLastRow = resources.length % elPerRow;
-          const tmp = districts.slice();
+          const tmp = schools.slice();
           if (!openView) {
             for (let i = 0; i < elPerRow - countElLastRow + 1; i++) {
               tmp.push({ _id: i, name: '', status: 'fake_data' });
@@ -172,45 +178,45 @@ const TSchool = ({
         }
       }
 
-      if (type === 'save') {
-        setLoadingSave(true);
-        const response = await updateGrouping({
-          variables: {
-            id: selectedData['_id'],
-            name: selectedData.name,
-            schemaType: 'district',
-            schemaVer: selectedData.schemaVer,
-            version: selectedData.version,
-            desc: {
-              title: selectedData.desc?.title,
-              short: selectedData.desc?.short,
-              long: selectedData.desc?.long
-            },
-            tagList: selectedData.tagList,
-            avatar: {
-              type: selectedData.avatar?.type,
-              url: selectedData.avatar?.url,
-              name: selectedData.avatar?.name,
-              iconUrl: selectedData.avatar?.iconUrl,
-              mimeType: selectedData.avatar?.mimeType,
-              altText: selectedData.avatar?.altText
-            },
-            body: selectedData.body
-          }
-        });
-        const { data } = response;
-        enqueueSnackbar(
-          `Successfully User ${data.updateGrouping.name} updated.`,
-          { variant: 'success' }
-        );
-        setLoadingSave(false);
-      }
+      //   if (type === 'save') {
+      //     setLoadingSave(true);
+      //     const response = await updateGrouping({
+      //       variables: {
+      //         id: selectedData['_id'],
+      //         name: selectedData.name,
+      //         schemaType: 'district',
+      //         schemaVer: selectedData.schemaVer,
+      //         version: selectedData.version,
+      //         desc: {
+      //           title: selectedData.desc?.title,
+      //           short: selectedData.desc?.short,
+      //           long: selectedData.desc?.long
+      //         },
+      //         tagList: selectedData.tagList,
+      //         avatar: {
+      //           type: selectedData.avatar?.type,
+      //           url: selectedData.avatar?.url,
+      //           name: selectedData.avatar?.name,
+      //           iconUrl: selectedData.avatar?.iconUrl,
+      //           mimeType: selectedData.avatar?.mimeType,
+      //           altText: selectedData.avatar?.altText
+      //         },
+      //         body: selectedData.body
+      //       }
+      //     });
+      //     const { data } = response;
+      //     enqueueSnackbar(
+      //       `Successfully User ${data.updateGrouping.name} updated.`,
+      //       { variant: 'success' }
+      //     );
+      //     setLoadingSave(false);
+      //   }
 
       if (type === 'delete') {
         const response = await deleteDocument({
           variables: {
             id: selectedData['_id'],
-            schemaType: 'district'
+            schemaType: 'school'
           }
         });
         const { data } = response;
@@ -224,7 +230,7 @@ const TSchool = ({
     }
   };
 
-  const handleDistrictEditChange = (type, value) => {
+  const handleSchoolEditChange = (type, value) => {
     if (type === 'avatar') {
       setSelectedData({
         ...selectedData,
@@ -243,7 +249,7 @@ const TSchool = ({
     setCanUpdate(true);
   };
 
-  const handleDistrictListChange = (value) => {
+  const handleSchoolListChange = (value) => {
     setOpenView(true);
     setSelectedData(value);
     onChange('view', value);
@@ -251,11 +257,12 @@ const TSchool = ({
 
   return (
     <Box className={classes.root}>
-      <DistrictHeader
+      <SchoolHeader
         loadingSave={loadingSave}
         canUpdate={canUpdate}
         selectedData={selectedData}
         stationData={currStation}
+        districtData={currDistrict}
         className={classes.toolbar}
         onChange={handleHeaderChange}
       />
@@ -273,7 +280,7 @@ const TSchool = ({
                 el.status === 'fake_data' ? (
                   <div key={el['_id']} style={{ width: 250, margin: 8 }}></div>
                 ) : (
-                  <DistrictCard
+                  <SchoolCard
                     data={el}
                     key={el['_id']}
                     onChange={handleCardAction}
@@ -283,20 +290,27 @@ const TSchool = ({
             <Box component={List}>
               {openView &&
                 loadedData.map((el) => (
-                  <DistrictList
+                  <SchoolList
                     key={el['_id']}
                     data={el}
                     selectedData={selectedData}
-                    onChange={handleDistrictListChange}
+                    onChange={handleSchoolListChange}
                   />
                 ))}
             </Box>
           </Box>
           {openView && selectedData && (
             <Box component={Paper} className={classes.preview}>
-              <DistrictEdit
+              <h1>ddddd</h1>
+              <h1>ddddd</h1>
+              <h1>ddddd</h1>
+              <h1>ddddd</h1>
+              <h1>ddddd</h1>
+              <h1>ddddd</h1>
+              <h1>ddddd</h1>
+              <SchoolEdit
                 resources={selectedData}
-                onChange={handleDistrictEditChange}
+                onChange={handleSchoolEditChange}
               />
             </Box>
           )}

@@ -10,7 +10,7 @@ import noLogo from '@app/assets/imgs/no-logo.jpg';
 
 import useStyles from '../style';
 
-const DistrictList = ({ data, selectedData, onChange, ...rest }) => {
+const SchoolList = ({ data, selectedData, onChange, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -34,4 +34,4 @@ const DistrictList = ({ data, selectedData, onChange, ...rest }) => {
   );
 };
 
-export default DistrictList;
+export default SchoolList;

@@ -33,7 +33,7 @@ const TDistrict = ({ params, stationData, resources, onChange }) => {
       const existData = cache.readQuery({
         query: graphql.queries.grouping,
         variables: {
-          schemaType: 'station'
+          schemaType: 'district'
         }
       });
 
@@ -42,7 +42,7 @@ const TDistrict = ({ params, stationData, resources, onChange }) => {
         cache.writeQuery({
           query: graphql.queries.grouping,
           variables: {
-            schemaType: 'station'
+            schemaType: 'district'
           },
           data: {
             grouping: tmp
@@ -127,6 +127,8 @@ const TDistrict = ({ params, stationData, resources, onChange }) => {
         const { data } = response;
         enqueueSnackbar(data.deleteDocument, { variant: 'success' });
       }
+
+      if (type === 'body') onChange(type, value);
     } catch (error) {
       console.log(error.message);
       enqueueSnackbar(error.message, { variant: 'error' });
