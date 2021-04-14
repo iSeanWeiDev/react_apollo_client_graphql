@@ -45,6 +45,39 @@ export const avatarUpload = async (url, file) => {
   }
 };
 
+export const userFileUpload = async (url, file) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${config.dev.corsHandler}${url}`,
+      data: file,
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const userBulkUpsert = async (assetUrl, docId, type) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${config.dev.corsHandler}${config.api.userBulkUpsert}`,
+      data: {
+        assetUrl,
+        parentDocId: docId,
+        type
+      }
+    });
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const packaging = async () => {
   try {
     const response = await axios({

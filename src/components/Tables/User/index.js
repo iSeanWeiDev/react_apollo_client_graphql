@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box,
   Table,
   TableBody,
   TableCell,
@@ -14,62 +13,23 @@ import {
 } from '@material-ui/core';
 import { useGroupingQuery } from '@app/utils/hooks/apollo';
 import { LoadingCard } from '@app/components/Cards';
+import { getComparator, stableSort } from '@app/utils/data-format';
 import EnhancedTableHead from './Header';
 import EnhancedTableToolbar from './Toolbar';
+import UserUpload from './Upload';
 import useStyles from './style';
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-const rows = [
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Donut', 452, 25.0, 51, 4.9),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-  createData('Oreo', 437, 18.0, 63, 4.0)
-];
 
 const UserTable = ({ schemaType, docId, onChange }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
-  // const [rows, setRows] = useState([]);
-  // const [page, setPage] = useState(0);
-  // const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rows, setRows] = useState([]);
+  const [openUpload, setOpenUpload] = useState(false);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('name');
+  const [selected, setSelected] = useState();
+  const [page, setPage] = useState(0);
+  const [dense, setDense] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const users = useGroupingQuery({
     schemaType: schemaType,
@@ -79,26 +39,19 @@ const UserTable = ({ schemaType, docId, onChange }) => {
   useEffect(() => {
     setLoading(true);
     if (users) {
-      console.log(users);
+      const tmp = users.map((el) => ({
+        id: el['_id'],
+        name: el.name,
+        firstName: el.contact?.firstName,
+        lastName: el.contact?.lastName,
+        email: el.contact?.email,
+        phone: el.contact?.phone
+      }));
+
+      setRows(tmp);
       setLoading(false);
     }
   }, [users]);
-
-  // const handleChangePage = (event, newPage) => {
-  //   setPage(newPage);
-  // };
-
-  // const handleChangeRowsPerPage = (event) => {
-  //   setRowsPerPage(+event.target.value);
-  //   setPage(0);
-  // };
-
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -106,33 +59,12 @@ const UserTable = ({ schemaType, docId, onChange }) => {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
+  const handleClick = (id) => {
+    if (selected === id) {
+      setSelected();
+    } else {
+      setSelected(id);
     }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -148,10 +80,19 @@ const UserTable = ({ schemaType, docId, onChange }) => {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
+  const isSelected = (id) => selected === id;
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
+  const handleToolbarChange = (type) => {
+    if (type === 'upload') {
+      setOpenUpload(true);
+    }
+  };
+
+  const handleUploadDialogChange = (type, value) => {
+    if (type === 'close') setOpenUpload(false);
+  };
 
   return (
     <LoadingCard loading={loading} height={`calc(100vh - 350px)`}>
@@ -159,7 +100,8 @@ const UserTable = ({ schemaType, docId, onChange }) => {
         <Paper className={classes.paper}>
           <EnhancedTableToolbar
             schemaType={schemaType}
-            numSelected={selected.length}
+            selectedData={rows.find((el) => el.id === selected)}
+            onChange={handleToolbarChange}
           />
           <TableContainer>
             <Table
@@ -170,29 +112,31 @@ const UserTable = ({ schemaType, docId, onChange }) => {
             >
               <EnhancedTableHead
                 classes={classes}
-                numSelected={selected.length}
                 order={order}
                 orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
               />
               <TableBody>
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+                  .map((row) => {
+                    const isItemSelected = isSelected(row.id);
+                    const labelId = `enhanced-table-checkbox-${row.id}`;
 
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.name)}
+                        onClick={() => handleClick(row.id)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
                         key={row.name}
                         selected={isItemSelected}
+                        style={{
+                          '&:selected': {
+                            background: 'red'
+                          }
+                        }}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
@@ -208,10 +152,10 @@ const UserTable = ({ schemaType, docId, onChange }) => {
                         >
                           {row.name}
                         </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
-                        <TableCell align="right">{row.carbs}</TableCell>
-                        <TableCell align="right">{row.protein}</TableCell>
+                        <TableCell align="left">{row.firstName}</TableCell>
+                        <TableCell align="left">{row.lastName}</TableCell>
+                        <TableCell align="left">{row.email}</TableCell>
+                        <TableCell align="left">{row.phone}</TableCell>
                       </TableRow>
                     );
                   })}
@@ -238,6 +182,12 @@ const UserTable = ({ schemaType, docId, onChange }) => {
           label="Dense padding"
         />
       </div>
+      <UserUpload
+        docId={docId}
+        open={openUpload}
+        schemaType={schemaType}
+        onChange={handleUploadDialogChange}
+      />
     </LoadingCard>
   );
 };
