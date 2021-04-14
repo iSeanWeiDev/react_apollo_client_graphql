@@ -16,8 +16,8 @@ const DistrictList = ({ data, selectedData, onChange, ...rest }) => {
   return (
     <ListItem
       className={clsx(classes.listItem, {
-        [classes.listItem]: data['_id'] !== selectedData['_id'],
-        [classes.listItemSelected]: data['_id'] === selectedData['_id']
+        [classes.listItem]: data['_id'] !== selectedData?._id,
+        [classes.listItemSelected]: data['_id'] === selectedData?._id
       })}
       onClick={() => onChange(data)}
       {...rest}

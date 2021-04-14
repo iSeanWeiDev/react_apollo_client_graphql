@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, AppBar, Tab, Grid } from '@material-ui/core';
 import { TabContext, TabList, TabPanel } from '@material-ui/lab';
 import { TagForm, AvatarForm, DescriptionForm } from '@app/components/Forms';
@@ -8,6 +8,13 @@ import useStyles from './style';
 const DistrictEdit = ({ resources, onChange }) => {
   const classes = useStyles();
   const [value, setValue] = useState('1');
+  const [loadedData, setLoadedData] = useState({});
+
+  useEffect(() => {
+    if (resources) {
+      setLoadedData(resources);
+    }
+  }, [resources]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -38,32 +45,32 @@ const DistrictEdit = ({ resources, onChange }) => {
             <Grid item xs={12} sm={12} md={10} lg={9}>
               <Box display="flex">
                 <AvatarForm
-                  docId={resources['_id']}
-                  resources={resources.avatar?.url}
+                  docId={loadedData['_id']}
+                  resources={loadedData.avatar?.url}
                   acceptedFiles={['image/png']}
                   onChange={(value) => onChange('avatar', value)}
                 />
                 <DescriptionForm
                   resources={{
-                    title: resources.desc?.title,
-                    short: resources.desc?.short,
-                    long: resources.desc?.long
+                    title: loadedData.desc?.title,
+                    short: loadedData.desc?.short,
+                    long: loadedData.desc?.long
                   }}
                   onChange={(value) => onChange('desc', value)}
                 />
               </Box>
               <TagForm
-                resources={resources.tagList}
+                resources={loadedData.tagList}
                 onChange={(value) => onChange('tagList', value)}
               />
             </Grid>
           </Grid>
         </TabPanel>
         <TabPanel value="2">
-          <UserTable schemaType="educator" docId={resources['_id']} />
+          <UserTable schemaType="educator" docId={loadedData['_id']} />
         </TabPanel>
         <TabPanel value="3">
-          <UserTable schemaType="student" docId={resources['_id']} />
+          <UserTable schemaType="student" docId={loadedData['_id']} />
         </TabPanel>
       </TabContext>
     </Box>

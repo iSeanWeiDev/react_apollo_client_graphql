@@ -11,14 +11,19 @@ import {
 const headCells = [
   {
     id: 'name',
-    numeric: false,
+    align: 'left',
     disablePadding: true,
-    label: 'Dessert (100g serving)'
+    label: 'User Name'
   },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' }
+  {
+    id: 'firstName',
+    align: 'left',
+    disablePadding: false,
+    label: 'First Name'
+  },
+  { id: 'lastName', align: 'left', disablePadding: false, label: 'Last Name' },
+  { id: 'email', align: 'left', disablePadding: false, label: 'Email' },
+  { id: 'phone', align: 'left', disablePadding: false, label: 'Phone' }
 ];
 
 const EnhancedTableHead = (props) => {
@@ -49,7 +54,7 @@ const EnhancedTableHead = (props) => {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'default'}
             sortDirection={orderBy === headCell.id ? order : false}
           >

@@ -59,12 +59,24 @@ const TDistrict = ({ params, stationData, resources, onChange }) => {
     }
   };
 
+  const handleHeaderChange = (type) => {
+    if (type === 'back') {
+      setSelectedData();
+      setOpenView(false);
+    }
+
+    if (type === 'view') {
+      onChange('view');
+    }
+  };
+
   return (
     <Box className={classes.root}>
       <DistrictHeader
         selectedData={selectedData}
         stationData={currStation}
         className={classes.toolbar}
+        onChange={handleHeaderChange}
       />
       <LoadingCard loading={loadingPage} height={`calc(100vh - 200px)`}>
         <Box className={classes.main}>

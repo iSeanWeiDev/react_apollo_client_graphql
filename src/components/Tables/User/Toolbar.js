@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -7,10 +7,14 @@ import {
   Typography,
   Tooltip,
   IconButton,
-  TableSortLabel
+  InputBase
 } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
+import {
+  Add as AddIcon,
+  Delete as DeleteIcon,
+  Search as SearchIcon,
+  CloudUpload as CloudUploadIcon
+} from '@material-ui/icons';
 
 const useToolbarStyles = makeStyles((theme) => ({
   root: {
@@ -29,12 +33,16 @@ const useToolbarStyles = makeStyles((theme) => ({
         },
   title: {
     flex: '1 1 100%'
+  },
+  input: {
+    width: 300
   }
 }));
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+  const [canSearch, setCanSearch] = useState(false);
+  const { schemaType, numSelected, onChange } = props;
 
   return (
     <Toolbar
@@ -58,7 +66,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          {schemaType === 'educator' ? 'Educators' : 'Students'}
         </Typography>
       )}
 
@@ -69,11 +77,37 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <React.Fragment>
+          {canSearch && (
+            <InputBase
+              className={classes.input}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder={`Search ${
+                schemaType === 'educator' ? 'Educators' : 'Students'
+              }... ...`}
+              inputProps={{ 'aria-label': 'search users' }}
+              autoFocus
+            />
+          )}
+          <Tooltip title="Search Users">
+            <IconButton
+              aria-label="search users"
+              onClick={() => setCanSearch(!canSearch)}
+            >
+              <SearchIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Upload Users">
+            <IconButton aria-label="upload users">
+              <CloudUploadIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Add User">
+            <IconButton aria-label="add user">
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
+        </React.Fragment>
       )}
     </Toolbar>
   );
