@@ -13,6 +13,8 @@ import {
   Add as AddIcon,
   Delete as DeleteIcon,
   Search as SearchIcon,
+  Edit as EditIcon,
+  Close as CloseIcon,
   CloudUpload as CloudUploadIcon
 } from '@material-ui/icons';
 
@@ -39,24 +41,24 @@ const useToolbarStyles = makeStyles((theme) => ({
   }
 }));
 
-const EnhancedTableToolbar = ({ schemaType, numSelected, onChange }) => {
+const EnhancedTableToolbar = ({ schemaType, selectedData, onChange }) => {
   const classes = useToolbarStyles();
   const [canSearch, setCanSearch] = useState(false);
 
   return (
     <Toolbar
       className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0
+        [classes.highlight]: selectedData
       })}
     >
-      {numSelected > 0 ? (
+      {selectedData ? (
         <Typography
           className={classes.title}
           color="inherit"
           variant="subtitle1"
           component="div"
         >
-          {numSelected} selected
+          {selectedData.name} selected
         </Typography>
       ) : (
         <Typography
@@ -69,12 +71,24 @@ const EnhancedTableToolbar = ({ schemaType, numSelected, onChange }) => {
         </Typography>
       )}
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+      {selectedData ? (
+        <React.Fragment>
+          <Tooltip title="Edit User">
+            <IconButton aria-label="edit">
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete User">
+            <IconButton aria-label="delete">
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Close User Selection">
+            <IconButton aria-label="close">
+              <CloseIcon />
+            </IconButton>
+          </Tooltip>
+        </React.Fragment>
       ) : (
         <React.Fragment>
           {canSearch && (
