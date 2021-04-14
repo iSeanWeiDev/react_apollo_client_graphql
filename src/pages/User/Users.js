@@ -142,7 +142,6 @@ const Users = ({ type }) => {
           schemaType: type
         }
       });
-      console.log(existData);
       if (isEmptyObject(existData.grouping)) {
         const tmp = existData.grouping.filter(
           (el) => el['_id'] !== selectedUser.idx

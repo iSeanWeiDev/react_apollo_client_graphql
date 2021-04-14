@@ -132,8 +132,8 @@ const AppDrawer = ({ location }) => {
         try {
           const currentUser = await loadUser();
           setAvatarInfo(currentUser['attributes']);
-        } catch (err) {
-          console.log(err);
+        } catch (error) {
+          console.log(error.message);
         }
       };
       onLoad();

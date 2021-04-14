@@ -59,7 +59,6 @@ const TopologyContainer = ({ match, history }) => {
 
   const handleTreeChange = (type, value) => {
     if (type === 'close') setOpenTreeView(!openTreeView);
-    console.log(type, value);
   };
 
   return (
