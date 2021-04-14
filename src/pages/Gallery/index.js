@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import {
   Box,
@@ -20,10 +20,10 @@ import GalleryList from './List';
 import useStyles from './style';
 
 const tabData = [
-  { label: 'Stock Images', value: 'stockImage' },
-  { label: 'Stock Banners', value: 'stockBanner' },
-  { label: 'Stock Logos', value: 'stockLogo' },
-  { label: 'Stock Avatars', value: 'stockAvatar' }
+  { label: 'Stock Images', value: 'stockImage', url: 'stock-images' },
+  { label: 'Stock Banners', value: 'stockBanner', url: 'stock-banners' },
+  { label: 'Stock Logos', value: 'stockLogo', url: 'stock-logos' },
+  { label: 'Stock Avatars', value: 'stockAvatar', url: 'stock-avatars' }
 ];
 
 const a11yProps = (index) => {
@@ -33,9 +33,14 @@ const a11yProps = (index) => {
   };
 };
 
-const GalleryContainer = () => {
+const GalleryContainer = ({ history }) => {
   const classes = useStyles();
   const [currentTab, setCurrentTab] = useState(0);
+  const [openCreate, setOpenCreate] = useState(false);
+
+  useEffect(() => {
+    history.push(`/galleries/${tabData[currentTab].url}`);
+  }, [currentTab]);
 
   const handleChange = (event, newValue) => {
     setCurrentTab(newValue);
@@ -63,7 +68,11 @@ const GalleryContainer = () => {
             <SearchIcon />
           </IconButton>
         </Box>
-        <Button variant="contained" className={classes.addButton}>
+        <Button
+          variant="contained"
+          className={classes.addButton}
+          onClick={() => setOpenCreate(true)}
+        >
           Add New Gallery
         </Button>
       </Box>
@@ -98,7 +107,11 @@ const GalleryContainer = () => {
               index={index}
               style={{ width: '100%' }}
             >
-              <GalleryList type={el.value} />
+              <GalleryList
+                type={el.value}
+                openCreate={openCreate}
+                setOpenCreate={setOpenCreate}
+              />
             </AppTabPanel>
           ))}
         </Box>

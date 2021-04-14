@@ -31,9 +31,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     flex: 1
   },
-  iconButton: {
-    padding: 10
-  },
   addButton: {
     height: 40,
     borderRadius: 40,
@@ -87,14 +84,19 @@ const useStyles = makeStyles((theme) => ({
   listMain: {
     width: '100%'
   },
+  elements: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap'
+  },
   card: {
-    width: 300,
+    width: 250,
     margin: theme.spacing(1)
   },
   cardContent: {
-    minHeight: 150
-  },
-  cardAction: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
