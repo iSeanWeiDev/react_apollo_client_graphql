@@ -53,7 +53,7 @@ const UserUpload = ({ open, docId, schemaType, onChange }) => {
       }
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       enqueueSnackbar(error.message, { variant: 'error' });
     }
   };

@@ -1,73 +1,38 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Typography,
-  CardActions,
-  Button,
-  Divider,
-  FormControl,
-  InputBase,
-  InputAdornment,
-  IconButton
-} from '@material-ui/core';
-import { Add as AddIcon, Search as SearchIcon } from '@material-ui/icons';
-import { useSnackbar } from 'notistack';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect, useCallback } from 'react';
+import clsx from 'clsx';
 import { useMutation } from '@apollo/client';
-import { faStoreAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useSnackbar } from 'notistack';
+import { Box, Paper, List } from '@material-ui/core';
+import { useHistory, withRouter } from 'react-router-dom';
 import { LoadingCard } from '@app/components/Cards';
-import CreateSchool from './Create';
-import PreviewSchool from './Preview';
 import graphql from '@app/graphql';
-import noLogo from '@app/assets/imgs/no-logo.jpg';
+import { isEmptyObject } from '@app/utils/data-format';
+import SchoolHeader from './partials/Header';
+import SchoolCard from './partials/Card';
+import SchoolList from './partials/List';
+import SchoolEdit from './Edit';
 import useStyles from './style';
 
-const TSchool = ({ resources, districts }) => {
+const TSchool = ({
+  params,
+  stationData,
+  districtData,
+  resources,
+  onChange
+}) => {
   const classes = useStyles();
   const history = useHistory();
-  const params = useParams();
   const { enqueueSnackbar } = useSnackbar();
+  const [openView, setOpenView] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
-  const [districtName, setDistrictName] = useState('');
+  const [loadingSave, setLoadingSave] = useState(false);
+  const [canUpdate, setCanUpdate] = useState(false);
   const [loadedData, setLoadedData] = useState([]);
-  const [openCreate, setOpenCreate] = useState(false);
-  const [openPreview, setOpenPreview] = useState(false);
   const [selectedData, setSelectedData] = useState();
+  const [currStation, setCurrStation] = useState({});
+  const [currDistrict, setCurrDistrict] = useState({});
   const [currMainWidth, setCurrMainWidth] = useState(null);
-  const [searchKey, setSearchKey] = useState('');
-
-  const [createGrouping] = useMutation(graphql.mutations.createGrouping, {
-    update(cache, { data: { createGrouping } }) {
-      const existData = cache.readQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: 'school'
-        }
-      });
-      let data = existData ? existData.grouping.slice() : [];
-      const idx = data.findIndex((el) => el['_id'] === createGrouping['_id']);
-      if (idx > -1) {
-        data[idx] = createGrouping;
-      } else {
-        data = [...data, createGrouping];
-      }
-
-      cache.writeQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: 'school'
-        },
-        data: {
-          grouping: data
-        }
-      });
-    }
-  });
 
   const [deleteDocument] = useMutation(graphql.mutations.deleteDocument, {
     update(cache, { data: { deleteDocument } }) {
@@ -79,7 +44,35 @@ const TSchool = ({ resources, districts }) => {
         }
       });
 
-      const tmp = existData.grouping.filter((el) => el['_id'] !== idx);
+      if (isEmptyObject(existData.grouping)) {
+        const tmp = existData.grouping.filter((el) => el['_id'] !== idx);
+        cache.writeQuery({
+          query: graphql.queries.grouping,
+          variables: {
+            schemaType: 'school'
+          },
+          data: {
+            grouping: tmp
+          }
+        });
+      }
+    }
+  });
+
+  const [updateGrouping] = useMutation(graphql.mutations.updateGrouping, {
+    update(cache, { data: { updateGrouping } }) {
+      const existData = cache.readQuery({
+        query: graphql.queries.grouping,
+        variables: {
+          schemaType: 'school'
+        }
+      });
+      let tmp = existData.grouping.slice();
+      const idx = tmp.findIndex((el) => el['_id'] === updateGrouping['_id']);
+      if (idx > -1) {
+        tmp[idx] = updateGrouping;
+      }
+
       cache.writeQuery({
         query: graphql.queries.grouping,
         variables: {
@@ -92,59 +85,51 @@ const TSchool = ({ resources, districts }) => {
     }
   });
 
+  useEffect(() => {
+    setLoadingPage(true);
+    if (!params.pId) history.push({ pathname: '/topologies/stations' });
+
+    if (resources && params.pId && stationData && districtData) {
+      const schools = resources.filter(
+        (el) => el.topology?.district === params.pId
+      );
+
+      const elPerRow = Math.floor(currMainWidth / 250);
+      const countElLastRow = resources.length % elPerRow;
+      const tmp = schools.slice();
+      if (!openView) {
+        for (let i = 0; i < elPerRow - countElLastRow + 1; i++) {
+          tmp.push({ _id: i, name: '', status: 'fake_data' });
+        }
+      }
+      setLoadedData(tmp);
+
+      const district = districtData.find((el) => el['_id'] === params.pId);
+      const station = stationData.find(
+        (el) => el['_id'] === district.topology.station
+      );
+      setCurrDistrict(district);
+      setCurrStation(station);
+      setLoadingPage(false);
+    }
+  }, [params, resources, stationData, currMainWidth, openView]);
+
   const mainRef = useCallback((node) => {
     if (node !== null) {
       setCurrMainWidth(node.offsetWidth);
-      //fetch(...)   load data
     }
   }, []);
 
-  useEffect(() => {
-    setLoadingPage(true);
-    if (resources && currMainWidth) {
-      if (params.parentID) {
-        const elPerRow = Math.floor(currMainWidth / 300);
-        const countElLastRow = resources.length % elPerRow;
-        let tmp = resources.slice();
-        tmp = tmp.filter((el) => el.parentId === params.parentID);
-        for (let i = 0; i < elPerRow - countElLastRow; i++) {
-          tmp.push({ _id: i, name: '', status: 'fake_data' });
-        }
-        const district = districts.find((el) => el['_id'] === params.parentID);
-        setDistrictName(district?.name);
-        setLoadedData(tmp);
-      }
-      setLoadingPage(false);
-    }
-  }, [resources, currMainWidth]);
-
-  const handleSearch = (e) => {
-    let countElLastRow, tmp;
-    setSearchKey(e.target.value);
-    const elPerRow = Math.floor(currMainWidth / 300);
-
-    if (e.target.value.length >= 3) {
-      const filteredData = loadedData.filter((el) =>
-        el.name.toLowerCase().includes(e.target.value.toLowerCase())
-      );
-      countElLastRow = filteredData.length % elPerRow;
-      tmp = filteredData.slice();
-    } else {
-      countElLastRow = resources.length % elPerRow;
-      tmp = resources.slice();
-    }
-
-    for (let i = 0; i < elPerRow - countElLastRow; i++) {
-      tmp.push({ _id: i, name: '', status: 'fake_data' });
-    }
-
-    setLoadedData(tmp);
-  };
-
-  const handleCardAction = async (method, value) => {
+  const handleCardAction = async (type, value) => {
     try {
-      setSelectedData(value);
-      if (method === 'delete') {
+      if (type === 'view') {
+        console.log(value);
+        setOpenView(true);
+        setSelectedData(value);
+        onChange('view', value);
+      }
+
+      if (type === 'delete') {
         const response = await deleteDocument({
           variables: {
             id: value['_id'],
@@ -154,15 +139,90 @@ const TSchool = ({ resources, districts }) => {
         const { data } = response;
         enqueueSnackbar(data.deleteDocument, { variant: 'success' });
       }
+    } catch (error) {
+      console.log(error.message);
+      enqueueSnackbar(error.message, { variant: 'error' });
+    }
+  };
 
-      if (method === 'view') {
-        setOpenPreview(true);
+  const handleHeaderChange = async (type, value) => {
+    try {
+      if (type === 'back') {
+        setSelectedData();
+        setOpenView(false);
       }
 
-      if (method === 'body') {
-        const id = value['_id'];
+      if (type === 'view') {
+        onChange('view');
+      }
 
-        history.push({ pathname: `/topologies/classes/null/${id}` });
+      if (type === 'search') {
+        const schools = resources.filter(
+          (el) => el.topology?.district === params.pId
+        );
+        if (value.length >= 2) {
+          const filteredData = schools.filter((el) =>
+            el.name.toLowerCase().includes(value.toLowerCase())
+          );
+          setLoadedData(filteredData);
+        } else {
+          const elPerRow = Math.floor(currMainWidth / 250);
+          const countElLastRow = resources.length % elPerRow;
+          const tmp = schools.slice();
+          if (!openView) {
+            for (let i = 0; i < elPerRow - countElLastRow + 1; i++) {
+              tmp.push({ _id: i, name: '', status: 'fake_data' });
+            }
+          }
+          setLoadedData(tmp);
+        }
+      }
+
+      //   if (type === 'save') {
+      //     setLoadingSave(true);
+      //     const response = await updateGrouping({
+      //       variables: {
+      //         id: selectedData['_id'],
+      //         name: selectedData.name,
+      //         schemaType: 'district',
+      //         schemaVer: selectedData.schemaVer,
+      //         version: selectedData.version,
+      //         desc: {
+      //           title: selectedData.desc?.title,
+      //           short: selectedData.desc?.short,
+      //           long: selectedData.desc?.long
+      //         },
+      //         tagList: selectedData.tagList,
+      //         avatar: {
+      //           type: selectedData.avatar?.type,
+      //           url: selectedData.avatar?.url,
+      //           name: selectedData.avatar?.name,
+      //           iconUrl: selectedData.avatar?.iconUrl,
+      //           mimeType: selectedData.avatar?.mimeType,
+      //           altText: selectedData.avatar?.altText
+      //         },
+      //         body: selectedData.body
+      //       }
+      //     });
+      //     const { data } = response;
+      //     enqueueSnackbar(
+      //       `Successfully User ${data.updateGrouping.name} updated.`,
+      //       { variant: 'success' }
+      //     );
+      //     setLoadingSave(false);
+      //   }
+
+      if (type === 'delete') {
+        const response = await deleteDocument({
+          variables: {
+            id: selectedData['_id'],
+            schemaType: 'school'
+          }
+        });
+        const { data } = response;
+        setSelectedData();
+        setOpenView(false);
+        enqueueSnackbar(data.deleteDocument, { variant: 'success' });
       }
     } catch (error) {
       console.log(error.message);
@@ -170,135 +230,94 @@ const TSchool = ({ resources, districts }) => {
     }
   };
 
-  const handleCreateDialogChange = async (flag, value) => {
-    try {
-      if (flag) {
-        await createGrouping({
-          variables: {
-            schemaType: 'school',
-            schemaVer: 1,
-            version: 1,
-            name: value.name,
-            desc: {
-              title: value.title,
-              short: value.short,
-              long: value.long
-            }
-          }
-        });
-        enqueueSnackbar('Successfully school created!', {
-          variant: 'success'
-        });
-      }
-
-      setOpenCreate(false);
-    } catch (error) {
-      console.log(error.message);
-      enqueueSnackbar(error.message, { variant: 'error' });
+  const handleSchoolEditChange = (type, value) => {
+    if (type === 'avatar') {
+      setSelectedData({
+        ...selectedData,
+        avatar: {
+          ...selectedData.avatar,
+          url: value
+        }
+      });
+    } else {
+      setSelectedData({
+        ...selectedData,
+        [type]: value
+      });
     }
+
+    setCanUpdate(true);
+  };
+
+  const handleSchoolListChange = (value) => {
+    setOpenView(true);
+    setSelectedData(value);
+    onChange('view', value);
   };
 
   return (
     <Box className={classes.root}>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="h6" className={classes.panelTitle}>
-          <FontAwesomeIcon icon={faStoreAlt} className={classes.panelIcon} />
-          Schools ({districtName})
-        </Typography>
-        <Box display="flex" alignItems="center">
-          <FormControl className={classes.searchBar}>
-            <InputBase
-              placeholder="Search schools..."
-              type="text"
-              variant="outline"
-              autoFocus
-              value={searchKey}
-              onChange={handleSearch}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton size="small">
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-          <Button
-            variant="contained"
-            className={classes.addBtn}
-            onClick={() => setOpenCreate(true)}
-          >
-            <AddIcon />
-            New School
-          </Button>
-        </Box>
-      </Box>
-      <Divider className={classes.separator} />
+      <SchoolHeader
+        loadingSave={loadingSave}
+        canUpdate={canUpdate}
+        selectedData={selectedData}
+        stationData={currStation}
+        districtData={currDistrict}
+        className={classes.toolbar}
+        onChange={handleHeaderChange}
+      />
       <LoadingCard loading={loadingPage} height={`calc(100vh - 200px)`}>
-        <main className={classes.main} ref={mainRef}>
-          {loadedData.map((el) =>
-            el.status === 'fake_data' ? (
-              <div key={el['_id']} style={{ width: 300, margin: 8 }}></div>
-            ) : (
-              <Card className={classes.card} key={el['_id']}>
-                <CardActionArea onClick={() => handleCardAction('body', el)}>
-                  <CardMedia
-                    component="img"
-                    alt="Contemplative Reptile"
-                    height="140"
-                    image={el.avatar?.url ? el.avatar?.url : noLogo}
-                    title="Contemplative Reptile"
+        <Box className={classes.main}>
+          <Box
+            className={clsx({
+              [classes.elements]: !openView,
+              [classes.elementsOnView]: openView
+            })}
+            ref={mainRef}
+          >
+            {!openView &&
+              loadedData.map((el) =>
+                el.status === 'fake_data' ? (
+                  <div key={el['_id']} style={{ width: 250, margin: 8 }}></div>
+                ) : (
+                  <SchoolCard
+                    data={el}
+                    key={el['_id']}
+                    onChange={handleCardAction}
                   />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h6" component="h2">
-                      {el.name}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      component="p"
-                    >
-                      {!el.desc || !el.desc?.long ? (
-                        <em>No description</em>
-                      ) : (
-                        <React.Fragment>
-                          {el.desc.long.length > 150
-                            ? `${el.desc.long.substring(0, 150)}... ...`
-                            : el.desc.long}
-                        </React.Fragment>
-                      )}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-                <CardActions className={classes.cardAction}>
-                  <Button
-                    size="small"
-                    color="secondary"
-                    onClick={() => handleCardAction('delete', el)}
-                  >
-                    delete
-                  </Button>
-                  <Button
-                    size="small"
-                    color="primary"
-                    onClick={() => handleCardAction('view', el)}
-                  >
-                    view
-                  </Button>
-                </CardActions>
-              </Card>
-            )
+                )
+              )}
+            <Box component={List}>
+              {openView &&
+                loadedData.map((el) => (
+                  <SchoolList
+                    key={el['_id']}
+                    data={el}
+                    selectedData={selectedData}
+                    onChange={handleSchoolListChange}
+                  />
+                ))}
+            </Box>
+          </Box>
+          {openView && selectedData && (
+            <Box component={Paper} className={classes.preview}>
+              <h1>ddddd</h1>
+              <h1>ddddd</h1>
+              <h1>ddddd</h1>
+              <h1>ddddd</h1>
+              <h1>ddddd</h1>
+              <h1>ddddd</h1>
+              <h1>ddddd</h1>
+              <SchoolEdit
+                resources={selectedData}
+                onChange={handleSchoolEditChange}
+              />
+            </Box>
           )}
-          <CreateSchool open={openCreate} onChange={handleCreateDialogChange} />
-          <PreviewSchool
-            open={openPreview}
-            resources={selectedData}
-            onChange={() => setOpenPreview(!openPreview)}
-          />
-        </main>
+        </Box>
       </LoadingCard>
     </Box>
   );
 };
 
-export default TSchool;
+export default withRouter(TSchool);

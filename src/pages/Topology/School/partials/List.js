@@ -10,14 +10,14 @@ import noLogo from '@app/assets/imgs/no-logo.jpg';
 
 import useStyles from '../style';
 
-const StationList = ({ data, selectedData, onChange, ...rest }) => {
+const SchoolList = ({ data, selectedData, onChange, ...rest }) => {
   const classes = useStyles();
 
   return (
     <ListItem
       className={clsx(classes.listItem, {
-        [classes.listItem]: data['_id'] !== selectedData['_id'],
-        [classes.listItemSelected]: data['_id'] === selectedData['_id']
+        [classes.listItem]: data['_id'] !== selectedData?._id,
+        [classes.listItemSelected]: data['_id'] === selectedData?._id
       })}
       onClick={() => onChange(data)}
       {...rest}
@@ -34,4 +34,4 @@ const StationList = ({ data, selectedData, onChange, ...rest }) => {
   );
 };
 
-export default StationList;
+export default SchoolList;

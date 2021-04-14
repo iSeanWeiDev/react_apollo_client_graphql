@@ -14,16 +14,21 @@ import {
   DeleteOutline as DeleteIcon
 } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBroadcastTower, faSchool } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBroadcastTower,
+  faSchool,
+  faStoreAlt
+} from '@fortawesome/free-solid-svg-icons';
 import { Img } from 'react-image';
 import noLogo from '@app/assets/imgs/no-logo.jpg';
 import useStyles from '../style';
 
-const DistrictHeader = ({
+const SchoolHeader = ({
   loadingSave,
   canUpdate,
   selectedData,
   stationData,
+  districtData,
   onChange,
   ...rest
 }) => {
@@ -45,12 +50,14 @@ const DistrictHeader = ({
             </Box>
             <Box className={classes.title}>
               <Typography variant="h5" style={{ fontWeight: 700 }}>
-                <FontAwesomeIcon icon={faSchool} />
-                &nbsp; &nbsp; Districts
+                <FontAwesomeIcon icon={faStoreAlt} />
+                &nbsp; &nbsp; Schools
               </Typography>
               <Typography variant="caption">
                 <FontAwesomeIcon icon={faBroadcastTower} />
-                &nbsp; {stationData.name} /
+                &nbsp; {stationData.name} / &nbsp;
+                <FontAwesomeIcon icon={faSchool} />
+                &nbsp; {districtData.name} /
               </Typography>
             </Box>
           </Box>
@@ -58,7 +65,7 @@ const DistrictHeader = ({
             <InputBase
               className={classes.input}
               onChange={handleSearchChange}
-              placeholder="Search districts... ... "
+              placeholder="Search schools... ... "
               inputProps={{ 'aria-label': 'search districts' }}
               onChange={(e) => onChange('search', e.target.value)}
             />
@@ -75,7 +82,7 @@ const DistrictHeader = ({
             className={classes.addButton}
             onClick={() => onChange('create', true)}
           >
-            Add New District
+            Add New School
           </Button>
         </React.Fragment>
       ) : (
@@ -98,9 +105,13 @@ const DistrictHeader = ({
             <Box marginLeft={2} className={classes.title}>
               <Typography variant="h6">{selectedData.name}</Typography>
               <Typography variant="caption">
-                <FontAwesomeIcon icon={faBroadcastTower} />
-                &nbsp; {stationData.name} / &nbsp;
-                <FontAwesomeIcon icon={faSchool} />
+                <Typography variant="caption">
+                  <FontAwesomeIcon icon={faBroadcastTower} />
+                  &nbsp; {stationData.name} / &nbsp;
+                  <FontAwesomeIcon icon={faSchool} />
+                  &nbsp; {districtData.name} / &nbsp;
+                </Typography>
+                <FontAwesomeIcon icon={faStoreAlt} />
                 &nbsp; {selectedData.name}
               </Typography>
             </Box>
@@ -141,4 +152,4 @@ const DistrictHeader = ({
   );
 };
 
-export default DistrictHeader;
+export default SchoolHeader;

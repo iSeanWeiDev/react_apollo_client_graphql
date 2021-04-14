@@ -24,6 +24,7 @@ const DistrictList = ({ data, selectedData, onChange, ...rest }) => {
     >
       <ListItemAvatar>
         <Avatar
+          style={{ border: '2px solid white' }}
           alt="Remy Sharp"
           src={data.avatar?.url ? data.avatar?.url : noLogo}
         />
