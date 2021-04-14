@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 export default {
   apollo: {
     http: 'https://dev-core.emp-sig.com:4001/',
@@ -29,9 +30,13 @@ export default {
   },
   assetUrl: 'https://s3.us-east-2.amazonaws.com/assets.emp-sig.com',
   api: {
-    studentAndTeacherUpload:
+    userBulkUpsert:
       'https://xs9e660jm1.execute-api.us-east-2.amazonaws.com/users/multiple',
     packaging:
       'https://xs9e660jm1.execute-api.us-east-2.amazonaws.com/packaging'
+  },
+  mockData: {
+    userFile:
+      'https://drive.google.com/uc?export=download&id=1HtJrQtuLxVZx3Kkdqbl6JI35scNorG7a'
   }
 };

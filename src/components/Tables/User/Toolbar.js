@@ -39,10 +39,9 @@ const useToolbarStyles = makeStyles((theme) => ({
   }
 }));
 
-const EnhancedTableToolbar = (props) => {
+const EnhancedTableToolbar = ({ schemaType, numSelected, onChange }) => {
   const classes = useToolbarStyles();
   const [canSearch, setCanSearch] = useState(false);
-  const { schemaType, numSelected, onChange } = props;
 
   return (
     <Toolbar
@@ -98,7 +97,10 @@ const EnhancedTableToolbar = (props) => {
             </IconButton>
           </Tooltip>
           <Tooltip title="Upload Users">
-            <IconButton aria-label="upload users">
+            <IconButton
+              aria-label="upload users"
+              onClick={() => onChange('upload')}
+            >
               <CloudUploadIcon />
             </IconButton>
           </Tooltip>

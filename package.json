@@ -59,6 +59,7 @@
     "jest-watch-typeahead": "0.6.1",
     "jsoneditor": "^9.3.0",
     "jsoneditor-react": "^3.1.1",
+    "libphonenumber-js": "^1.9.16",
     "material-ui-dropzone": "^3.5.0",
     "mini-css-extract-plugin": "0.11.3",
     "notistack": "^1.0.5",

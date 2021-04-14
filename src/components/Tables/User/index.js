@@ -16,6 +16,7 @@ import { useGroupingQuery } from '@app/utils/hooks/apollo';
 import { LoadingCard } from '@app/components/Cards';
 import EnhancedTableHead from './Header';
 import EnhancedTableToolbar from './Toolbar';
+import UserUpload from './Upload';
 import useStyles from './style';
 
 function createData(name, calories, fat, carbs, protein) {
@@ -67,6 +68,7 @@ const rows = [
 const UserTable = ({ schemaType, docId, onChange }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
+  const [openUpload, setOpenUpload] = useState(false);
   // const [rows, setRows] = useState([]);
   // const [page, setPage] = useState(0);
   // const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -153,6 +155,16 @@ const UserTable = ({ schemaType, docId, onChange }) => {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+  const handleToolbarChange = (type) => {
+    if (type === 'upload') {
+      setOpenUpload(true);
+    }
+  };
+
+  const handleUploadDialogChange = (type, value) => {
+    if (type === 'close') setOpenUpload(false);
+  };
+
   return (
     <LoadingCard loading={loading} height={`calc(100vh - 350px)`}>
       <div className={classes.root}>
@@ -160,6 +172,7 @@ const UserTable = ({ schemaType, docId, onChange }) => {
           <EnhancedTableToolbar
             schemaType={schemaType}
             numSelected={selected.length}
+            onChange={handleToolbarChange}
           />
           <TableContainer>
             <Table
@@ -238,6 +251,12 @@ const UserTable = ({ schemaType, docId, onChange }) => {
           label="Dense padding"
         />
       </div>
+      <UserUpload
+        docId={docId}
+        open={openUpload}
+        schemaType={schemaType}
+        onChange={handleUploadDialogChange}
+      />
     </LoadingCard>
   );
 };
