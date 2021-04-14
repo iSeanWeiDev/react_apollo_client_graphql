@@ -36,8 +36,8 @@ const Users = ({ type }) => {
   const commonCol = [
     {
       field: 'photo',
-      headerName: 'User photo',
-      width: 150,
+      headerName: 'Avatar',
+      width: 100,
       renderCell: (params) => (
         <Avatar src={params.value} className={classes.avatar} />
       )
