@@ -13,6 +13,8 @@ const DistrictEdit = ({ resources, onChange }) => {
   useEffect(() => {
     if (resources) {
       setLoadedData(resources);
+    } else {
+      setLoadedData();
     }
   }, [resources]);
 

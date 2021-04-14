@@ -19,7 +19,14 @@ import { Img } from 'react-image';
 import noLogo from '@app/assets/imgs/no-logo.jpg';
 import useStyles from '../style';
 
-const DistrictHeader = ({ selectedData, stationData, onChange, ...rest }) => {
+const DistrictHeader = ({
+  loadingSave,
+  canUpdate,
+  selectedData,
+  stationData,
+  onChange,
+  ...rest
+}) => {
   const classes = useStyles();
   const handleSearchChange = () => {};
   return (
@@ -53,6 +60,7 @@ const DistrictHeader = ({ selectedData, stationData, onChange, ...rest }) => {
               onChange={handleSearchChange}
               placeholder="Search districts... ... "
               inputProps={{ 'aria-label': 'search districts' }}
+              onChange={(e) => onChange('search', e.target.value)}
             />
             <IconButton
               type="submit"
@@ -105,7 +113,7 @@ const DistrictHeader = ({ selectedData, stationData, onChange, ...rest }) => {
             <IconButton
               variant="contained"
               className={classes.addButton}
-              // onClick={handleDelete}
+              onClick={() => onChange('delete')}
             >
               <DeleteIcon /> &nbsp; Remove
             </IconButton>
@@ -114,16 +122,16 @@ const DistrictHeader = ({ selectedData, stationData, onChange, ...rest }) => {
               <Button
                 variant="contained"
                 className={classes.saveButton}
-                // onClick={handleSave}
-                // disabled={!canUpdate || loadingSave}
+                onClick={() => onChange('save')}
+                disabled={!canUpdate || loadingSave}
               >
                 Save
-                {/* {loadingSave && (
-                    <CircularProgress
-                      size={24}
-                      className={classes.buttonProgress}
-                    />
-                  )} */}
+                {loadingSave && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
               </Button>
             </Box>
           </Box>
