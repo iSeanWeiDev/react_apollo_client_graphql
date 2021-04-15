@@ -5,6 +5,7 @@ import { TagForm, AvatarForm, DescriptionForm } from '@app/components/Forms';
 import useStyles from './style';
 
 const SchoolEdit = ({ resources, onChange }) => {
+  console.log(resources);
   const classes = useStyles();
   const [value, setValue] = useState('1');
   const [loadedData, setLoadedData] = useState({});
