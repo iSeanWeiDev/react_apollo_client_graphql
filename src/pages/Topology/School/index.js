@@ -123,7 +123,6 @@ const TSchool = ({
   const handleCardAction = async (type, value) => {
     try {
       if (type === 'view') {
-        console.log(value);
         setOpenView(true);
         setSelectedData(value);
         onChange('view', value);
@@ -144,7 +143,7 @@ const TSchool = ({
       enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
-
+  console.log(openView);
   const handleHeaderChange = async (type, value) => {
     try {
       if (type === 'back') {
@@ -301,13 +300,6 @@ const TSchool = ({
           </Box>
           {openView && selectedData && (
             <Box component={Paper} className={classes.preview}>
-              <h1>ddddd</h1>
-              <h1>ddddd</h1>
-              <h1>ddddd</h1>
-              <h1>ddddd</h1>
-              <h1>ddddd</h1>
-              <h1>ddddd</h1>
-              <h1>ddddd</h1>
               <SchoolEdit
                 resources={selectedData}
                 onChange={handleSchoolEditChange}
