@@ -12,12 +12,12 @@ import {
 } from '@material-ui/core';
 import { Search as SearchIcon } from '@material-ui/icons';
 import { AppTabPanel } from '@app/components/App';
-// import { Img } from 'react-image';
-// import { useSnackbar } from 'notistack';
 import { faPhotoVideo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import GalleryList from './List';
 import useStyles from './style';
+import { useGroupingQuery } from '@app/utils/hooks/apollo';
+import { useSnackbar } from 'notistack';
 
 const tabData = [
   { label: 'Stock Images', value: 'stockImage', url: 'stock-images' },
@@ -37,13 +37,58 @@ const GalleryContainer = ({ history }) => {
   const classes = useStyles();
   const [currentTab, setCurrentTab] = useState(0);
   const [openCreate, setOpenCreate] = useState(false);
+  const [searchStr, setSearchStr] = useState('');
+  const [isfiltered, setIsfiltered] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const imgData = useGroupingQuery({ schemaType: 'stockImage' });
+  const bannerData = useGroupingQuery({ schemaType: 'stockBanner' });
+  const logoData = useGroupingQuery({ schemaType: 'stockLogo' });
+  const avatarData = useGroupingQuery({ schemaType: 'stockAvatar' });
+
+  useEffect(() => {
+    resetFilteredData();
+  }, [imgData, bannerData, logoData, avatarData]);
 
   useEffect(() => {
     history.push(`/galleries/${tabData[currentTab].url}`);
   }, [currentTab]);
 
+  const resetFilteredData = () => {
+    let totalData = [];
+    if (imgData) totalData = [...imgData, ...totalData];
+    if (bannerData) totalData = [...bannerData, ...totalData];
+    if (logoData) totalData = [...logoData, ...totalData];
+    if (avatarData) totalData = [...avatarData, ...totalData];
+
+    setFilteredData(
+      totalData.filter((el) =>
+        el.name.toLowerCase().includes(searchStr.toLowerCase())
+      )
+    );
+  };
+
   const handleChange = (event, newValue) => {
     setCurrentTab(newValue);
+  };
+
+  const handleSearchChange = (e) => {
+    if (!e.target.value) {
+      history.push(`/galleries/${tabData[currentTab].url}`);
+      setIsfiltered(false);
+      resetFilteredData();
+    }
+    setSearchStr(e.target.value);
+  };
+
+  const handleSearch = (e) => {
+    if (searchStr && e.key === 'Enter') {
+      setIsfiltered(true);
+      resetFilteredData();
+      enqueueSnackbar(`${searchStr} is filtered`, { variant: 'success' });
+      history.push(`/galleries/search?q=${searchStr}`);
+    }
   };
 
   return (
@@ -56,7 +101,8 @@ const GalleryContainer = ({ history }) => {
         <Box component={Paper} className={classes.search}>
           <InputBase
             className={classes.input}
-            // onChange={handleSearchChange}
+            onChange={handleSearchChange}
+            onKeyDown={handleSearch}
             placeholder="Search asset... ... "
             inputProps={{ 'aria-label': 'search google maps' }}
           />
@@ -71,6 +117,7 @@ const GalleryContainer = ({ history }) => {
         <Button
           variant="contained"
           className={classes.addButton}
+          disabled={isfiltered}
           onClick={() => setOpenCreate(true)}
         >
           Add New Gallery
@@ -93,6 +140,7 @@ const GalleryContainer = ({ history }) => {
               <Tab
                 key={index}
                 label={el.label}
+                disabled={isfiltered}
                 className={classes.tabHeader}
                 {...a11yProps(index)}
               />
@@ -111,6 +159,8 @@ const GalleryContainer = ({ history }) => {
                 type={el.value}
                 openCreate={openCreate}
                 setOpenCreate={setOpenCreate}
+                isfiltered={isfiltered}
+                dataByFilter={filteredData}
               />
             </AppTabPanel>
           ))}
