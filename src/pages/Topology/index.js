@@ -65,14 +65,16 @@ const TopologyContainer = ({ match, history }) => {
       const station = stationData.find(
         (el) => el['_id'] === district.topology.station
       );
-      let pathname = '';
       setOpenTreeView(false);
 
-      if (value) pathname = `/topologies/schools/${value['_id']}/${params.pId}`;
-      else pathname = `/topologies/districts/null/${station['_id']}`;
-
-      setCurrPage('districts');
-      history.push({ pathname });
+      if (value) {
+        const pathname = `/topologies/schools/${value['_id']}/${params.pId}`;
+        history.push({ pathname });
+      } else {
+        const pathname = `/topologies/districts/null/${station['_id']}`;
+        history.push({ pathname });
+        setCurrPage('districts');
+      }
     }
 
     if (type === 'body') {
