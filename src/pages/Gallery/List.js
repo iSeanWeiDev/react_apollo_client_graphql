@@ -19,10 +19,17 @@ import noLogo from '@app/assets/imgs/no-logo.jpg';
 import useStyles from './style';
 import { useSnackbar } from 'notistack';
 
-const GalleryList = ({ type, openCreate, setOpenCreate }) => {
+const GalleryList = ({
+  type,
+  isfiltered,
+  dataByFilter,
+  openCreate,
+  setOpenCreate
+}) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [loadedData, setLoadedData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [currMainWidth, setCurrMainWidth] = useState(null);
   const [title, setTitle] = useState('');
   const [openEdit, setOpenEdit] = useState(false);
@@ -139,10 +146,15 @@ const GalleryList = ({ type, openCreate, setOpenCreate }) => {
       for (let i = 0; i < elPerRow - countElLastRow + 1; i++) {
         tmp.push({ _id: i, name: '', status: 'fake_data' });
       }
+      const tmp1 = dataByFilter.slice();
+      for (let i = 0; i < elPerRow - countElLastRow + 1; i++) {
+        tmp1.push({ _id: i, name: '', status: 'fake_data' });
+      }
       setLoadedData(tmp);
+      setFilteredData(tmp1);
       setLoading(false);
     }
-  }, [resourceData, currMainWidth]);
+  }, [resourceData, currMainWidth, dataByFilter]);
 
   const mainRef = useCallback((node) => {
     if (node !== null) {
@@ -287,36 +299,67 @@ const GalleryList = ({ type, openCreate, setOpenCreate }) => {
       className={classes.listMain}
     >
       <Box className={classes.elements} ref={mainRef}>
-        {loadedData.map((el) =>
-          el.status === 'fake_data' ? (
-            <div key={el['_id']} style={{ width: 250, margin: 8 }}></div>
-          ) : (
-            <Card className={classes.card} key={el['_id']}>
-              <CardActionArea onClick={(e) => handleCardAction(e, 'body', el)}>
-                <CardMedia
-                  component="img"
-                  alt={el.avatar?.altText}
-                  height={175}
-                  image={el.avatar?.url ? el.avatar?.url : noLogo}
-                />
-                <CardContent className={classes.cardContent}>
-                  <Typography gutterBottom variant="subtitle2">
-                    {el.name.length > 19
-                      ? `${el.name.length.substring(0, 19)}...`
-                      : el.name}
-                  </Typography>
-                  <Button
-                    size="small"
-                    color="secondary"
-                    onClick={(e) => handleCardAction(e, 'delete', el)}
+        {isfiltered
+          ? filteredData.map((el) =>
+              el.status === 'fake_data' ? (
+                <div key={el['_id']} style={{ width: 250, margin: 8 }}></div>
+              ) : (
+                <Card className={classes.card} key={el['_id']}>
+                  <CardActionArea
+                    onClick={(e) => handleCardAction(e, 'body', el)}
                   >
-                    Delete
-                  </Button>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          )
-        )}
+                    <CardMedia
+                      component="img"
+                      alt={el.avatar?.altText}
+                      height={175}
+                      image={el.avatar?.url ? el.avatar?.url : noLogo}
+                    />
+                    <CardContent className={classes.cardContent}>
+                      <Typography gutterBottom variant="subtitle2">
+                        {el.name.length > 19
+                          ? `${el.name.length.substring(0, 19)}...`
+                          : el.name}
+                      </Typography>
+                      <Typography gutterBottom variant="subtitle2">
+                        {el.schemaType}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              )
+            )
+          : loadedData.map((el) =>
+              el.status === 'fake_data' ? (
+                <div key={el['_id']} style={{ width: 250, margin: 8 }}></div>
+              ) : (
+                <Card className={classes.card} key={el['_id']}>
+                  <CardActionArea
+                    onClick={(e) => handleCardAction(e, 'body', el)}
+                  >
+                    <CardMedia
+                      component="img"
+                      alt={el.avatar?.altText}
+                      height={175}
+                      image={el.avatar?.url ? el.avatar?.url : noLogo}
+                    />
+                    <CardContent className={classes.cardContent}>
+                      <Typography gutterBottom variant="subtitle2">
+                        {el.name.length > 19
+                          ? `${el.name.length.substring(0, 19)}...`
+                          : el.name}
+                      </Typography>
+                      <Button
+                        size="small"
+                        color="secondary"
+                        onClick={(e) => handleCardAction(e, 'delete', el)}
+                      >
+                        Delete
+                      </Button>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              )
+            )}
       </Box>
       <EditGalleryDialog
         title={title}

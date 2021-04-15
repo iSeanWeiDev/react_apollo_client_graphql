@@ -59,7 +59,7 @@ const EditGalleryDialog = ({ title, open, type, resources, onChange }) => {
       }}
     >
       <DialogTitle>Preview {title}</DialogTitle>
-      <DialogContent>
+      <DialogContent className={classes.dialogContent}>
         <Grid container className={classes.root}>
           <Grid item xs={12} md={12} lg={4} className={classes.photo}>
             <AvatarForm
