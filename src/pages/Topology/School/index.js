@@ -143,7 +143,7 @@ const TSchool = ({
       enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
-  console.log(openView);
+
   const handleHeaderChange = async (type, value) => {
     try {
       if (type === 'back') {
@@ -177,39 +177,39 @@ const TSchool = ({
         }
       }
 
-      //   if (type === 'save') {
-      //     setLoadingSave(true);
-      //     const response = await updateGrouping({
-      //       variables: {
-      //         id: selectedData['_id'],
-      //         name: selectedData.name,
-      //         schemaType: 'district',
-      //         schemaVer: selectedData.schemaVer,
-      //         version: selectedData.version,
-      //         desc: {
-      //           title: selectedData.desc?.title,
-      //           short: selectedData.desc?.short,
-      //           long: selectedData.desc?.long
-      //         },
-      //         tagList: selectedData.tagList,
-      //         avatar: {
-      //           type: selectedData.avatar?.type,
-      //           url: selectedData.avatar?.url,
-      //           name: selectedData.avatar?.name,
-      //           iconUrl: selectedData.avatar?.iconUrl,
-      //           mimeType: selectedData.avatar?.mimeType,
-      //           altText: selectedData.avatar?.altText
-      //         },
-      //         body: selectedData.body
-      //       }
-      //     });
-      //     const { data } = response;
-      //     enqueueSnackbar(
-      //       `Successfully User ${data.updateGrouping.name} updated.`,
-      //       { variant: 'success' }
-      //     );
-      //     setLoadingSave(false);
-      //   }
+      if (type === 'save') {
+        setLoadingSave(true);
+        const response = await updateGrouping({
+          variables: {
+            id: selectedData['_id'],
+            name: selectedData.name,
+            schemaType: 'school',
+            schemaVer: selectedData.schemaVer,
+            version: selectedData.version,
+            desc: {
+              title: selectedData.desc?.title,
+              short: selectedData.desc?.short,
+              long: selectedData.desc?.long
+            },
+            tagList: selectedData.tagList,
+            avatar: {
+              type: selectedData.avatar?.type,
+              url: selectedData.avatar?.url,
+              name: selectedData.avatar?.name,
+              iconUrl: selectedData.avatar?.iconUrl,
+              mimeType: selectedData.avatar?.mimeType,
+              altText: selectedData.avatar?.altText
+            },
+            body: selectedData.body
+          }
+        });
+        const { data } = response;
+        enqueueSnackbar(
+          `Successfully User ${data.updateGrouping.name} updated.`,
+          { variant: 'success' }
+        );
+        setLoadingSave(false);
+      }
 
       if (type === 'delete') {
         const response = await deleteDocument({
