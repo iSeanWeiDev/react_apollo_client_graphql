@@ -61,17 +61,17 @@ const AppRoutes = () => (
     <PrivateRoute
       path="/archives"
       component={ComingSoonContainer}
-      layout={DashboardLayout}
+      layout={BasicLayout}
     />
     <PrivateRoute
       path="/tutorials"
       component={ComingSoonContainer}
-      layout={DashboardLayout}
+      layout={BasicLayout}
     />
     <PrivateRoute
       path="/settings"
       component={ComingSoonContainer}
-      layout={DashboardLayout}
+      layout={BasicLayout}
     />
     <PublicRoute path="**" component={NotFound} layout={BasicLayout} />
   </Switch>

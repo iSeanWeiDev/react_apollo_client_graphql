@@ -26,26 +26,27 @@ const AppStateProvider = ({ ...props }) => {
           schemaType: groupingAdd.schemaType
         }
       });
-
-      let data = isEmptyObject(existData.grouping)
-        ? existData.grouping.slice()
-        : [];
-      const idx = data.findIndex((el) => el['_id'] === groupingAdd['_id']);
-      if (idx > -1) {
-        data[idx] = groupingAdd;
-      } else {
-        data = [...data, groupingAdd];
-      }
-
-      client.writeQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: groupingAdd.schemaType
-        },
-        data: {
-          grouping: data
+      if (existData) {
+        let data = isEmptyObject(existData.grouping)
+          ? existData.grouping.slice()
+          : [];
+        const idx = data.findIndex((el) => el['_id'] === groupingAdd['_id']);
+        if (idx > -1) {
+          data[idx] = groupingAdd;
+        } else {
+          data = [...data, groupingAdd];
         }
-      });
+
+        client.writeQuery({
+          query: graphql.queries.grouping,
+          variables: {
+            schemaType: groupingAdd.schemaType
+          },
+          data: {
+            grouping: data
+          }
+        });
+      }
     }
   });
 
@@ -62,24 +63,25 @@ const AppStateProvider = ({ ...props }) => {
           schemaType: groupingUpdate.schemaType
         }
       });
-
-      let tmp = isEmptyObject(existData.grouping)
-        ? existData.grouping.slice()
-        : [];
-      const idx = tmp.findIndex((el) => el['_id'] === groupingUpdate['_id']);
-      if (idx > -1) {
-        tmp[idx] = groupingUpdate;
-      }
-
-      client.writeQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: groupingUpdate.schemaType
-        },
-        data: {
-          grouping: tmp
+      if (existData) {
+        let tmp = isEmptyObject(existData.grouping)
+          ? existData.grouping.slice()
+          : [];
+        const idx = tmp.findIndex((el) => el['_id'] === groupingUpdate['_id']);
+        if (idx > -1) {
+          tmp[idx] = groupingUpdate;
         }
-      });
+
+        client.writeQuery({
+          query: graphql.queries.grouping,
+          variables: {
+            schemaType: groupingUpdate.schemaType
+          },
+          data: {
+            grouping: tmp
+          }
+        });
+      }
     }
   });
 
@@ -97,21 +99,22 @@ const AppStateProvider = ({ ...props }) => {
           schemaType: schemaType
         }
       });
+      if (existData) {
+        let tmp = isEmptyObject(existData.grouping)
+          ? existData.grouping.slice()
+          : [];
+        const data = tmp.findIndex((el) => el['_id'] !== _id);
 
-      let tmp = isEmptyObject(existData.grouping)
-        ? existData.grouping.slice()
-        : [];
-      const data = tmp.findIndex((el) => el['_id'] !== _id);
-
-      client.writeQuery({
-        query: graphql.queries.grouping,
-        variables: {
-          schemaType: schemaType
-        },
-        data: {
-          grouping: data
-        }
-      });
+        client.writeQuery({
+          query: graphql.queries.grouping,
+          variables: {
+            schemaType: schemaType
+          },
+          data: {
+            grouping: data
+          }
+        });
+      }
     }
   });
 

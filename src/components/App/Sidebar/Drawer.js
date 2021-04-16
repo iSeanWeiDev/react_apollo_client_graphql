@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { withRouter } from 'react-router-dom';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Tooltip, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useTheme } from '@material-ui/core/styles';
 import {
@@ -108,53 +108,66 @@ const AppDrawer = ({ location }) => {
       <Divider className={classes.separator} />
       <List className={classes.menus}>
         {mainMenuElements.map((el, index) => (
-          <ListItem
-            button
+          <Tooltip
+            arrow
             key={index}
-            className={classes.listItems}
-            onClick={() => handleListClick(el)}
-            disabled={el.disabled}
+            title={el.tooltip}
+            placement="right-center"
+            style={{ fontSize: 20 }}
           >
-            <ListItemIcon className={classes.listItemIcons}>
-              <FontAwesomeIcon
-                icon={el.icon}
-                className={clsx(classes.listItemIcon, {
-                  [classes.listItemIconSelcted]: el.url === selected,
-                  [classes.listItemIcon]: el.url !== selected
-                })}
-              />
-            </ListItemIcon>
-            <ListItemText
-              className={clsx(classes.listItemText, {
-                [classes.listItemTextSelcted]: el.url === selected,
-                [classes.listItemText]: el.url !== selected
-              })}
+            <ListItem
+              button
+              className={classes.listItems}
+              onClick={() => handleListClick(el)}
+              disabled={el.disabled}
             >
-              {el.text}
-            </ListItemText>
-          </ListItem>
+              <ListItemIcon className={classes.listItemIcons}>
+                <FontAwesomeIcon
+                  icon={el.icon}
+                  className={clsx(classes.listItemIcon, {
+                    [classes.listItemIconSelcted]: el.url === selected,
+                    [classes.listItemIcon]: el.url !== selected
+                  })}
+                />
+              </ListItemIcon>
+              <ListItemText
+                className={clsx(classes.listItemText, {
+                  [classes.listItemTextSelcted]: el.url === selected,
+                  [classes.listItemText]: el.url !== selected
+                })}
+              >
+                {el.text}
+              </ListItemText>
+            </ListItem>
+          </Tooltip>
         ))}
       </List>
 
       <List className={classes.actionList}>
         <Divider className={classes.actionSeparator} />
         {actionMenuElements.map((el, index) => (
-          <ListItem
-            button
+          <Tooltip
             key={index}
-            className={classes.listItems}
-            onClick={() => handleListClick(el)}
-            disabled={el.disabled}
+            title={el.tooltip}
+            placement="right-center"
+            arrow
           >
-            <ListItemIcon className={classes.listItemIcons}>
-              <FontAwesomeIcon
-                icon={el.icon}
-                size="lg"
-                color={theme.palette.common.white}
-              />
-            </ListItemIcon>
-            <ListItemText>{el.text}</ListItemText>
-          </ListItem>
+            <ListItem
+              button
+              className={classes.listItems}
+              onClick={() => handleListClick(el)}
+              disabled={el.disabled}
+            >
+              <ListItemIcon className={classes.listItemIcons}>
+                <FontAwesomeIcon
+                  icon={el.icon}
+                  size="lg"
+                  color={theme.palette.common.white}
+                />
+              </ListItemIcon>
+              <ListItemText>{el.text}</ListItemText>
+            </ListItem>
+          </Tooltip>
         ))}
       </List>
     </Box>

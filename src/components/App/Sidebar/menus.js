@@ -16,49 +16,49 @@ export const mainMenuElements = [
     icon: faTachometerAlt,
     text: 'Dashboard',
     url: '/dashboard',
-    disabled: false
+    tooltip: 'Dashboard with Graphic Designs'
   },
   {
     icon: faSitemap,
     text: 'Topology',
     url: '/topologies',
-    disabled: false
+    tooltip: 'Tree structure and Topologies'
   },
   {
     icon: faBookOpen,
     text: 'Lessons',
     url: '/lessons',
-    disabled: false
+    tooltip: 'Classes and Lessons'
   },
   {
     icon: faBox,
     text: 'Packages',
     url: '/packages',
-    disabled: false
+    tooltip: 'Packaged Lessons'
   },
   {
     icon: faPhotoVideo,
     text: 'Galleries',
     url: '/galleries',
-    disabled: false
+    tooltip: 'Global Assets'
   },
   {
     icon: faSwatchbook,
     text: 'Resources',
     url: '/resources',
-    disabled: false
+    tooltip: 'All Resources'
   },
   {
     icon: faFileArchive,
     text: 'Archives',
     url: '/archives',
-    disabled: false
+    tooltip: 'Coming Soon Page'
   },
   {
     icon: faUsersCog,
     text: 'Users',
     url: '/users',
-    disabled: false
+    tooltip: 'All Users'
   }
 ];
 
@@ -67,7 +67,12 @@ export const actionMenuElements = [
     icon: faInfoCircle,
     text: 'Tutorials',
     url: '/tutorials',
-    disabled: false
+    tooltip: 'Coming Soon Page'
   },
-  { icon: faCog, text: 'Settings', url: '/settings', disabled: false }
+  {
+    icon: faCog,
+    text: 'Settings',
+    url: '/settings',
+    tooltip: 'Coming Soon Page'
+  }
 ];
