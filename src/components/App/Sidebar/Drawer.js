@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { withRouter } from 'react-router-dom';
 import { Box, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
 import { useTheme } from '@material-ui/core/styles';
 import {
   Divider,
@@ -124,9 +123,7 @@ const AppDrawer = ({ location }) => {
     let profile = localStorage.getItem('profile');
 
     if (!profile) {
-      const loadUser = () => {
-        return Auth.currentUserInfo({ bypassCache: true });
-      };
+      const loadUser = () => {};
 
       const onLoad = async () => {
         try {

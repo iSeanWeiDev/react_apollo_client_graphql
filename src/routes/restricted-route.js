@@ -1,4 +1,3 @@
-import { isAuthenticated } from '@app/utils/auth';
 import React, { useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
@@ -28,7 +27,6 @@ const RestrictedRoute = ({ component: Component, layout: Layout, ...rest }) => {
           window.localStorage.clear();
         }
       }
-      setLoggedIn((await isAuthenticated()) ? 1 : 0);
     })();
   });
 
