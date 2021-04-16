@@ -6,8 +6,12 @@ import PrivateRoute from './private-route';
 // import RestrictedRoute from './restricted-route';
 
 import BasicLayout from '@app/layouts/basic-layout';
+import AppLayout from '@app/layouts/app-layout';
 import DashboardLayout from '@app/layouts/dashboard-layout';
 
+// import HomeContainer from '@app/pages/Home';
+import ComingSoonContainer from '@app/pages/ComingSoon';
+import DashboardContainer from '@app/pages/Dashboard';
 import UserContainer from '@app/pages/User';
 import TopologyContainer from '@app/pages/Topology';
 import ResourceContainer from '@app/pages/Resource';
@@ -18,18 +22,17 @@ import NotFound from '@app/pages/NotFound';
 
 const AppRoutes = () => (
   <Switch>
-    {/* <RestrictedRoute
+    <PublicRoute
       exact
       path="/"
-      component={LoginContainer}
-      layout={BasicLayout}
+      component={ComingSoonContainer}
+      layout={AppLayout}
     />
-    <RestrictedRoute
-      exact
-      path="/forgot-password"
-      component={ForgotPasswordContainer}
-      layout={BasicLayout}
-    /> */}
+    <PrivateRoute
+      path="/dashboard"
+      component={DashboardContainer}
+      layout={DashboardLayout}
+    />
     <PrivateRoute
       path="/topologies/:type?/:typeId?/:pId?"
       component={TopologyContainer}
@@ -59,6 +62,21 @@ const AppRoutes = () => (
       path="/lessons"
       component={LessonContainer}
       layout={DashboardLayout}
+    />
+    <PrivateRoute
+      path="/archives"
+      component={ComingSoonContainer}
+      layout={BasicLayout}
+    />
+    <PrivateRoute
+      path="/tutorials"
+      component={ComingSoonContainer}
+      layout={BasicLayout}
+    />
+    <PrivateRoute
+      path="/settings"
+      component={ComingSoonContainer}
+      layout={BasicLayout}
     />
     <PublicRoute path="**" component={NotFound} layout={BasicLayout} />
   </Switch>

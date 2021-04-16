@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const NotFound = ({ history }) => {
   const classes = useStyles();
-  const handleClick = () => history.push({ pathname: '/topologies' });
+  const handleClick = () => history.push({ pathname: '/dashboard' });
 
   return (
     <Box className={classes.root}>

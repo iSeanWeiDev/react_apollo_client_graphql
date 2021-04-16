@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { withRouter } from 'react-router-dom';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Tooltip, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useTheme } from '@material-ui/core/styles';
 import {
@@ -13,80 +13,16 @@ import {
   ListItemText,
   Avatar
 } from '@material-ui/core';
-import {
-  faCog,
-  faBox,
-  faSwatchbook,
-  faSitemap,
-  faFileArchive,
-  faPhotoVideo,
-  faBookOpen,
-  faUsersCog,
-  faInfoCircle
-} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import noUserFemale from '@app/assets/imgs/no-user-female.jpeg';
 import StyledBadge from './StyledBadge';
+import { mainMenuElements, actionMenuElements } from './menus';
 import useStyles from './style';
 
 const AppDrawer = ({ location }) => {
   const classes = useStyles();
   const theme = useTheme();
   const history = useHistory();
-  const menuElements = [
-    {
-      icon: faSitemap,
-      text: 'Topology',
-      url: '/topologies',
-      disabled: false
-    },
-    {
-      icon: faBookOpen,
-      text: 'Lessons',
-      url: '/lessons',
-      disabled: false
-    },
-    {
-      icon: faBox,
-      text: 'Packages',
-      url: '/packages',
-      disabled: false
-    },
-    {
-      icon: faPhotoVideo,
-      text: 'Galleries',
-      url: '/galleries',
-      disabled: false
-    },
-    {
-      icon: faSwatchbook,
-      text: 'Resources',
-      url: '/resources',
-      disabled: false
-    },
-    {
-      icon: faFileArchive,
-      text: 'Archives',
-      url: '/archives',
-      disabled: true
-    },
-    {
-      icon: faUsersCog,
-      text: 'Users',
-      url: '/users',
-      disabled: false
-    }
-  ];
-
-  const actionElements = [
-    {
-      icon: faInfoCircle,
-      text: 'Tutorials',
-      url: '/tutorials',
-      disabled: false
-    },
-    { icon: faCog, text: 'Settings', url: '/settings', disabled: false }
-  ];
 
   const [role, setRole] = useState('');
   const [userName, setUserName] = useState('');
@@ -171,54 +107,67 @@ const AppDrawer = ({ location }) => {
 
       <Divider className={classes.separator} />
       <List className={classes.menus}>
-        {menuElements.map((el, index) => (
-          <ListItem
-            button
+        {mainMenuElements.map((el, index) => (
+          <Tooltip
+            arrow
             key={index}
-            className={classes.listItems}
-            onClick={() => handleListClick(el)}
-            disabled={el.disabled}
+            title={el.tooltip}
+            placement="right-center"
+            style={{ fontSize: 20 }}
           >
-            <ListItemIcon className={classes.listItemIcons}>
-              <FontAwesomeIcon
-                icon={el.icon}
-                className={clsx(classes.listItemIcon, {
-                  [classes.listItemIconSelcted]: el.url === selected,
-                  [classes.listItemIcon]: el.url !== selected
-                })}
-              />
-            </ListItemIcon>
-            <ListItemText
-              className={clsx(classes.listItemText, {
-                [classes.listItemTextSelcted]: el.url === selected,
-                [classes.listItemText]: el.url !== selected
-              })}
+            <ListItem
+              button
+              className={classes.listItems}
+              onClick={() => handleListClick(el)}
+              disabled={el.disabled}
             >
-              {el.text}
-            </ListItemText>
-          </ListItem>
+              <ListItemIcon className={classes.listItemIcons}>
+                <FontAwesomeIcon
+                  icon={el.icon}
+                  className={clsx(classes.listItemIcon, {
+                    [classes.listItemIconSelcted]: el.url === selected,
+                    [classes.listItemIcon]: el.url !== selected
+                  })}
+                />
+              </ListItemIcon>
+              <ListItemText
+                className={clsx(classes.listItemText, {
+                  [classes.listItemTextSelcted]: el.url === selected,
+                  [classes.listItemText]: el.url !== selected
+                })}
+              >
+                {el.text}
+              </ListItemText>
+            </ListItem>
+          </Tooltip>
         ))}
       </List>
 
       <List className={classes.actionList}>
-        <Divider className={classes.separator} />
-        {actionElements.map((el, index) => (
-          <ListItem
-            button
+        <Divider className={classes.actionSeparator} />
+        {actionMenuElements.map((el, index) => (
+          <Tooltip
             key={index}
-            className={classes.listItems}
-            onClick={() => handleListClick(el)}
-            disabled={el.disabled}
+            title={el.tooltip}
+            placement="right-center"
+            arrow
           >
-            <ListItemIcon className={classes.listItemIcons}>
-              <FontAwesomeIcon
-                icon={el.icon}
-                size="lg"
-                color={theme.palette.common.white}
-              />
-            </ListItemIcon>
-            <ListItemText>{el.text}</ListItemText>
-          </ListItem>
+            <ListItem
+              button
+              className={classes.listItems}
+              onClick={() => handleListClick(el)}
+              disabled={el.disabled}
+            >
+              <ListItemIcon className={classes.listItemIcons}>
+                <FontAwesomeIcon
+                  icon={el.icon}
+                  size="lg"
+                  color={theme.palette.common.white}
+                />
+              </ListItemIcon>
+              <ListItemText>{el.text}</ListItemText>
+            </ListItem>
+          </Tooltip>
         ))}
       </List>
     </Box>
