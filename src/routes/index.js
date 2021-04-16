@@ -9,7 +9,7 @@ import BasicLayout from '@app/layouts/basic-layout';
 import AppLayout from '@app/layouts/app-layout';
 import DashboardLayout from '@app/layouts/dashboard-layout';
 
-import HomeContainer from '@app/pages/Home';
+// import HomeContainer from '@app/pages/Home';
 import ComingSoonContainer from '@app/pages/ComingSoon';
 import DashboardContainer from '@app/pages/Dashboard';
 import UserContainer from '@app/pages/User';
@@ -22,7 +22,12 @@ import NotFound from '@app/pages/NotFound';
 
 const AppRoutes = () => (
   <Switch>
-    <PublicRoute exact path="/" component={HomeContainer} layout={AppLayout} />
+    <PublicRoute
+      exact
+      path="/"
+      component={ComingSoonContainer}
+      layout={AppLayout}
+    />
     <PrivateRoute
       path="/dashboard"
       component={DashboardContainer}
