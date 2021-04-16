@@ -6,8 +6,11 @@ import PrivateRoute from './private-route';
 // import RestrictedRoute from './restricted-route';
 
 import BasicLayout from '@app/layouts/basic-layout';
+import AppLayout from '@app/layouts/app-layout';
 import DashboardLayout from '@app/layouts/dashboard-layout';
 
+import HomeContainer from '@app/pages/Home';
+import DashboardContainer from '@app/pages/Dashboard';
 import UserContainer from '@app/pages/User';
 import TopologyContainer from '@app/pages/Topology';
 import ResourceContainer from '@app/pages/Resource';
@@ -18,6 +21,7 @@ import NotFound from '@app/pages/NotFound';
 
 const AppRoutes = () => (
   <Switch>
+    <PublicRoute exact path="/" component={HomeContainer} layout={AppLayout} />
     {/* <RestrictedRoute
       exact
       path="/"
@@ -30,6 +34,11 @@ const AppRoutes = () => (
       component={ForgotPasswordContainer}
       layout={BasicLayout}
     /> */}
+    <PrivateRoute
+      path="/dashboard"
+      component={DashboardContainer}
+      layout={DashboardLayout}
+    />
     <PrivateRoute
       path="/topologies/:type?/:typeId?/:pId?"
       component={TopologyContainer}
