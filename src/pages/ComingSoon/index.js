@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Box, Typography } from '@material-ui/core';
 
-const ArchiveContainer = ({ history }) => {
+const ComingSoonContainer = ({ history }) => {
   return (
     <Box
       display="flex"
@@ -17,4 +17,4 @@ const ArchiveContainer = ({ history }) => {
   );
 };
 
-export default withRouter(ArchiveContainer);
+export default withRouter(ComingSoonContainer);

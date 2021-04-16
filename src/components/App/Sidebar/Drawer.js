@@ -137,7 +137,7 @@ const AppDrawer = ({ location }) => {
       </List>
 
       <List className={classes.actionList}>
-        <Divider className={classes.separator} />
+        <Divider className={classes.actionSeparator} />
         {actionMenuElements.map((el, index) => (
           <ListItem
             button

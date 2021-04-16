@@ -10,7 +10,7 @@ import AppLayout from '@app/layouts/app-layout';
 import DashboardLayout from '@app/layouts/dashboard-layout';
 
 import HomeContainer from '@app/pages/Home';
-import ArchiveContainer from '@app/pages/Archive';
+import ComingSoonContainer from '@app/pages/ComingSoon';
 import DashboardContainer from '@app/pages/Dashboard';
 import UserContainer from '@app/pages/User';
 import TopologyContainer from '@app/pages/Topology';
@@ -60,7 +60,17 @@ const AppRoutes = () => (
     />
     <PrivateRoute
       path="/archives"
-      component={ArchiveContainer}
+      component={ComingSoonContainer}
+      layout={DashboardLayout}
+    />
+    <PrivateRoute
+      path="/tutorials"
+      component={ComingSoonContainer}
+      layout={DashboardLayout}
+    />
+    <PrivateRoute
+      path="/settings"
+      component={ComingSoonContainer}
       layout={DashboardLayout}
     />
     <PublicRoute path="**" component={NotFound} layout={BasicLayout} />

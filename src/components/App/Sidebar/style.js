@@ -40,6 +40,13 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2)
   },
+  actionSeparator: {
+    background: theme.palette.common.white,
+    height: 2,
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(1)
+  },
   menus: {
     width: '100%',
     marginTop: 3
