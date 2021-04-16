@@ -11,7 +11,7 @@ class Optin extends Component {
   render() {
     return (
       <div className="optin">
-        <p>Return back to other page</p>
+        <p>Return back to dashboard page</p>
         <button onClick={() => this.modal()}>Click Me</button>
       </div>
     );
