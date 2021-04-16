@@ -7,16 +7,13 @@
   right: 0;
   bottom: 0;
   text-align: center;
+
   color: #fff;
   font-family: 'Roboto Condensed', sans-serif;
+  background-image: url(https://images.unsplash.com/photo-1508389377389-b8221c0bcc9e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80);
+  background-position: top top;
   background-size: cover;
   margin: 0;
-  background: linear-gradient(
-    117deg,
-    #ebebeb 0%,
-    #999999 50%,
-    rgb(0 0 0 / 40%) 100%
-  );
 }
 
 .container {
