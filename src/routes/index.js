@@ -3,12 +3,11 @@ import { Switch, withRouter } from 'react-router-dom';
 
 import PublicRoute from './public-route';
 import PrivateRoute from './private-route';
-import RestrictedRoute from './restricted-route';
+// import RestrictedRoute from './restricted-route';
 
 import BasicLayout from '@app/layouts/basic-layout';
 import DashboardLayout from '@app/layouts/dashboard-layout';
 
-import { LoginContainer, ForgotPasswordContainer } from '@app/pages/Auth';
 import UserContainer from '@app/pages/User';
 import TopologyContainer from '@app/pages/Topology';
 import ResourceContainer from '@app/pages/Resource';
@@ -19,7 +18,7 @@ import NotFound from '@app/pages/NotFound';
 
 const AppRoutes = () => (
   <Switch>
-    <RestrictedRoute
+    {/* <RestrictedRoute
       exact
       path="/"
       component={LoginContainer}
@@ -30,7 +29,7 @@ const AppRoutes = () => (
       path="/forgot-password"
       component={ForgotPasswordContainer}
       layout={BasicLayout}
-    />
+    /> */}
     <PrivateRoute
       path="/topologies/:type?/:typeId?/:pId?"
       component={TopologyContainer}

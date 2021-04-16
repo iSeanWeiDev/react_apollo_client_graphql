@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { Auth } from 'aws-amplify';
 import { useHistory } from 'react-router-dom';
 import { Img } from 'react-image';
 import PropTypes from 'prop-types';
@@ -40,7 +39,6 @@ const AppNavbar = ({ fullWidth, position, canClose, onChange }) => {
 
   const handleLogout = async () => {
     try {
-      await Auth.signOut();
       window.localStorage.clear();
       history.push('/');
     } catch (error) {
