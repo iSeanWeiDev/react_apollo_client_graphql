@@ -13,80 +13,16 @@ import {
   ListItemText,
   Avatar
 } from '@material-ui/core';
-import {
-  faCog,
-  faBox,
-  faSwatchbook,
-  faSitemap,
-  faFileArchive,
-  faPhotoVideo,
-  faBookOpen,
-  faUsersCog,
-  faInfoCircle
-} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import noUserFemale from '@app/assets/imgs/no-user-female.jpeg';
 import StyledBadge from './StyledBadge';
+import { mainMenuElements, actionMenuElements } from './menus';
 import useStyles from './style';
 
 const AppDrawer = ({ location }) => {
   const classes = useStyles();
   const theme = useTheme();
   const history = useHistory();
-  const menuElements = [
-    {
-      icon: faSitemap,
-      text: 'Topology',
-      url: '/topologies',
-      disabled: false
-    },
-    {
-      icon: faBookOpen,
-      text: 'Lessons',
-      url: '/lessons',
-      disabled: false
-    },
-    {
-      icon: faBox,
-      text: 'Packages',
-      url: '/packages',
-      disabled: false
-    },
-    {
-      icon: faPhotoVideo,
-      text: 'Galleries',
-      url: '/galleries',
-      disabled: false
-    },
-    {
-      icon: faSwatchbook,
-      text: 'Resources',
-      url: '/resources',
-      disabled: false
-    },
-    {
-      icon: faFileArchive,
-      text: 'Archives',
-      url: '/archives',
-      disabled: true
-    },
-    {
-      icon: faUsersCog,
-      text: 'Users',
-      url: '/users',
-      disabled: false
-    }
-  ];
-
-  const actionElements = [
-    {
-      icon: faInfoCircle,
-      text: 'Tutorials',
-      url: '/tutorials',
-      disabled: false
-    },
-    { icon: faCog, text: 'Settings', url: '/settings', disabled: false }
-  ];
 
   const [role, setRole] = useState('');
   const [userName, setUserName] = useState('');
@@ -171,7 +107,7 @@ const AppDrawer = ({ location }) => {
 
       <Divider className={classes.separator} />
       <List className={classes.menus}>
-        {menuElements.map((el, index) => (
+        {mainMenuElements.map((el, index) => (
           <ListItem
             button
             key={index}
@@ -202,7 +138,7 @@ const AppDrawer = ({ location }) => {
 
       <List className={classes.actionList}>
         <Divider className={classes.separator} />
-        {actionElements.map((el, index) => (
+        {actionMenuElements.map((el, index) => (
           <ListItem
             button
             key={index}
