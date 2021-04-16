@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 
 const HomeContainer = ({ history }) => {
-  return <h1>Home Container</h1>;
+  return <div></div>;
 };
 
 export default withRouter(HomeContainer);
