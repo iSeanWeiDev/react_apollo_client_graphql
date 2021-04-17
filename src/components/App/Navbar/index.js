@@ -14,7 +14,9 @@ import {
 } from '@material-ui/core';
 import {
   Menu as MenuIcon,
-  AccountCircle as AccountIcon
+  AccountCircle as AccountIcon,
+  History as HistoryIcon,
+  ExitToApp as ExitToaAppIcon
 } from '@material-ui/icons';
 import { HideOnScroll } from '@app/components/ScrollButton';
 import useStyles from './style';
@@ -44,6 +46,16 @@ const AppNavbar = ({ fullWidth, position, canClose, onChange }) => {
     } catch (error) {
       console.log(error.message);
     }
+  };
+
+  const handleProfile = () => {
+    handleClose();
+    history.push('/profile');
+  };
+
+  const handleMyAccount = () => {
+    handleClose();
+    history.push('/account');
   };
 
   return (
@@ -92,9 +104,18 @@ const AppNavbar = ({ fullWidth, position, canClose, onChange }) => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          <MenuItem onClick={handleProfile}>
+            <AccountIcon />
+            &nbsp;&nbsp;&nbsp;Profile
+          </MenuItem>
+          <MenuItem onClick={handleMyAccount}>
+            <HistoryIcon />
+            &nbsp;&nbsp;&nbsp;My account
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>
+            <ExitToaAppIcon />
+            &nbsp;&nbsp;&nbsp;Logout
+          </MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
