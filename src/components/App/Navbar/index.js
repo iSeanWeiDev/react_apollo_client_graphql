@@ -10,7 +10,8 @@ import {
   AppBar,
   Toolbar,
   Button,
-  IconButton
+  IconButton,
+  Container
 } from '@material-ui/core';
 import {
   Menu as MenuIcon,
@@ -26,7 +27,13 @@ HideOnScroll.propTypes = {
   window: PropTypes.func
 };
 
-const AppNavbar = ({ fullWidth, position, canClose, onChange }) => {
+const AppNavbar = ({
+  fullWidth,
+  position,
+  canClose,
+  onChange,
+  isAuthenticated
+}) => {
   const classes = useStyles();
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -77,26 +84,43 @@ const AppNavbar = ({ fullWidth, position, canClose, onChange }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Box
-          width="100%"
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Img
-            src="https://configs.emp-sig.com/assets/PoweredByLogo.png"
-            height="50"
-          />
-          {!canClose ? (
-            <IconButton onClick={handleClick}>
-              <AccountIcon />
-            </IconButton>
-          ) : (
-            <Button size="small" onClick={() => onChange('close')}>
-              Close
-            </Button>
-          )}
-        </Box>
+        {!isAuthenticated ? (
+          <Container>
+            <Box
+              width="100%"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Img
+                src="https://configs.emp-sig.com/assets/PoweredByLogo.png"
+                height="50"
+              />
+              <Button size="medium">Login</Button>
+            </Box>
+          </Container>
+        ) : (
+          <Box
+            width="100%"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Img
+              src="https://configs.emp-sig.com/assets/PoweredByLogo.png"
+              height="50"
+            />
+            {!canClose ? (
+              <IconButton onClick={handleClick}>
+                <AccountIcon />
+              </IconButton>
+            ) : (
+              <Button size="small" onClick={() => onChange('close')}>
+                Close
+              </Button>
+            )}
+          </Box>
+        )}
         <Menu
           id="simple-menu"
           anchorEl={anchorEl}
