@@ -1,21 +1,25 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { lightBlue } from '@material-ui/core/colors';
-
+import imgDemo3 from '@app/assets/imgs/demo-3.png';
+import { shadows } from '@material-ui/system';
 const useStyles = makeStyles((theme) => ({
   hero: {
-    backgroundImage:
-      'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
-    minHeight: '250px'
+    backgroundImage: `url(${imgDemo3})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: '100% auto',
+    backgroundPosition: 'center',
+    minHeight: '175px'
   },
   userInfo: {
     position: 'relative',
-    marginLeft: '20px'
+    marginLeft: '40px'
   },
   avatar: {
     width: 150,
     height: 150,
     float: 'left',
-    marginTop: '-100px'
+    marginTop: '-90px',
+    border: '2px solid white'
   },
   inputArea: {
     width: '100%',
@@ -28,7 +32,8 @@ const useStyles = makeStyles((theme) => ({
     padding: '8px 8px 0 8px',
     backgroundColor: theme.palette.background.paper,
     color: theme.palette.blueGrey['800'],
-    borderRadius: '20px 20px 0 0'
+    borderRadius: '20px 20px 0 0',
+    boxShadow: 'none'
   },
   saveSecBtn: {
     height: 40,
@@ -42,7 +47,10 @@ const useStyles = makeStyles((theme) => ({
     },
     float: 'right'
   },
-  linkListContainer: {}
+  linkListContainer: {},
+  tabPanel: {
+    background: theme.palette.common.white
+  }
 }));
 
 export default useStyles;

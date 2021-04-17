@@ -6,13 +6,16 @@ import PropTypes from 'prop-types';
 import {
   Box,
   Menu,
+  Badge,
   MenuItem,
   AppBar,
   Toolbar,
   Button,
-  IconButton
+  IconButton,
+  Container
 } from '@material-ui/core';
 import {
+  Notifications,
   Menu as MenuIcon,
   AccountCircle as AccountIcon,
   History as HistoryIcon,
@@ -26,7 +29,13 @@ HideOnScroll.propTypes = {
   window: PropTypes.func
 };
 
-const AppNavbar = ({ fullWidth, position, canClose, onChange }) => {
+const AppNavbar = ({
+  fullWidth,
+  position,
+  canClose,
+  onChange,
+  isAuthenticated
+}) => {
   const classes = useStyles();
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -77,26 +86,53 @@ const AppNavbar = ({ fullWidth, position, canClose, onChange }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Box
-          width="100%"
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Img
-            src="https://configs.emp-sig.com/assets/PoweredByLogo.png"
-            height="50"
-          />
-          {!canClose ? (
-            <IconButton onClick={handleClick}>
-              <AccountIcon />
-            </IconButton>
-          ) : (
-            <Button size="small" onClick={() => onChange('close')}>
-              Close
-            </Button>
-          )}
-        </Box>
+        {!isAuthenticated ? (
+          <Container>
+            <Box
+              width="100%"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Img
+                src="https://configs.emp-sig.com/assets/PoweredByLogo.png"
+                height="50"
+              />
+              <Button size="medium">Login</Button>
+            </Box>
+          </Container>
+        ) : (
+          <Box
+            width="100%"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Img
+              src="https://configs.emp-sig.com/assets/PoweredByLogo.png"
+              height="50"
+            />
+            {!canClose ? (
+              <Box>
+                <Badge
+                  color="secondary"
+                  badgeContent={58}
+                  className={classes.badge}
+                >
+                  <Notifications />
+                </Badge>
+
+                <IconButton onClick={handleClick}>
+                  <AccountIcon />
+                </IconButton>
+              </Box>
+            ) : (
+              <Button size="small" onClick={() => onChange('close')}>
+                Close
+              </Button>
+            )}
+          </Box>
+        )}
         <Menu
           id="simple-menu"
           anchorEl={anchorEl}
@@ -110,7 +146,7 @@ const AppNavbar = ({ fullWidth, position, canClose, onChange }) => {
           </MenuItem>
           <MenuItem onClick={handleMyAccount}>
             <HistoryIcon />
-            &nbsp;&nbsp;&nbsp;My account
+            &nbsp;&nbsp;&nbsp;History
           </MenuItem>
           <MenuItem onClick={handleLogout}>
             <ExitToaAppIcon />

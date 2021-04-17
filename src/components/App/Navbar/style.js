@@ -20,7 +20,11 @@ const useStyles = makeStyles((theme) => ({
       display: 'none'
     }
   },
-  toolbar: theme.mixins.toolbar
+  toolbar: theme.mixins.toolbar,
+  badge: {
+    marginRight: theme.spacing(2),
+    cursor: 'pointer'
+  }
 }));
 
 export default useStyles;
