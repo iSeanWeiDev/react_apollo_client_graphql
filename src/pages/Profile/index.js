@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import useStyles from './style';
-import { Grid, Avatar, Typography, AppBar, Tab, Tabs } from '@material-ui/core';
+import {
+  Grid,
+  Paper,
+  Avatar,
+  Typography,
+  AppBar,
+  Tab,
+  Tabs,
+  Container
+} from '@material-ui/core';
 import { TabContext, TabList, TabPanel } from '@material-ui/lab';
 import ProfileLink from './Link';
 import ProfileSecurity from './Security';
@@ -46,16 +55,18 @@ const ProfileContainer = () => {
   };
 
   return (
-    <React.Fragment>
-      <Grid container spacing={3}>
-        <Grid item xs={12} className={classes.hero} />
-        <Grid item xs={12} className={classes.userInfo}>
+    <Grid container spacing={3}>
+      <Grid item xs={12} className={classes.hero} />
+      <Grid item xs={12} className={classes.userInfo}>
+        <Container>
           <Avatar className={classes.avatar} />
           <Typography variant="h4" gutterBottom>
             John Smith
           </Typography>
-        </Grid>
-        <Grid item xs={12}>
+        </Container>
+      </Grid>
+      <Grid item xs={12}>
+        <Container>
           <TabContext value={tabIndex} className={classes.tabContext}>
             <AppBar position="static" className={classes.appbar}>
               <TabList
@@ -69,19 +80,19 @@ const ProfileContainer = () => {
                 <Tab label="Links" value={3} />
               </TabList>
             </AppBar>
-            <TabPanel value={1}>
+            <TabPanel value={1} className={classes.tabPanel}>
               <ProfileAbout />
             </TabPanel>
-            <TabPanel value={2}>
+            <TabPanel value={2} className={classes.tabPanel}>
               <ProfileSecurity />
             </TabPanel>
-            <TabPanel value={3}>
+            <TabPanel value={3} className={classes.tabPanel}>
               <ProfileLink />
             </TabPanel>
           </TabContext>
-        </Grid>
+        </Container>
       </Grid>
-    </React.Fragment>
+    </Grid>
   );
 };
 

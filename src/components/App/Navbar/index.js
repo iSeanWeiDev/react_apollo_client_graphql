@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import {
   Box,
   Menu,
+  Badge,
   MenuItem,
   AppBar,
   Toolbar,
@@ -14,6 +15,7 @@ import {
   Container
 } from '@material-ui/core';
 import {
+  Notifications,
   Menu as MenuIcon,
   AccountCircle as AccountIcon,
   History as HistoryIcon,
@@ -111,9 +113,19 @@ const AppNavbar = ({
               height="50"
             />
             {!canClose ? (
-              <IconButton onClick={handleClick}>
-                <AccountIcon />
-              </IconButton>
+              <Box>
+                <Badge
+                  color="secondary"
+                  badgeContent={58}
+                  className={classes.badge}
+                >
+                  <Notifications />
+                </Badge>
+
+                <IconButton onClick={handleClick}>
+                  <AccountIcon />
+                </IconButton>
+              </Box>
             ) : (
               <Button size="small" onClick={() => onChange('close')}>
                 Close
@@ -134,7 +146,7 @@ const AppNavbar = ({
           </MenuItem>
           <MenuItem onClick={handleMyAccount}>
             <HistoryIcon />
-            &nbsp;&nbsp;&nbsp;My account
+            &nbsp;&nbsp;&nbsp;History
           </MenuItem>
           <MenuItem onClick={handleLogout}>
             <ExitToaAppIcon />
