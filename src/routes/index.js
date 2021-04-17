@@ -19,6 +19,8 @@ import GalleryContainer from '@app/pages/Gallery';
 import PackageContainer from '@app/pages/Package';
 import LessonContainer from '@app/pages/Lession';
 import NotFound from '@app/pages/NotFound';
+import ProfileContainer from '@app/pages/Profile';
+import MyAccountContainer from '@app/pages/MyAccount';
 
 const AppRoutes = () => (
   <Switch>
@@ -77,6 +79,16 @@ const AppRoutes = () => (
       path="/settings"
       component={ComingSoonContainer}
       layout={BasicLayout}
+    />
+    <PrivateRoute
+      path="/profile"
+      component={ProfileContainer}
+      layout={DashboardLayout}
+    />
+    <PrivateRoute
+      path="/account"
+      component={MyAccountContainer}
+      layout={DashboardLayout}
     />
     <PublicRoute path="**" component={NotFound} layout={BasicLayout} />
   </Switch>
