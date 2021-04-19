@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import noUserFemale from '@app/assets/imgs/no-user-female.jpeg';
+import noUserMale from '@app/assets/imgs/no-user-male.jpeg';
 import StyledBadge from './StyledBadge';
 import { mainMenuElements, actionMenuElements } from './menus';
 import useStyles from './style';
@@ -64,7 +65,7 @@ const AppDrawer = ({ location }) => {
       const onLoad = async () => {
         try {
           const currentUser = await loadUser();
-          setAvatarInfo(currentUser['attributes']);
+          // setAvatarInfo(currentUser['attributes']);
         } catch (error) {
           console.log(error.message);
         }
@@ -94,14 +95,16 @@ const AppDrawer = ({ location }) => {
           <Avatar
             alt="Remy Sharp"
             className={classes.avatar}
-            src={noUserFemale}
+            src={noUserMale}
           />
         </StyledBadge>
         <Typography variant="subtitle1" className={classes.userName}>
-          {userName}
+          {/* {userName} */}
+          John Smith
         </Typography>
         <Typography variant="subtitle2" className={classes.userRole}>
-          {role}
+          {/* {role} */}
+          Super Admin
         </Typography>
       </Box>
 

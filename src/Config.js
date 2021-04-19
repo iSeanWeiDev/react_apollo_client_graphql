@@ -4,6 +4,15 @@ export default {
     http: 'https://dev-core.emp-sig.com:4001/',
     ws: 'wss://dev-core.emp-sig.com:4001/'
   },
+  firebase: {
+    apiKey: 'AIzaSyDzFHT2paKuZNfERmFseHyfC0slPYG16Mo',
+    projectId: 'pmep-demo',
+    databaseURL: 'https://pmep-demo-default-rtdb.firebaseio.com',
+    authDomain: 'pmep-demo.firebaseapp.com',
+    // OPTIONAL
+    storageBucket: 'pmep-demo.appspot.com',
+    messagingSenderId: '221889911451'
+  },
   dev: {
     corsHandler: 'https://cors-anywhere-handler.herokuapp.com/'
   },

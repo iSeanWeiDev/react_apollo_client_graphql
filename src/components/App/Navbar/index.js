@@ -98,7 +98,9 @@ const AppNavbar = ({
                 src="https://configs.emp-sig.com/assets/PoweredByLogo.png"
                 height="50"
               />
-              <Button size="medium">Login</Button>
+              <Button size="medium" onClick={() => history.push('/dashboard')}>
+                Login
+              </Button>
             </Box>
           </Container>
         ) : (
