@@ -24,7 +24,8 @@ const HomeHeroImages = () => {
               backgroundImage: `url(${el.image})`,
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'top',
-              backgroundSize: '100% auto'
+              backgroundSize: '100% auto',
+              zIndex: 1
             }}
           >
             <div style={{ padding: '10.5vw' }}>
