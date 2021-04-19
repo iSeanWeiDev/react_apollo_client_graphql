@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 export default {
   apollo: {
-    http: 'https://dev-core.emp-sig.com:4001/',
-    ws: 'wss://dev-core.emp-sig.com:4001/'
+    http: 'https://core-staging.pmep.org:4001/',
+    ws: 'wss://core-staging.pmep.org:4001/'
   },
   firebase: {
     apiKey: 'AIzaSyDzFHT2paKuZNfERmFseHyfC0slPYG16Mo',
